@@ -1,0 +1,20 @@
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'config/**'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - '*.md'
+
+source:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/**'
+
+github:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
