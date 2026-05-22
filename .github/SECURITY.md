@@ -21,7 +21,7 @@ We strongly recommend always running the latest commit on `main` or the most rec
 
 Report vulnerabilities privately via GitHub's built-in security advisory system:
 
-1. Navigate to the [placeholder repository](https://github.com/DeTraced-Security/placeholder)
+1. Navigate to the [YARlint repository](https://github.com/DeTraced-Security/YARlint)
 2. Click **Security** → **Advisories** → **Report a vulnerability**
 3. Fill in the details described below
 
@@ -56,10 +56,7 @@ We follow a coordinated disclosure model. We ask that reporters allow us reasona
 
 The following are considered in scope for security reports:
 
-- **placeholder** placeholder
-- **placeholder** placeholder
-- **placeholder** placeholder
-- **placeholder** placeholder
+- **File Parsing** binary injection, RCE, DOS via malformed input
 
 The following are currently out of scope:
 
@@ -70,16 +67,11 @@ The following are currently out of scope:
 
 ---
 
-## Security Design Principles
-
-[placeholder]
-
----
 
 ## Acknowledgements
 
-We are grateful to all researchers who responsibly disclose vulnerabilities in placeholder. Contributors who report valid security issues will be credited in the relevant GitHub Security Advisory unless they request otherwise.
+We are grateful to all researchers who responsibly disclose vulnerabilities in YARlint. Contributors who report valid security issues will be credited in the relevant GitHub Security Advisory unless they request otherwise.
 
 ---
 
-*This policy is versioned alongside the placeholder codebase. For the current version, see [`SECURITY.md`](/.github/SECURITY.md) on the `main` branch.*
+*This policy is versioned alongside the YARlint codebase. For the current version, see [`SECURITY.md`](/.github/SECURITY.md) on the `main` branch.*

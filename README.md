@@ -1,3 +1,4 @@
-# dt-template
+# YARlint
 
-Template repository for DeTraced Security
+YARA rule syntax checker and linter
+
