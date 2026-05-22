@@ -1,6 +1,6 @@
-## [PLACEHOLDER] Pull Request
+## YARlint Pull Request
 
-Thanks for contributing. Fill this out so future-you doesn't hate past-you.
+<!-- Thanks for contributing. Fill this out so future-you doesn't hate past-you. -->
 
 ## What does this PR do?
 <!-- Short, clear explanation of the change. -->

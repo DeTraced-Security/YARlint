@@ -1,4 +1,4 @@
-# Contributing to [PLACEHOLDER]
+# Contributing to YARlint
 
 First of all, thanks for contributing!
 
@@ -61,16 +61,10 @@ A few expectations:
 - Keep commits focused and meaningful
 - If you change behavior, explain why in the commit or PR
 
-If your change affects:
-- placeholder
-- placeholder
-- placeholder
-
-…please call that out clearly in your PR description.
-
 ## Testing
 
-[Placeholder]
+WIP
+
 
 ## Opening a Pull Request
 
@@ -84,9 +78,6 @@ When opening your PR:
 
 Please fill out the PR template when opening a pull request. That helps us with understanding what your PR is trying to do. PRs without context or without an associated issue may be closed or sent back for clarification.
 
-# Philosophy
-
-[Placeholder]
 
 ---
 
