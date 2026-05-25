@@ -1,0 +1,21 @@
+[package]
+name = "yarlint"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/DeTraced-Security/yarlint"
+description = "A modern YARA linter written in Rust"
+readme = "README.md"
+keywords = ["yara", "security", "lint", "malware"]
+categories = ["command-line-utilities", "development-tools"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[dependencies]
+clap = { version = "4.6.1", features = ["derive"] }
+colored = "3.1.1"
+walkdir = "2.5.0"
