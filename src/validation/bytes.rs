@@ -1,3 +1,20 @@
+//! Byte-level safety validation.
+//!
+//! This module detects potentially unsafe or malformed content,
+//! including control characters, null bytes, and Unicode bidi
+//! control characters.
+
+/// Validates byte-level safety constraints.
+///
+/// The validator rejects files containing:
+///
+/// - Null bytes (`0x00`)
+/// - ASCII control characters other than `\n`, `\r`, and `\t`
+/// - Unicode bidirectional control characters commonly associated
+///   with source-code spoofing and visual obfuscation attacks
+///
+/// This validation is intended to prevent malformed or potentially
+/// deceptive content from reaching the parsing stage.
 pub fn validate_bytes(file: &[u8]) -> Result<bool, String> {
     // 1. null byte + control byte scan
     for &byte in file {

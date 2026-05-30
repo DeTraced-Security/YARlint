@@ -1,3 +1,8 @@
+//! YARlint command-line interface.
+//!
+//! This binary is responsible for argument parsing, user-facing output,
+//! and execution of the linting pipeline.
+
 use clap::Parser;
 
 use yarlint::app::yarlint_pipeline;
@@ -8,7 +13,10 @@ use yarlint::cli::output::{
     print_scan_start,
 };
 
+/// Parses CLI arguments and executes the YARlint pipeline.
 ///
+/// Fatal errors are reported to stderr before the process exits
+/// with a non-zero status code.
 fn main() {
     let args = Args::parse();
 

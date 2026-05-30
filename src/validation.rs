@@ -1,3 +1,15 @@
+//! Validation pipeline for YARA files.
+//!
+//! This module is responsible for filtering malformed, unsafe, or
+//! unsupported files before they reach the parsing stage.
+//!
+//! Validation currently includes:
+//! - File size checks
+//! - UTF-8 encoding validation
+//! - Byte-level safety checks
+//!
+//! Files that fail validation are excluded from further processing.
+
 use std::{
     fs::File,
     io::{BufReader, Read},
@@ -10,6 +22,23 @@ pub mod encoding;
 pub mod bytes;
 pub mod size;
 
+/// Validates a collection of candidate YARA files.
+///
+/// Each file is loaded into memory and passed through the configured
+/// validation checks. Files that pass all validation stages are returned
+/// for parsing.
+///
+/// Validation currently performs:
+/// - File size validation
+/// - UTF-8 encoding validation
+/// - Byte-level safety validation
+///
+/// Returns a vector containing only files that passed all validation
+/// checks.
+///
+/// # Errors
+///
+/// Returns an error if a file cannot be opened or read.
 pub fn validate_files(files: &Vec<PathBuf>) -> Result<Vec<PathBuf>, String> {
     let mut valid_files: Vec<PathBuf> = Vec::new();
 
