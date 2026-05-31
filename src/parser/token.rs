@@ -1,3 +1,7 @@
+//! Token implementation.
+//! 
+//! This module implements the token for the YARA lexer.
+
 use crate::parser::span::Span;
 
 #[derive(Debug)]
@@ -8,6 +12,8 @@ use crate::parser::span::Span;
 pub struct Token {
     /// The token's classification and associated value.
     pub token_type: TokenType,
+
+    /// The token's location via line and column number
     pub span: Span,
 }
 
