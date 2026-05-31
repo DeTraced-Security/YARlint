@@ -1,3 +1,8 @@
+//! YARA rule lexing.
+//!
+//! This module converts YARA source code into a sequence of tokens
+//! that can be consumed by the parser.
+
 use std::{iter::Peekable, str::Chars};
 
 use crate::parser::{
@@ -46,6 +51,27 @@ impl<'a> Lexer<'a> {
     }
 }
 
+/// Converts YARA source text into a sequence of lexical tokens.
+///
+/// The lexer scans the provided source code and produces a vector of
+/// [`Token`] values that can be consumed by the parser.
+///
+/// Supported token types include:
+/// - Identifiers
+/// - YARA string identifiers (`$foo`)
+/// - String literals
+/// - Numeric literals
+/// - Keywords
+/// - Operators and punctuation
+///
+/// Comments are ignored and are not included in the output token stream.
+///
+/// # Errors
+///
+/// Returns an error if the lexer encounters invalid syntax, such as:
+/// - Unterminated block comments
+/// - Unterminated string literals
+/// - Other malformed token sequences
 pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = Lexer::new(source);
     let mut tokens = Vec::new();
