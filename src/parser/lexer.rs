@@ -11,13 +11,34 @@ use crate::parser::{
     yara_rule::KEYWORDS,
 };
 
+/// Stateful lexer used to tokenize YARA source code.
+///
+/// The lexer maintains the current input position and provides utility
+/// methods for consuming characters while tracking source locations.
+///
+/// Source locations are tracked using line and column numbers, allowing
+/// later parsing stages to produce accurate diagnostics and error messages.
 struct Lexer<'a> {
+    /// Character iterator over the source text.
     chars: Peekable<Chars<'a>>,
+
+    /// Current line number within the source file.
+    ///
+    /// Line numbers are one-based.
     line: usize,
+
+    /// Current column number within the source file.
+    ///
+    /// Column numbers are one-based after the first character on a line
+    /// has been consumed.
     column: usize,
 }
 
 impl<'a> Lexer<'a> {
+    /// Creates a new lexer for the provided source text.
+    ///
+    /// The lexer is initialized at the beginning of the input with the
+    /// current position set to line 1, column 0.
     fn new(source: &'a str) -> Self {
         Self {
             chars: source.chars().peekable(),
@@ -26,6 +47,10 @@ impl<'a> Lexer<'a> {
         }
     }
 
+    /// Returns the current source position.
+    ///
+    /// This position can be attached to tokens and syntax nodes to aid
+    /// in error reporting and diagnostics.
     fn current_span(&self) -> Span {
         Span {
             line: self.line,
@@ -33,10 +58,20 @@ impl<'a> Lexer<'a> {
         }
     }
 
+    /// Returns the next character without consuming it.
+    ///
+    /// Returns `None` if the end of the input has been reached.
     fn peek(&mut self) -> Option<&char> {
         self.chars.peek()
     }
 
+    /// Consumes and returns the next character from the input stream.
+    ///
+    /// The lexer's line and column counters are updated automatically.
+    /// Newline characters increment the line counter and reset the column
+    /// counter to zero.
+    ///
+    /// Returns `None` if the end of the input has been reached.
     fn next(&mut self) -> Option<char> {
         let ch = self.chars.next()?;
 
