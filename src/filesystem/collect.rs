@@ -24,21 +24,25 @@ use crate::filesystem::filters::is_yara_file;
 ///
 /// Returns an error if the supplied path does not exist or if a
 /// filesystem traversal error occurs.
-/// 
+///
 /// Non-YARA files are ignored and do not produce an error
-pub fn collect_yara_files(path: &str, recursive: bool, depth: Option<usize>,) -> Result<Vec<PathBuf>, String> {
+pub fn collect_yara_files(
+    path: &str,
+    recursive: bool,
+    depth: Option<usize>,
+) -> Result<Vec<PathBuf>, String> {
     let path = Path::new(path);
     if !path.exists() {
         return Err("Path does not exist".to_string());
     }
-    
+
     let mut yara_files = Vec::new();
 
     if path.is_file() {
         if is_yara_file(path) {
             yara_files.push(path.to_path_buf());
         }
-        return Ok(yara_files)
+        return Ok(yara_files);
     }
 
     let walker = if recursive {
@@ -60,5 +64,4 @@ pub fn collect_yara_files(path: &str, recursive: bool, depth: Option<usize>,) ->
     }
 
     Ok(yara_files)
-
 }

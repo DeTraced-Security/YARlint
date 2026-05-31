@@ -4,8 +4,8 @@
 //! presentation concerns separate from collection, validation,
 //! and parsing logic.
 
-use std::path::PathBuf;
 use colored::Colorize;
+use std::path::Path;
 
 /// Displays the path currently being scanned.
 pub fn print_scan_start(path: &str) {
@@ -17,9 +17,12 @@ pub fn print_scan_start(path: &str) {
 /// Recursive scans may traverse large directory trees and increase
 /// memory usage and runtime.
 pub fn print_recursive_warning() {
-    println!("{}", format!("Warning: Recursive scanning can consume large amounts of system memory, and may take a long time to complete. Use with caution").yellow());
+    println!(
+        "{}",
+        "Warning: Recursive scanning can consume large amounts of system memory, and may take a long time to complete. Use with caution"
+            .yellow()
+    );
 }
-
 /// Displays the total number of YARA files discovered during collection.
 pub fn print_file_summary(count: usize) {
     println!("{}", format!("Found {} YARA files", count).green());
@@ -31,13 +34,11 @@ pub fn print_valid_file_summary(count: usize) {
 }
 
 /// Prints a file path to standard output.
-pub fn print_file(path: &PathBuf) {
+pub fn print_file(path: &Path) {
     println!("{}", path.display());
-
 }
 
 /// Prints an error message to standard error using colored output.
 pub fn print_error(err: &str) {
     eprintln!("{}", format!("Error: {}", err).red())
-
 }

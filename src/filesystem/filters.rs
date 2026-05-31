@@ -10,8 +10,8 @@ use std::path::Path;
 /// Currently, files ending in `.yar` or `.yara` are considered valid
 /// YARA rule files.
 pub fn is_yara_file(path: &Path) -> bool {
-    match path.extension().and_then(|ext| ext.to_str()) {
-        Some("yar") | Some("yara") => true,
-        _ => false,
-    }
+    matches!(
+        path.extension().and_then(|ext| ext.to_str()),
+        Some("yar") | Some("yara")
+    )
 }
