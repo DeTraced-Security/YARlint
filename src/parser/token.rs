@@ -1,14 +1,14 @@
+use crate::parser::span::Span;
+
 #[derive(Debug)]
 
 /// A token produced by the lexer.
 ///
-/// Stores the token's type and, in the future, may include
-/// source location information such as line and column numbers.
+/// Stores the token's type and source location in a span.
 pub struct Token {
     /// The token's classification and associated value.
     pub token_type: TokenType,
-    //pub column: usize,
-    //pub row: usize,
+    pub span: Span,
 }
 
 /// Represents a lexical token recognized by the YARA lexer.

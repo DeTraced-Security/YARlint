@@ -5,6 +5,7 @@
 
 pub mod ast;
 pub mod lexer;
+pub mod span;
 pub mod token;
 pub mod yara_rule;
 
@@ -13,12 +14,7 @@ use std::{
     io::{BufReader, Read},
 };
 
-use crate::parser::{
-    ast::ast_parser,
-    token::Token,
-    lexer::tokenize,
-    yara_rule::YaraRule,
-};
+use crate::parser::{ast::ast_parser, lexer::tokenize, token::Token, yara_rule::YaraRule};
 
 /// Parses and validates one or more YARA files.
 ///

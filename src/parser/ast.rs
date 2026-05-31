@@ -5,4 +5,3 @@ pub fn ast_parser(tokens: Vec<Token>) -> Result<YaraRule, String> {
 
     Ok(rule)
 }
-
