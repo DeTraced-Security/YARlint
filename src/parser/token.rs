@@ -1,5 +1,5 @@
 //! Token implementation.
-//! 
+//!
 //! This module implements the token for the YARA lexer.
 
 use crate::parser::span::Span;
