@@ -9,11 +9,43 @@ documentation:
           - 'docs/**'
           - '*.md'
 
-source:
+core:
   - changed-files:
       - any-glob-to-any-file:
-          - 'src/**'
+          - 'src/main.rs'
+          - 'src/app.rs'
+          - 'src/lib.rs'
 
+cli:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/cli/**'
+          - 'src/cli.rs'
+
+filesystem:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/filesystem/**'
+          - 'src/filesystem.rs'
+
+models:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/models/**'
+          - 'src/models.rs'
+
+parser:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/parser/**'
+          - 'src/parser.rs'
+
+validation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/validation/**'
+          - 'src/validation.rs'
+ 
 github:
   - changed-files:
       - any-glob-to-any-file:
