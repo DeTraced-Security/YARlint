@@ -1,6 +1,9 @@
 
 name: Lint Commit Messages
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -13,4 +16,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: wagoid/commitlint-github-action@v6
+      - uses: wagoid/commitlint-github-action@3c75220e8d20774b68eea48e869a706ff7249b54
