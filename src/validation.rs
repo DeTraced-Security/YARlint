@@ -18,8 +18,8 @@ use std::{
 
 use crate::validation::{bytes::validate_bytes, encoding::validate_encoding, size::validate_size};
 
-pub mod encoding;
 pub mod bytes;
+pub mod encoding;
 pub mod size;
 
 /// Validates a collection of candidate YARA files.
@@ -43,9 +43,7 @@ pub fn validate_files(files: &Vec<PathBuf>) -> Result<Vec<PathBuf>, String> {
     let mut valid_files: Vec<PathBuf> = Vec::new();
 
     for file_path in files {
-
-        let file = File::open(file_path)
-            .map_err(|e| e.to_string())?;
+        let file = File::open(file_path).map_err(|e| e.to_string())?;
 
         let mut reader = BufReader::new(file);
 
@@ -61,7 +59,6 @@ pub fn validate_files(files: &Vec<PathBuf>) -> Result<Vec<PathBuf>, String> {
         {
             valid_files.push(file_path.clone());
         }
-
     }
 
     Ok(valid_files)

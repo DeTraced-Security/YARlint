@@ -1,5 +1,7 @@
-use std::path::PathBuf;
-
-pub fn ast_parser(file: &PathBuf) -> Result<&PathBuf, String> {
-    Ok(file)
-}
+//use crate::parser::{lexer::Token, yara_rule::YaraRule};
+//
+//pub fn ast_parser(tokens: Vec<Token>) -> Result<YaraRule, String> {
+//    let rule = YaraRule::new("WIP".to_string());
+//
+//    Ok(rule)
+//}

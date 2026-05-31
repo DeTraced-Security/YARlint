@@ -206,7 +206,7 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 Some('/') => {
                     chars.next();
 
-                    while let Some(ch) = chars.next() {
+                    for ch in chars.by_ref() {
                         if ch == '\n' {
                             break;
                         }
@@ -244,7 +244,7 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 let mut value = String::new();
                 let mut escaped = false;
 
-                while let Some(next) = chars.next() {
+                for next in chars.by_ref() {
                     if escaped {
                         value.push(next);
                         escaped = false;

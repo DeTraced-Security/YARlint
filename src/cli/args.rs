@@ -26,5 +26,4 @@ pub struct Args {
     /// Ignored unless `--recursive` is specified.
     #[arg(short, long)]
     pub depth: Option<usize>,
-
 }

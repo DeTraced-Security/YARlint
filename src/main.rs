@@ -7,11 +7,7 @@ use clap::Parser;
 
 use yarlint::app::yarlint_pipeline;
 use yarlint::cli::Args;
-use yarlint::cli::output::{
-    print_error,
-    print_recursive_warning,
-    print_scan_start,
-};
+use yarlint::cli::output::{print_error, print_recursive_warning, print_scan_start};
 
 /// Parses CLI arguments and executes the YARlint pipeline.
 ///
