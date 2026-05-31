@@ -7,6 +7,7 @@ use crate::cli::Args;
 use crate::cli::output::{print_file_summary, print_valid_file_summary};
 
 use crate::filesystem::collect_yara_files;
+use crate::parser::parse_files;
 use crate::validation::validate_files;
 
 /// Executes the YARlint processing pipeline.
@@ -33,7 +34,7 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
     print_valid_file_summary(valid_files.len());
 
-    //let parsed_files: &Vec<std::path::PathBuf> = parse_files(&valid_files)?;
+    let yara_rules: Vec<crate::parser::yara_rule::YaraRule> = parse_files(&valid_files)?;
 
     Ok(())
 }
