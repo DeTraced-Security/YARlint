@@ -8,8 +8,65 @@ use std::{iter::Peekable, str::Chars};
 use crate::parser::{
     span::Span,
     token::{Token, TokenType},
-    yara_rule::KEYWORDS,
 };
+
+/// Reserved keywords recognized by the YARA language.
+///
+/// These keywords are used by the lexer to distinguish language
+/// constructs from ordinary identifiers.
+pub const KEYWORDS: &[&str] = &[
+    "all",
+    "and",
+    "any",
+    "ascii",
+    "at",
+    "base64",
+    "base64wide",
+    "condition",
+    "contains",
+    "endswith",
+    "entrypoint",
+    "false",
+    "filesize",
+    "for",
+    "fullword",
+    "global",
+    "import",
+    "icontains",
+    "iendswith",
+    "iequals",
+    "in",
+    "include",
+    "int16",
+    "int16be",
+    "int32",
+    "int32be",
+    "int8",
+    "int8be",
+    "istartswith",
+    "matches",
+    "meta",
+    "nocase",
+    "none",
+    "not",
+    "of",
+    "or",
+    "private",
+    "rule",
+    "startswith",
+    "strings",
+    "them",
+    "true",
+    "uint16",
+    "uint16be",
+    "uint32",
+    "uint32be",
+    "uint8",
+    "uint8be",
+    "wide",
+    "xor",
+    "defined",
+];
 
 /// Stateful lexer used to tokenize YARA source code.
 ///

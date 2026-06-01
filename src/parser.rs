@@ -3,18 +3,18 @@
 //! This module contains functionality for processing validated YARA
 //! files and extracting the information required for linting.
 
+pub mod ast_parser;
 pub mod lexer;
 pub mod span;
 pub mod syntax;
 pub mod token;
-pub mod yara_rule;
 
 use std::{
     fs::File,
     io::{BufReader, Read},
 };
 
-use crate::parser::{lexer::tokenize, token::Token, yara_rule::YaraRule};
+use crate::parser::{ast_parser::parse_rule, lexer::tokenize, syntax::RuleNode, token::Token};
 
 /// Parses and validates one or more YARA files.
 ///
@@ -35,8 +35,8 @@ use crate::parser::{lexer::tokenize, token::Token, yara_rule::YaraRule};
 /// * A file cannot be opened.
 /// * A file cannot be read.
 /// * Tokenization fails.
-pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<YaraRule>, String> {
-    let /*mut*/ rules: Vec<YaraRule> = Vec::new();
+pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<RuleNode>, String> {
+    let mut rules: Vec<RuleNode> = Vec::new();
     for file_path in files {
         let file = File::open(file_path).map_err(|e| e.to_string())?;
 
@@ -47,9 +47,14 @@ pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<YaraRule>, Str
         reader
             .read_to_string(&mut file_source)
             .map_err(|e| e.to_string())?;
-        let _tokens: Vec<Token> = tokenize(&file_source.to_string())?;
-        //rules.push(ast_parser(tokens)?);
+        let tokens: Vec<Token> = tokenize(&file_source.to_string())?;
+        for token in &tokens {
+            println!("{:?}", token);
+        }
+        rules.push(parse_rule(tokens)?);
     }
-
+    for rule in &rules {
+        println!("{:#?}", rule);
+    }
     Ok(rules)
 }
