@@ -18,7 +18,7 @@ use crate::validation::validate_files;
 /// 2. File validation
 /// 3. File parsing
 ///
-/// Progress information is reported to the user between stages.
+///s Progress information is reported to the user between stages.
 ///
 /// # Errors
 ///
@@ -36,5 +36,8 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
     let yara_rules: Vec<crate::parser::syntax::RuleNode> = parse_files(&valid_files)?;
 
+    for rule in &yara_rules {
+        println!("{:#?}", rule);
+    }
     Ok(())
 }

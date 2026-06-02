@@ -9,12 +9,11 @@ pub mod span;
 pub mod syntax;
 pub mod token;
 
+use crate::parser::{ast_parser::AstParser, lexer::tokenize, syntax::RuleNode, token::Token};
 use std::{
     fs::File,
     io::{BufReader, Read},
 };
-
-use crate::parser::{ast_parser::parse_rule, lexer::tokenize, syntax::RuleNode, token::Token};
 
 /// Parses and validates one or more YARA files.
 ///
@@ -51,10 +50,9 @@ pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<RuleNode>, Str
         for token in &tokens {
             println!("{:?}", token);
         }
-        rules.push(parse_rule(tokens)?);
-    }
-    for rule in &rules {
-        println!("{:#?}", rule);
+        let parser: AstParser = AstParser::new(tokens);
+
+        rules.push(AstParser::parse_rule(parser)?);
     }
     Ok(rules)
 }

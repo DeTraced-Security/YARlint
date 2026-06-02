@@ -1,9 +1,47 @@
+//! Parsing of YARA string definitions.
+//!
+//! This module parses string declarations and their associated
+//! modifiers, producing [`StringNode`] values suitable for AST
+//! construction and later analysis.
+
 use crate::parser::{
     ast_parser::AstParser,
     syntax::{StringModifier, StringNode},
     token::TokenType,
 };
 
+/// Parses the `strings` section of a YARA rule.
+///
+/// This function consumes string declarations until the beginning of
+/// the `condition` section is encountered. Each string declaration
+/// consists of a string identifier, an equals sign, a string literal,
+/// and zero or more string modifiers.
+///
+/// Supported modifiers include:
+/// - `wide`
+/// - `ascii`
+/// - `fullword`
+/// - `nocase`
+/// - `xor`
+/// - `base64`
+/// - `base64wide`
+///
+/// # Arguments
+///
+/// * `parser` - The active parser positioned at the first string
+///   declaration following the `strings:` section header.
+///
+/// # Returns
+///
+/// Returns a vector containing all parsed [`StringNode`] values.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - A string identifier is missing or malformed.
+/// - An equals sign is missing.
+/// - A string literal is missing or invalid.
+/// - The input ends unexpectedly while parsing string declarations.
 pub fn parse_strings(parser: &mut AstParser) -> Result<Vec<StringNode>, String> {
     let mut strings = Vec::new();
 

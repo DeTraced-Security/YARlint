@@ -65,20 +65,49 @@ pub enum ExprNode {
         expression: Box<ExprNode>,
     },
 
-    // All of
+    /// Matches all strings that satisfy the provided pattern.
+    ///
+    /// Example:
+    /// `all of ($a*)`
+    ///
+    /// The pattern typically represents a string identifier prefix
+    /// followed by a wildcard.
     AllOf {
+        /// Pattern used to select matching strings.
         pattern: String,
     },
 
-    // all of them
+    /// Matches all strings declared within the rule.
+    ///
+    /// Example:
+    /// `all of them`
+    ///
+    /// This expression evaluates to true only when every declared
+    /// string in the rule matches.
     AllOfThem,
 
-    // 1 of ($x*)
+    /// Matches a specified number of strings from a pattern group.
+    ///
+    /// Examples:
+    /// `1 of ($x*)`
+    /// `3 of ($api*)`
+    /// `10 of ($str*)`
+    ///
+    /// The count may itself be an expression.
     Of {
+        /// Number of matching strings required.
         count: Box<ExprNode>,
+
+        /// Pattern used to select candidate strings.
         pattern: String,
     },
 
-    // parenthesized expressions
+    /// A parenthesized expression.
+    ///
+    /// Example:
+    /// `(filesize < 1MB and $a)`
+    ///
+    /// Grouping expressions allows precedence to be overridden
+    /// during evaluation and parsing.
     Group(Box<ExprNode>),
 }
