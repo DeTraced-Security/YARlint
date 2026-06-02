@@ -272,6 +272,56 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 }
             }
 
+            '/' => {
+                let start_span = span;
+
+                match lexer.peek() {
+                    // line comment: //
+                    Some('/') => {
+                        lexer.next(); // consume second '/'
+
+                        while let Some(ch) = lexer.next() {
+                            if ch == '\n' {
+                                break;
+                            }
+                        }
+                    }
+
+                    // block comment: /* ... */
+                    Some('*') => {
+                        lexer.next(); // consume '*'
+
+                        loop {
+                            match lexer.next() {
+                                Some('*') => {
+                                    if matches!(lexer.peek(), Some('/')) {
+                                        lexer.next(); // consume '/'
+                                        break;
+                                    }
+                                }
+
+                                Some(_) => {}
+
+                                None => {
+                                    return Err(format!(
+                                        "Unterminated block comment at {}:{}",
+                                        start_span.line, start_span.column
+                                    ));
+                                }
+                            }
+                        }
+                    }
+
+                    // division operator
+                    _ => {
+                        tokens.push(Token {
+                            token_type: TokenType::FSlash,
+                            span,
+                        });
+                    }
+                }
+            }
+
             '"' => {
                 let mut value = String::new();
                 let mut escaped = false;
