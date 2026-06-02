@@ -34,7 +34,7 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
     print_valid_file_summary(valid_files.len());
 
-    let yara_rules:Vec<crate::parser::syntax::RuleNode>  = parse_files(&valid_files)?;
+    let yara_rules: Vec<crate::parser::syntax::RuleNode> = parse_files(&valid_files)?;
 
     Ok(())
 }

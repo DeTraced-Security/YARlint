@@ -1,4 +1,8 @@
-use crate::parser::{ast_parser::AstParser, syntax::{StringModifier, StringNode}, token::TokenType};
+use crate::parser::{
+    ast_parser::AstParser,
+    syntax::{StringModifier, StringNode},
+    token::TokenType,
+};
 
 pub fn parse_strings(parser: &mut AstParser) -> Result<Vec<StringNode>, String> {
     let mut strings = Vec::new();

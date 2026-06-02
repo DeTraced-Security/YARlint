@@ -124,7 +124,7 @@ impl AstParser {
         }
     }
 
-    pub fn expect_string_identifier(&mut self) -> Result<String, String> {
+    fn expect_string_identifier(&mut self) -> Result<String, String> {
         match self.advance() {
             Some(Token {
                 token_type: TokenType::StringIdentifier(name),

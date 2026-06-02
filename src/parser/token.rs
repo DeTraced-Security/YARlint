@@ -18,8 +18,7 @@ pub struct Token {
 }
 
 /// Represents a lexical token recognized by the YARA lexer.
-#[derive(PartialEq)]
-#[derive(Debug)]
+#[derive(PartialEq, Debug)]
 pub enum TokenType {
     /// A standard identifier such as a rule name, metadata key,
     /// module name, or function name.
