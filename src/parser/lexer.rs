@@ -184,11 +184,6 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 span,
             }),
 
-            '=' => tokens.push(Token {
-                token_type: TokenType::Equals,
-                span,
-            }),
-
             ':' => tokens.push(Token {
                 token_type: TokenType::Colon,
                 span,
@@ -228,6 +223,22 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 token_type: TokenType::Plus,
                 span,
             }),
+
+            '=' => {
+                if matches!(lexer.peek(), Some('=')) {
+                    lexer.next();
+
+                    tokens.push(Token { 
+                        token_type: TokenType::EqualsEquals, 
+                        span 
+                    });
+                } else {
+                    tokens.push(Token { 
+                        token_type: TokenType::Equals, 
+                        span 
+                    })
+                }
+            }
 
             '>' => {
                 if matches!(lexer.peek(), Some('=')) {
@@ -367,9 +378,9 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
         }
     }
 
-    //for token in &tokens {
-    //    println!("{:?}, {}:{}", token.token_type, token.span.line, token.span.column)
-    //}
+    for token in &tokens {
+        println!("{:?}, {}:{}", token.token_type, token.span.line, token.span.column)
+    }
 
     Ok(tokens)
 }

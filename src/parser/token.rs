@@ -51,8 +51,11 @@ pub enum TokenType {
     /// Less-than-or-equal operator (`<=`).
     LEThan,
 
-    /// Assignment or equality operator (`=`).
+    /// Assignment operator (`=`).
     Equals,
+
+    /// Equality operator (`==`).
+    EqualsEquals,
 
     /// Minus operator (`-`).
     Minus,

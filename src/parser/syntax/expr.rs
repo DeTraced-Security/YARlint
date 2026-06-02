@@ -64,4 +64,21 @@ pub enum ExprNode {
         /// Expression the operator is applied to.
         expression: Box<ExprNode>,
     },
+
+    // All of
+    AllOf {
+        pattern: String,
+    },
+
+    // all of them
+    AllOfThem,
+
+    // 1 of ($x*)
+    Of {
+        count: Box<ExprNode>,
+        pattern: String,
+    },
+
+    // parenthesized expressions
+    Group(Box<ExprNode>),
 }

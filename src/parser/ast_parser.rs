@@ -6,7 +6,9 @@ pub mod strings;
 
 use crate::parser::{
     ast_parser::{condition::parse_condition, meta::parse_meta, strings::parse_strings},
-    syntax::{self, ConditionNode, ExprNode, MetaEntryNode, StringNode, rule::RuleNode},
+    syntax::{
+        self, BinaryOperator, ConditionNode, ExprNode, MetaEntryNode, StringNode, rule::RuleNode,
+    },
     token::{Token, TokenType},
 };
 
@@ -168,6 +170,109 @@ impl AstParser {
             None => Err("Unexpected EOF".into()),
         }
     }
+
+    fn parse_or(parser: &mut AstParser) -> Result<ExprNode, String> {
+        let mut left = Self::parse_and(parser)?;
+
+        while parser.peek_keyword("or") {
+            parser.advance();
+
+            let right = Self::parse_and(parser)?;
+
+            left = ExprNode::Binary {
+                left: Box::new(left),
+                operator: BinaryOperator::Or,
+                right: Box::new(right),
+            };
+        }
+
+        Ok(left)
+    }
+
+    fn parse_and(parser: &mut AstParser) -> Result<ExprNode, String> {
+        let mut left = Self::parse_comparison(parser)?;
+
+        while parser.peek_keyword("and") {
+            parser.advance();
+
+            let right = Self::parse_comparison(parser)?;
+
+            left = ExprNode::Binary {
+                left: Box::new(left),
+                operator: BinaryOperator::And,
+                right: Box::new(right),
+            };
+        }
+
+        Ok(left)
+    }
+
+    fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
+        if parser.peek_keyword("all") {
+            return Self::parse_all_of(parser);
+        }
+
+        match parser.advance() {
+            Some(Token {
+                token_type: TokenType::StringIdentifier(id),
+                ..
+            }) => Ok(ExprNode::Identifier(id.clone())),
+
+            _ => Err("Expected expression".into()),
+        }
+    }
+
+    fn parse_all_of(parser: &mut AstParser) -> Result<ExprNode, String> {
+        parser.expect_keyword("all")?;
+        parser.expect_keyword("of")?;
+
+        parser.expect(&TokenType::LParen)?;
+
+        let pattern = parser.expect_string_identifier()?;
+
+        parser.expect(&TokenType::Star)?;
+
+        parser.expect(&TokenType::RParen)?;
+
+        Ok(ExprNode::AllOf { pattern })
+    }
+
+    fn parse_comparison(parser: &mut AstParser) -> Result<ExprNode, String> {
+        let mut left = Self::parse_primary(parser)?;
+
+        loop {
+            let op = match parser.peek() {
+                Some(Token {
+                    token_type: TokenType::EqualsEquals,
+                    ..
+                }) => BinaryOperator::Equals,
+
+                Some(Token {
+                    token_type: TokenType::LThan,
+                    ..
+                }) => BinaryOperator::LessThan,
+
+                Some(Token {
+                    token_type: TokenType::GThan,
+                    ..
+                }) => BinaryOperator::GreaterThan,
+
+                _ => break,
+            };
+
+            parser.advance();
+
+            let right = Self::parse_primary(parser)?;
+
+            left = ExprNode::Binary {
+                left: Box::new(left),
+                operator: op,
+                right: Box::new(right),
+            };
+        }
+
+        Ok(left)
+    }
 }
 
 pub fn parse_rule(tokens: Vec<Token>) -> Result<RuleNode, String> {
@@ -183,7 +288,9 @@ pub fn parse_rule(tokens: Vec<Token>) -> Result<RuleNode, String> {
     parser.expect(&TokenType::LBrace)?;
     let mut meta: Vec<MetaEntryNode> = Vec::new();
     let mut strings: Vec<StringNode> = Vec::new();
-    let mut condition: Vec<ConditionNode> = Vec::new();
+    let mut condition: ConditionNode = ConditionNode {
+        expression: ExprNode::Identifier(String::new()),
+    };
     if parser.peek_keyword("meta") {
         parser.expect_keyword("meta")?;
         parser.expect(&TokenType::Colon)?;
@@ -196,8 +303,8 @@ pub fn parse_rule(tokens: Vec<Token>) -> Result<RuleNode, String> {
     }
     if parser.peek_keyword("condition") {
         parser.expect_keyword("condition")?;
-        parser.expect(&TokenType::Colon);
-        condition = parse_condition(&mut parser)?;
+        parser.expect(&TokenType::Colon)?;
+        condition = condition::parse_condition(&mut parser)?;
     }
 
     parser.expect(&TokenType::RBrace)?;
@@ -209,8 +316,6 @@ pub fn parse_rule(tokens: Vec<Token>) -> Result<RuleNode, String> {
         tags: Vec::new(),
         meta: meta,
         strings: strings,
-        condition: syntax::condition::ConditionNode {
-            expression: ExprNode::Identifier(String::new()),
-        },
+        condition: condition,
     })
 }
