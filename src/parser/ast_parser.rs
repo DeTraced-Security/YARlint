@@ -29,7 +29,9 @@ pub mod strings;
 
 use crate::parser::{
     ast_parser::{meta::parse_meta, strings::parse_strings},
-    syntax::{ConditionNode, ExprNode, MetaEntryNode, StringNode, rule::RuleNode},
+    syntax::{
+        ConditionNode, ExprNode, MetaEntryNode, StringNode, rule::RuleNode, rule_file::RuleFileNode,
+    },
     token::{Token, TokenType},
 };
 
@@ -409,7 +411,7 @@ impl AstParser {
     /// # Returns
     ///
     /// A fully populated [`RuleNode`] representing the rule.
-    pub fn parse_rule(mut parser: AstParser) -> Result<RuleNode, String> {
+    fn parse_rule(mut parser: &mut AstParser) -> Result<RuleNode, String> {
         parser.expect_keyword("rule")?;
         println!("matched rule keyword");
 
@@ -439,6 +441,7 @@ impl AstParser {
             condition = condition::parse_condition(&mut parser)?;
         }
 
+        println!("Before RBrace: {:?}", parser.peek());
         parser.expect(&TokenType::RBrace)?;
 
         Ok(RuleNode {
@@ -450,5 +453,18 @@ impl AstParser {
             strings,
             condition,
         })
+    }
+
+    pub fn parse_rule_file(mut parser: AstParser) -> Result<RuleFileNode, String> {
+        let mut imports: Vec<String> = Vec::new();
+        while parser.peek_keyword("import") {
+            parser.expect_keyword("import")?;
+            imports.push(parser.expect_string_literal()?);
+        }
+        let mut rules: Vec<RuleNode> = Vec::new();
+        while parser.peek_keyword("rule") {
+            rules.push(Self::parse_rule(&mut parser)?);
+        }
+        Ok(RuleFileNode { imports, rules })
     }
 }

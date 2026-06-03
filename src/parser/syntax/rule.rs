@@ -1,8 +1,8 @@
-//! Root syntax node representing a YARA rule.
+//! Syntax node representing a YARA rule.
 
 use crate::parser::syntax::{condition::ConditionNode, meta::MetaEntryNode, strings::StringNode};
 
-/// Root syntax node representing a parsed YARA rule.
+/// Syntax node representing a parsed YARA rule.
 ///
 /// A rule consists of a name, optional modifiers, optional tags,
 /// metadata entries, string definitions, and a condition block.

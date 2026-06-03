@@ -8,6 +8,7 @@ use crate::cli::output::{print_file_summary, print_valid_file_summary};
 
 use crate::filesystem::collect_yara_files;
 use crate::parser::parse_files;
+use crate::parser::syntax::rule_file::RuleFileNode;
 use crate::validation::validate_files;
 
 /// Executes the YARlint processing pipeline.
@@ -34,9 +35,9 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
     print_valid_file_summary(valid_files.len());
 
-    let yara_rules: Vec<crate::parser::syntax::RuleNode> = parse_files(&valid_files)?;
+    let yara_rule_files: Vec<RuleFileNode> = parse_files(&valid_files)?;
 
-    for rule in &yara_rules {
+    for rule in &yara_rule_files {
         println!("{:#?}", rule);
     }
     Ok(())

@@ -237,8 +237,34 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
             token_type: TokenType::Number(_),
             ..
         }) => {
-            let num = parser.expect_number()?;
-            Ok(ExprNode::Number(num))
+            let count = parser.expect_number()?;
+
+            if parser.peek_keyword("of") {
+                parser.advance();
+
+                if parser.peek_keyword("them") {
+                    parser.advance();
+
+                    return Ok(ExprNode::Of {
+                        count: Box::new(ExprNode::Number(count)),
+                        pattern: "them".to_string(),
+                    });
+                }
+
+                parser.expect(&TokenType::LParen)?;
+
+                let pattern = parser.expect_string_identifier()?;
+
+                parser.expect(&TokenType::Star)?;
+                parser.expect(&TokenType::RParen)?;
+
+                return Ok(ExprNode::Of {
+                    count: Box::new(ExprNode::Number(count)),
+                    pattern,
+                });
+            }
+
+            Ok(ExprNode::Number(count))
         }
 
         Some(Token {
@@ -300,8 +326,14 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
             token_type: TokenType::Keyword(k),
             ..
         }) if k == "all" => {
-            parser.advance();
+            parser.expect_keyword("all")?;
             parser.expect_keyword("of")?;
+
+            if parser.peek_keyword("them") {
+                parser.advance();
+
+                return Ok(ExprNode::AllOfThem);
+            }
             parser.expect(&TokenType::LParen)?;
 
             let pattern = parser.expect_string_identifier()?;

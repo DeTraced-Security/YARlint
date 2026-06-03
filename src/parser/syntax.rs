@@ -8,6 +8,7 @@ pub mod expr;
 pub mod meta;
 pub mod operators;
 pub mod rule;
+pub mod rule_file;
 pub mod strings;
 
 pub use condition::ConditionNode;
