@@ -3,96 +3,151 @@
 //! This module converts YARA source code into a sequence of tokens
 //! that can be consumed by the parser.
 
-use crate::parser::yara_rule::KEYWORDS;
+use std::{iter::Peekable, str::Chars};
 
-#[derive(Debug)]
+use crate::parser::{
+    span::Span,
+    token::{Token, TokenType},
+};
 
-/// A token produced by the lexer.
+/// Reserved keywords recognized by the YARA language.
 ///
-/// Stores the token's type and, in the future, may include
-/// source location information such as line and column numbers.
-pub struct Token {
-    /// The token's classification and associated value.
-    pub token_type: TokenType,
-    //pub column: usize,
-    //pub row: usize,
+/// These keywords are used by the lexer to distinguish language
+/// constructs from ordinary identifiers.
+pub const KEYWORDS: &[&str] = &[
+    "all",
+    "and",
+    "any",
+    "ascii",
+    "at",
+    "base64",
+    "base64wide",
+    "condition",
+    "contains",
+    "endswith",
+    "false",
+    "for",
+    "fullword",
+    "global",
+    "import",
+    "icontains",
+    "iendswith",
+    "iequals",
+    "in",
+    "include",
+    "istartswith",
+    "matches",
+    "meta",
+    "nocase",
+    "none",
+    "not",
+    "of",
+    "or",
+    "private",
+    "rule",
+    "startswith",
+    "strings",
+    "them",
+    "true",
+    "wide",
+    "xor",
+    "defined",
+];
+
+/// List of identifier-like tokens used by the lexer.
+///
+/// This is used to differentiate between keywords and identifiers
+/// during tokenization and parsing.
+pub const IDENTIFIERS: &[&str] = &[
+    "entrypoint",
+    "filesize",
+    "uint8",
+    "uint16",
+    "uint32",
+    "uint8be",
+    "uint16be",
+    "uint32be",
+    "int8",
+    "int16",
+    "int32",
+    "int8be",
+    "int16be",
+    "int32be",
+];
+
+/// Stateful lexer used to tokenize YARA source code.
+///
+/// The lexer maintains the current input position and provides utility
+/// methods for consuming characters while tracking source locations.
+///
+/// Source locations are tracked using line and column numbers, allowing
+/// later parsing stages to produce accurate diagnostics and error messages.
+struct Lexer<'a> {
+    /// Character iterator over the source text.
+    chars: Peekable<Chars<'a>>,
+
+    /// Current line number within the source file.
+    ///
+    /// Line numbers are one-based.
+    line: usize,
+
+    /// Current column number within the source file.
+    ///
+    /// Column numbers are one-based after the first character on a line
+    /// has been consumed.
+    column: usize,
 }
 
-/// Represents a lexical token recognized by the YARA lexer.
-#[derive(Debug)]
-pub enum TokenType {
-    /// A standard identifier such as a rule name, metadata key,
-    /// module name, or function name.
-    Identifier(String),
-
-    /// A YARA string identifier such as `$a` or `$filename`.
-    StringIdentifier(String),
-
-    /// A quoted string literal.
-    StringLiteral(String),
-
-    /// A reserved YARA keyword.
-    Keyword(String),
-
-    /// A numeric literal.
+impl<'a> Lexer<'a> {
+    /// Creates a new lexer for the provided source text.
     ///
-    /// This may represent decimal, hexadecimal, or size values
-    /// until more specialized token types are introduced.
-    Number(String),
+    /// The lexer is initialized at the beginning of the input with the
+    /// current position set to line 1, column 0.
+    fn new(source: &'a str) -> Self {
+        Self {
+            chars: source.chars().peekable(),
+            line: 1,
+            column: 0,
+        }
+    }
 
-    /// Greater-than operator (`>`).
-    GThan,
+    /// Returns the current source position.
+    ///
+    /// This position can be attached to tokens and syntax nodes to aid
+    /// in error reporting and diagnostics.
+    fn current_span(&self) -> Span {
+        Span {
+            line: self.line,
+            column: self.column,
+        }
+    }
 
-    /// Greater-than-or-equal operator (`>=`).
-    GEThan,
+    /// Returns the next character without consuming it.
+    ///
+    /// Returns `None` if the end of the input has been reached.
+    fn peek(&mut self) -> Option<&char> {
+        self.chars.peek()
+    }
 
-    /// Less-than operator (`<`).
-    LThan,
+    /// Consumes and returns the next character from the input stream.
+    ///
+    /// The lexer's line and column counters are updated automatically.
+    /// Newline characters increment the line counter and reset the column
+    /// counter to zero.
+    ///
+    /// Returns `None` if the end of the input has been reached.
+    fn next(&mut self) -> Option<char> {
+        let ch = self.chars.next()?;
 
-    /// Less-than-or-equal operator (`<=`).
-    LEThan,
+        if ch == '\n' {
+            self.line += 1;
+            self.column = 0;
+        } else {
+            self.column += 1;
+        }
 
-    /// Assignment or equality operator (`=`).
-    Equals,
-
-    /// Minus operator (`-`).
-    Minus,
-
-    /// Plus operator (`+`).
-    Plus,
-
-    /// Colon separator (`:`).
-    Colon,
-
-    /// Comma separator (`,`).
-    Comma,
-
-    /// Left brace (`{`).
-    LBrace,
-
-    /// Right brace (`}`).
-    RBrace,
-
-    /// Left parenthesis (`(`).
-    LParen,
-
-    /// Right parenthesis (`)`).
-    RParen,
-
-    /// Forward slash (`/`).
-    FSlash,
-
-    /// Wildcard operator (`*`).
-    Star,
-
-    /// Member access operator (`.`).
-    Dot,
-
-    /// At symbol (`@`).
-    AtSymbol,
-
-    /// An unrecognized character encountered during lexing.
-    Unknown(char),
+        Some(ch)
+    }
 }
 
 /// Converts YARA source text into a sequence of lexical tokens.
@@ -117,134 +172,169 @@ pub enum TokenType {
 /// - Unterminated string literals
 /// - Other malformed token sequences
 pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = Lexer::new(source);
     let mut tokens = Vec::new();
-    let mut chars = source.chars().peekable();
 
-    while let Some(ch) = chars.next() {
+    while let Some(ch) = lexer.next() {
+        let span = lexer.current_span();
+
         match ch {
-            // Skip whitespace
             c if c.is_whitespace() => {}
 
-            // Single-character tokens
             '{' => tokens.push(Token {
                 token_type: TokenType::LBrace,
+                span,
             }),
 
             '}' => tokens.push(Token {
                 token_type: TokenType::RBrace,
-            }),
-
-            '=' => tokens.push(Token {
-                token_type: TokenType::Equals,
+                span,
             }),
 
             ':' => tokens.push(Token {
                 token_type: TokenType::Colon,
+                span,
             }),
 
             '(' => tokens.push(Token {
                 token_type: TokenType::LParen,
+                span,
             }),
 
             ')' => tokens.push(Token {
                 token_type: TokenType::RParen,
+                span,
             }),
 
             '*' => tokens.push(Token {
                 token_type: TokenType::Star,
+                span,
             }),
 
             '.' => tokens.push(Token {
                 token_type: TokenType::Dot,
+                span,
             }),
 
             '@' => tokens.push(Token {
                 token_type: TokenType::AtSymbol,
+                span,
             }),
 
             '-' => tokens.push(Token {
                 token_type: TokenType::Minus,
+                span,
             }),
 
             '+' => tokens.push(Token {
                 token_type: TokenType::Plus,
+                span,
             }),
 
-            '>' => match chars.peek() {
-                Some('=') => {
-                    chars.next();
+            '=' => {
+                if matches!(lexer.peek(), Some('=')) {
+                    lexer.next();
+
+                    tokens.push(Token {
+                        token_type: TokenType::EqualsEquals,
+                        span,
+                    });
+                } else {
+                    tokens.push(Token {
+                        token_type: TokenType::Equals,
+                        span,
+                    })
+                }
+            }
+
+            '>' => {
+                if matches!(lexer.peek(), Some('=')) {
+                    lexer.next();
 
                     tokens.push(Token {
                         token_type: TokenType::GEThan,
+                        span,
                     });
-                }
-
-                _ => {
+                } else {
                     tokens.push(Token {
                         token_type: TokenType::GThan,
+                        span,
                     });
                 }
-            },
+            }
 
-            '<' => match chars.peek() {
-                Some('=') => {
-                    chars.next();
+            '<' => {
+                if matches!(lexer.peek(), Some('=')) {
+                    lexer.next();
 
                     tokens.push(Token {
                         token_type: TokenType::LEThan,
+                        span,
                     });
-                }
-
-                _ => {
+                } else {
                     tokens.push(Token {
                         token_type: TokenType::LThan,
+                        span,
                     });
                 }
-            },
+            }
 
-            '/' => match chars.peek() {
-                Some('/') => {
-                    chars.next();
+            '/' => {
+                let start_span = span;
 
-                    for ch in chars.by_ref() {
-                        if ch == '\n' {
-                            break;
+                match lexer.peek() {
+                    // line comment: //
+                    Some('/') => {
+                        lexer.next(); // consume second '/'
+
+                        while let Some(ch) = lexer.next() {
+                            if ch == '\n' {
+                                break;
+                            }
                         }
                     }
-                }
 
-                Some('*') => {
-                    chars.next();
+                    // block comment: /* ... */
+                    Some('*') => {
+                        lexer.next(); // consume '*'
 
-                    loop {
-                        match chars.next() {
-                            Some('*') => {
-                                if let Some('/') = chars.peek() {
-                                    chars.next();
-                                    break;
+                        loop {
+                            match lexer.next() {
+                                Some('*') => {
+                                    if matches!(lexer.peek(), Some('/')) {
+                                        lexer.next(); // consume '/'
+                                        break;
+                                    }
+                                }
+
+                                Some(_) => {}
+
+                                None => {
+                                    return Err(format!(
+                                        "Unterminated block comment at {}:{}",
+                                        start_span.line, start_span.column
+                                    ));
                                 }
                             }
-                            Some(_) => {}
-                            None => {
-                                return Err("Unterminated block comment".to_string());
-                            }
                         }
                     }
-                }
 
-                _ => {
-                    tokens.push(Token {
-                        token_type: TokenType::FSlash,
-                    });
+                    // division operator
+                    _ => {
+                        tokens.push(Token {
+                            token_type: TokenType::FSlash,
+                            span,
+                        });
+                    }
                 }
-            },
+            }
 
-            // String literal
             '"' => {
                 let mut value = String::new();
                 let mut escaped = false;
+                let mut terminated = false;
 
-                for next in chars.by_ref() {
+                while let Some(next) = lexer.next() {
                     if escaped {
                         value.push(next);
                         escaped = false;
@@ -258,27 +348,34 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                         }
 
                         '"' => {
+                            terminated = true;
                             break;
                         }
 
-                        _ => {
-                            value.push(next);
-                        }
+                        _ => value.push(next),
                     }
+                }
+
+                if !terminated {
+                    return Err(format!(
+                        "Unterminated string literal at {}:{}",
+                        span.line, span.column
+                    ));
                 }
 
                 tokens.push(Token {
                     token_type: TokenType::StringLiteral(value),
+                    span,
                 });
             }
-            // YARA string identifier ($a, $foo, etc.)
+
             '$' => {
                 let mut ident = String::from("$");
 
-                while let Some(next) = chars.peek() {
+                while let Some(next) = lexer.peek() {
                     if next.is_alphanumeric() || *next == '_' {
                         ident.push(*next);
-                        chars.next();
+                        lexer.next();
                     } else {
                         break;
                     }
@@ -286,40 +383,38 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
 
                 tokens.push(Token {
                     token_type: TokenType::StringIdentifier(ident),
+                    span,
                 });
             }
 
-            // Keywords / identifiers
             c if c.is_alphabetic() || c == '_' => {
                 let mut word = String::from(c);
 
-                while let Some(next) = chars.peek() {
+                while let Some(next) = lexer.peek() {
                     if next.is_alphanumeric() || *next == '_' {
                         word.push(*next);
-                        chars.next();
+                        lexer.next();
                     } else {
                         break;
                     }
                 }
 
-                if KEYWORDS.contains(&word.as_str()) {
-                    tokens.push(Token {
-                        token_type: TokenType::Keyword(word),
-                    });
+                let token_type = if KEYWORDS.contains(&word.as_str()) {
+                    TokenType::Keyword(word)
                 } else {
-                    tokens.push(Token {
-                        token_type: TokenType::Identifier(word),
-                    });
-                }
+                    TokenType::Identifier(word)
+                };
+
+                tokens.push(Token { token_type, span });
             }
 
             c if c.is_ascii_digit() => {
                 let mut num = String::from(c);
 
-                while let Some(next) = chars.peek() {
+                while let Some(next) = lexer.peek() {
                     if next.is_ascii_alphanumeric() {
                         num.push(*next);
-                        chars.next();
+                        lexer.next();
                     } else {
                         break;
                     }
@@ -327,19 +422,24 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
 
                 tokens.push(Token {
                     token_type: TokenType::Number(num),
+                    span,
                 });
             }
 
             _ => {
                 tokens.push(Token {
                     token_type: TokenType::Unknown(ch),
+                    span,
                 });
             }
         }
     }
 
     //for token in &tokens {
-    //   println!("{:?}", token.token_type);
+    //    println!(
+    //        "{:?}, {}:{}",
+    //        token.token_type, token.span.line, token.span.column
+    //    )
     //}
 
     Ok(tokens)
