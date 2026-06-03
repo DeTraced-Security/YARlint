@@ -38,6 +38,24 @@ pub enum ExprNode {
         arguments: Vec<ExprNode>,
     },
 
+    /// A module-based function call expression.
+    ///
+    /// Example:
+    /// `pe.imphash(0)`
+    ///
+    /// Represents a function call where the function is
+    /// namespaced under a module (e.g. `pe`, `math`, `hash`).
+    ModuleFunction {
+        /// Module name (e.g. `pe`)
+        module: String,
+
+        /// Function name inside the module (e.g. `imphash`)
+        function: String,
+
+        /// Arguments passed to the function call.
+        arguments: Vec<ExprNode>,
+    },
+
     /// A binary operation involving two expressions.
     ///
     /// Example:

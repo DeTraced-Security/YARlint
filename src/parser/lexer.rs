@@ -54,6 +54,10 @@ pub const KEYWORDS: &[&str] = &[
     "defined",
 ];
 
+/// List of identifier-like tokens used by the lexer.
+///
+/// This is used to differentiate between keywords and identifiers
+/// during tokenization and parsing.
 pub const IDENTIFIERS: &[&str] = &[
     "entrypoint",
     "filesize",

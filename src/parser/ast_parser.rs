@@ -411,7 +411,7 @@ impl AstParser {
     /// # Returns
     ///
     /// A fully populated [`RuleNode`] representing the rule.
-    fn parse_rule(mut parser: &mut AstParser) -> Result<RuleNode, String> {
+    fn parse_rule(parser: &mut AstParser) -> Result<RuleNode, String> {
         parser.expect_keyword("rule")?;
         println!("matched rule keyword");
 
@@ -428,17 +428,17 @@ impl AstParser {
         if parser.peek_keyword("meta") {
             parser.expect_keyword("meta")?;
             parser.expect(&TokenType::Colon)?;
-            meta = parse_meta(&mut parser)?;
+            meta = parse_meta(parser)?;
         }
         if parser.peek_keyword("strings") {
             parser.expect_keyword("strings")?;
             parser.expect(&TokenType::Colon)?;
-            strings = parse_strings(&mut parser)?;
+            strings = parse_strings(parser)?;
         }
         if parser.peek_keyword("condition") {
             parser.expect_keyword("condition")?;
             parser.expect(&TokenType::Colon)?;
-            condition = condition::parse_condition(&mut parser)?;
+            condition = condition::parse_condition(parser)?;
         }
 
         println!("Before RBrace: {:?}", parser.peek());
@@ -455,6 +455,14 @@ impl AstParser {
         })
     }
 
+    /// Parses a full YARA file into a list of rules.
+    ///
+    /// This function handles:
+    /// - import statements
+    /// - multiple rule definitions
+    ///
+    /// The parser consumes tokens sequentially and delegates
+    /// rule parsing to [`AstParser::parse_rule`].
     pub fn parse_rule_file(mut parser: AstParser) -> Result<RuleFileNode, String> {
         let mut imports: Vec<String> = Vec::new();
         while parser.peek_keyword("import") {

@@ -288,6 +288,32 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
         }) => {
             let ident = parser.expect_identifier()?;
 
+            if parser.check(&TokenType::Dot) {
+                parser.expect(&TokenType::Dot)?;
+
+                let function = parser.expect_identifier()?;
+
+                parser.expect(&TokenType::LParen)?;
+
+                let mut args = Vec::new();
+
+                while !parser.check(&TokenType::RParen) {
+                    args.push(parse_expr(parser)?);
+
+                    if parser.check(&TokenType::Comma) {
+                        parser.advance();
+                    }
+                }
+
+                parser.expect(&TokenType::RParen)?;
+
+                return Ok(ExprNode::ModuleFunction {
+                    module: ident,
+                    function,
+                    arguments: args,
+                });
+            }
+
             if parser.check(&TokenType::LParen) {
                 parser.advance();
 
@@ -303,13 +329,13 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
 
                 parser.expect(&TokenType::RParen)?;
 
-                Ok(ExprNode::FunctionCall {
+                return Ok(ExprNode::FunctionCall {
                     name: ident,
                     arguments: args,
-                })
-            } else {
-                Ok(ExprNode::Identifier(ident))
+                });
             }
+
+            Ok(ExprNode::Identifier(ident))
         }
 
         Some(Token {

@@ -10,10 +10,7 @@ pub mod syntax;
 pub mod token;
 
 use crate::parser::{
-    ast_parser::AstParser,
-    lexer::tokenize,
-    syntax::{RuleNode, rule_file::RuleFileNode},
-    token::Token,
+    ast_parser::AstParser, lexer::tokenize, syntax::rule_file::RuleFileNode, token::Token,
 };
 use std::{
     fs::File,
