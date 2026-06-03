@@ -413,7 +413,7 @@ impl AstParser {
     /// A fully populated [`RuleNode`] representing the rule.
     fn parse_rule(parser: &mut AstParser) -> Result<RuleNode, String> {
         parser.expect_keyword("rule")?;
-        println!("matched rule keyword");
+        //println!("matched rule keyword");
 
         let name = parser.expect_identifier()?;
         println!("Parsed rule name: {}", name);
@@ -441,7 +441,6 @@ impl AstParser {
             condition = condition::parse_condition(parser)?;
         }
 
-        println!("Before RBrace: {:?}", parser.peek());
         parser.expect(&TokenType::RBrace)?;
 
         Ok(RuleNode {

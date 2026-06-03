@@ -435,12 +435,12 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
         }
     }
 
-    for token in &tokens {
-        println!(
-            "{:?}, {}:{}",
-            token.token_type, token.span.line, token.span.column
-        )
-    }
+    //for token in &tokens {
+    //    println!(
+    //        "{:?}, {}:{}",
+    //        token.token_type, token.span.line, token.span.column
+    //    )
+    //}
 
     Ok(tokens)
 }

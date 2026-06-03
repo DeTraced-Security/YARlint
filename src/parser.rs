@@ -54,14 +54,14 @@ pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<RuleFileNode>,
             println!("Skipping {}: contains no YARA rule", file_path.display());
             continue;
         }
-        for token in &tokens {
-            println!("{:?}", token);
-        }
+        //for token in &tokens {
+        //    println!("{:?}", token);
+        //}
         let parser: AstParser = AstParser::new(tokens);
 
-        println!("About to parse rule");
+        //println!("About to parse rule");
         let rule_file = AstParser::parse_rule_file(parser)?;
-        println!("Rule parsed successfully");
+        //println!("Rule parsed successfully");
         rule_files.push(rule_file);
     }
     Ok(rule_files)
