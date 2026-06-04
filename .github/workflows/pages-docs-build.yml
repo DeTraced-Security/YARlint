@@ -25,12 +25,14 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Build documentation
-        run: cargo doc --no-deps
+        run: |
+          cargo doc --no-deps
+          echo '<meta http-equiv="refresh" content="0; url=yarlint/index.html">' > target/doc/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: target/doc/yarlint
+          path: target/doc
 
   deploy:
     needs: build
