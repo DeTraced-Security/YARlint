@@ -1,0 +1,55 @@
+# Documentation
+
+YARLint's documentation is made up entirely of rustdoc comments. Considering
+this, all new additions to YARLint must have corectly formatted doc comments.
+
+## Modules
+
+Every module should have a module description block in the following format:
+
+```rust
+//! [Brief module description ( < a sentence )]
+//! 
+//! [In-depth description of the module's purpose/functionality]
+```
+
+## Functions
+
+Every function within every modules should minimally have a function description
+block similar to this example:
+
+```rust
+/// [Brief function description ( < a sentence )]
+/// 
+/// [In-depth description of the function's purpose/functionality]
+```
+
+If the function takes arguments, throws errors, or returns something, be sure
+to include that information as shown below.
+
+```rust
+/// [Brief function description ( < a sentence )]
+/// 
+/// [In-depth description of the function's purpose/functionality]
+/// 
+/// # Arguments
+/// 
+/// * `[argument 1 name]` - [Text about argument]
+/// * `[argument 2 name]` - [Text about argument]
+/// 
+/// # Returns
+/// 
+/// Returns [description of function's returned value]
+/// 
+/// # Errors
+/// 
+/// Returns an error if:
+/// - [Error condition]
+```
+
+Keep in mind that rustdoc allows for the use of markdown formatting in doc
+comments. The use of markdown formatting is encouraged so long as it improves
+the descriptiveness of the documentation being written.
+
+For examples of documentation as used in YARLint already, look at pre-existing
+modules in the source, or reference the official rustdoc documentation.
