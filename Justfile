@@ -8,8 +8,12 @@ fmt:
     cargo fmt
 
 release:
-    cargo build --release
+    cargo build --release --target x86_64-pc-windows-gnu
+    cargo build --release --target x86_64-unknown-linux-gnu
+    cargo zigbuild --release --target x86_64-apple-darwin
 
+doc:
+    git cliff
 all:
     cargo fmt --all -- --check
     cargo clippy --all-targets --all-features -- -D warnings
