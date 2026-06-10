@@ -4,6 +4,7 @@ use crate::linter::{context::LintContext, finding::Finding, rule::Rule};
 
 /// Lint execution engine.
 pub struct LintEngine {
+    /// Rules to be loaded into the lint engine
     rules: Vec<Box<dyn Rule>>,
 }
 

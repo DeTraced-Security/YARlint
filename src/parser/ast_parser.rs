@@ -377,6 +377,10 @@ impl AstParser {
         }
     }
 
+    /// Consumes the tokens needed to create a rule name
+    ///
+    /// This is to prevent errors from occurring when unexpected
+    /// characters show up in a rule name, such as a dash (`-`)
     fn expect_rule_name(&mut self) -> Result<String, String> {
         let mut name = String::new();
 
