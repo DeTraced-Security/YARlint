@@ -28,11 +28,11 @@ filesystem:
           - 'src/filesystem/**'
           - 'src/filesystem.rs'
 
-models:
+linter:
   - changed-files:
       - any-glob-to-any-file:
-          - 'src/models/**'
-          - 'src/models.rs'
+          - 'src/linter/**'
+          - 'src/linter.rs'
 
 parser:
   - changed-files:
