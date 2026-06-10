@@ -15,14 +15,8 @@
 /// Parsing of YARA condition expressions.
 pub mod condition;
 
-/// Shared expression parsing utilities.
-pub mod expr;
-
 /// Parsing of YARA metadata sections.
 pub mod meta;
-
-/// Parsing of complete YARA rule definitions.
-pub mod rule;
 
 /// Parsing of YARA string declarations and modifiers.
 pub mod strings;
@@ -383,6 +377,28 @@ impl AstParser {
         }
     }
 
+    fn expect_rule_name(&mut self) -> Result<String, String> {
+        let mut name = String::new();
+
+        while !self.check(&TokenType::LBrace) {
+            let token = self
+                .advance()
+                .ok_or("Unexpected EOF while parsing rule name")?;
+
+            match &token.token_type {
+                TokenType::Identifier(s) => name.push_str(s),
+                TokenType::Minus => name.push('-'),
+                _ => {
+                    return Err(format!(
+                        "Unexpected token in rule name: {:?}",
+                        token.token_type
+                    ));
+                }
+            }
+        }
+        Ok(name)
+    }
+
     /// Parses a complete YARA rule.
     ///
     /// This is the parser entry point.
@@ -415,7 +431,7 @@ impl AstParser {
         parser.expect_keyword("rule")?;
         //println!("matched rule keyword");
 
-        let name = parser.expect_identifier()?;
+        let name = parser.expect_rule_name()?;
         println!("Parsed rule name: {}", name);
         // TODO: tags
 

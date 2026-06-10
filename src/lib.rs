@@ -15,5 +15,6 @@
 pub mod app;
 pub mod cli;
 pub mod filesystem;
+pub mod linter;
 pub mod parser;
 pub mod validation;
