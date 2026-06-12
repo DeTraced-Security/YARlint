@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## [0.1.1](https://github.com/DeTraced-Security/YARlint/compare/v0.1.0...v0.1.1) - 2026-06-12
+
+### Bug Fixes
+
+- *(ci)* regex bug in release plz config ([#33](https://github.com/DeTraced-Security/YARlint/pull/33))
+
+### Documentation
+
+- add readme ([#30](https://github.com/DeTraced-Security/YARlint/pull/30))
+
+### Other
+
+- add commitlint and release-plz configs ([#32](https://github.com/DeTraced-Security/YARlint/pull/32))
+- *(workflows)* fix release-plz workflow ([#29](https://github.com/DeTraced-Security/YARlint/pull/29))
+- add releases-plz workflow ([#26](https://github.com/DeTraced-Security/YARlint/pull/26))
+
+### Refactored
+
+- *(linter)* cops file structure ([#27](https://github.com/DeTraced-Security/YARlint/pull/27))
+
 ## [0.1.0] - 2026-06-10
 
 ### 🚀 Features
