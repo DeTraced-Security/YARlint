@@ -6,9 +6,10 @@ on:
       - main
 
 jobs:
-  if: ${{ github.repository_owner == 'DeTraced-Security' }}
 
   release-plz-release:
+    if: ${{ github.repository_owner == 'DeTraced-Security' }}
+
     name: Release-plz release
     runs-on: ubuntu-latest
     permissions:
