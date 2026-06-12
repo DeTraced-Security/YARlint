@@ -6,7 +6,7 @@ pub mod engine;
 pub mod finding;
 pub mod rule;
 
-use cops::naming_rule_name::NamingRuleName;
+use cops::naming::naming_rule_name::NamingRuleName;
 use engine::LintEngine;
 
 /// Creates the default lint engine with all built-in cops.
