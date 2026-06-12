@@ -1,0 +1,25 @@
+[workspace]
+release_commits = "^(feat|fix|refactor)(\(.+\))?:"
+release_always = false
+
+[[package]]
+name = "yarlint"
+changelog_path = ".github/CHANGELOG.md"
+changelog_update = true
+git_release_enable = true
+semver_check = false
+
+[changelog]
+protect_breaking_commits = true
+sort_commits = "newest"
+
+commit_parsers = [
+    { message = "^feat", group = "Features" },
+    { message = "^fix", group = "Bug Fixes" },
+    { message = "^refactor", group = "Refactored" },
+    { message = "^perf", group = "Performance" },
+    { message = "^sec", group = "Security" },
+    { message = "^docs", group = "Documentation" },
+    { message = "^chore\\(release\\)", skip = true },
+    { message = "^.*", group = "Other" },
+]
