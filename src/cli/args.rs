@@ -7,7 +7,7 @@
 use clap::Parser;
 
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(version, about, long_about = None, arg_required_else_help = true)]
 /// Command-line arguments accepted by YARlint.
 ///
 /// These arguments control file discovery and traversal behavior
