@@ -8,6 +8,7 @@ use clap::Parser;
 use yarlint::app::yarlint_pipeline;
 use yarlint::cli::Args;
 use yarlint::cli::output::{print_error, print_recursive_warning, print_scan_start};
+use yarlint::config::init_verbose;
 
 /// Parses CLI arguments and executes the YARlint pipeline.
 ///
@@ -15,6 +16,8 @@ use yarlint::cli::output::{print_error, print_recursive_warning, print_scan_star
 /// with a non-zero status code.
 fn main() {
     let args = Args::parse();
+
+    init_verbose(args.verbose);
 
     print_scan_start(&args.path);
 
