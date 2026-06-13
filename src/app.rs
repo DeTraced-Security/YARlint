@@ -41,7 +41,7 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
     let yara_rule_files: Vec<RuleFileNode> = parse_files(&valid_files)?;
 
     for rule_file in &yara_rule_files {
-        let context = LintContext { file: &rule_file };
+        let context = LintContext { file: rule_file };
 
         let engine = linter::default_engine();
 

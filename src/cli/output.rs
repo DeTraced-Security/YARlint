@@ -48,6 +48,6 @@ pub fn print_error(err: &str) {
 /// Prints all rule file nodes in a vec
 pub fn print_yara_rule_files(yara_rule_files: &Vec<RuleFileNode>) {
     for rule in yara_rule_files {
-            println!("{:#?}", rule);
-        }
+        println!("{:#?}", rule);
+    }
 }
