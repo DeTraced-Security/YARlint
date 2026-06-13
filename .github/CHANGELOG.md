@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.1.2](https://github.com/DeTraced-Security/YARlint/compare/v0.1.1...v0.1.2) - 2026-06-13
+
+### Bug Fixes
+
+- default run bugs ([#56](https://github.com/DeTraced-Security/YARlint/pull/56))
+
 ## [0.1.1](https://github.com/DeTraced-Security/YARlint/compare/v0.1.0...v0.1.1) - 2026-06-12
 
 ### Bug Fixes
