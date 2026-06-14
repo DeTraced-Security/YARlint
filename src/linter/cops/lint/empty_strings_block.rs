@@ -5,11 +5,11 @@ use crate::linter::{
     rule::Rule,
 };
 /// Validates the string block in a YARA rule isn't empty
-pub struct LintEmptyStringBlock;
+pub struct LintEmptyStringsBlock;
 
-impl Rule for LintEmptyStringBlock {
+impl Rule for LintEmptyStringsBlock {
     fn name(&self) -> &'static str {
-        "Lint/EmptyStringBlock"
+        "Lint/EmptyStringsBlock"
     }
 
     fn check(&self, context: &LintContext, findings: &mut Vec<Finding>) {
@@ -18,7 +18,7 @@ impl Rule for LintEmptyStringBlock {
                 findings.push(Finding {
                     rule: self.name(),
                     message: format!(
-                        "The string block in rule {} is empty, consider removing it",
+                        "The strings block in rule {} is empty, consider removing it",
                         rule.name
                     ),
                     severity: Severity::Warning,

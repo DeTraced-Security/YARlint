@@ -9,7 +9,7 @@ pub mod rule;
 use engine::LintEngine;
 
 use cops::{
-    lint::{empty_string::LintEmptyString, empty_string_block::LintEmptyStringBlock},
+    lint::{empty_string::LintEmptyString, empty_strings_block::LintEmptyStringsBlock},
     naming::rule_name::NamingRuleName,
 };
 
@@ -19,7 +19,7 @@ pub fn default_engine() -> LintEngine {
 
     engine.register(NamingRuleName);
     engine.register(LintEmptyString);
-    engine.register(LintEmptyStringBlock);
+    engine.register(LintEmptyStringsBlock);
 
     engine
 }
