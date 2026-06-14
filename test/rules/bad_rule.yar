@@ -10,6 +10,7 @@ rule BadRule
         $s2 = "Kill process failed!" wide ascii
         $s3 = ""
         $s4 = "" wide ascii
+        $s5 = "" wide ascii
         $pdb = "glooxtest.pdb" wide ascii
         $s5 = "C:/Windows/System32"
 
