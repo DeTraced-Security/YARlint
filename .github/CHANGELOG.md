@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.1.3](https://github.com/DeTraced-Security/YARlint/compare/v0.1.2...v0.1.3) - 2026-06-14
+
+### Features
+
+- add verbose mode ([#58](https://github.com/DeTraced-Security/YARlint/pull/58))
+
 ## [0.1.2](https://github.com/DeTraced-Security/YARlint/compare/v0.1.1...v0.1.2) - 2026-06-13
 
 ### Bug Fixes
