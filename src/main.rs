@@ -11,6 +11,11 @@ use yarlint::cli::output::{print_error, print_recursive_warning, print_scan_star
 
 /// Parses CLI arguments and executes the YARlint pipeline.
 ///
+/// # Errors
+/// 
+/// Returns an error if:
+/// - errors are thrown by the linting pipeline
+/// 
 /// Fatal errors are reported to stderr before the process exits
 /// with a non-zero status code.
 fn main() {
