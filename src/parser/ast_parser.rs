@@ -82,7 +82,7 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// A new [`AstParser`] positioned at the start of the token stream.
+    /// Returns  new [`AstParser`] positioned at the start of the token stream.
     pub fn new(tokens: Vec<Token>) -> Self {
         Self { tokens, pos: 0 }
     }
@@ -97,7 +97,7 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// `true` if the current token matches, otherwise `false`.
+    /// Returns `true` if the current token matches, otherwise `false`.
     fn check(&self, token_type: &TokenType) -> bool {
         matches!(
             self.peek(),
@@ -109,7 +109,7 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// The current token, or `None` if the end of the stream
+    /// Returns the current token, or `None` if the end of the stream
     /// has been reached.
     fn peek(&self) -> Option<&Token> {
         self.tokens.get(self.pos)
@@ -124,7 +124,7 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// `true` if the current token is the requested keyword.
+    /// Returns `true` if the current token is the requested keyword.
     fn peek_keyword(&self, keyword: &str) -> bool {
         matches!(
             self.peek(),
@@ -148,7 +148,7 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// `true` if the current token is a
+    /// Returns `true` if the current token is a
     /// [`TokenType::StringIdentifier`].
     pub fn peek_string_identifier(&self) -> bool {
         matches!(
@@ -166,7 +166,7 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// The consumed token, or `None` if EOF has been reached.
+    /// Returns the consumed token, or `None` if EOF has been reached.
     fn advance(&mut self) -> Option<&Token> {
         let tok = self.tokens.get(self.pos);
         self.pos += 1;
@@ -179,9 +179,15 @@ impl AstParser {
     ///
     /// * `expected` - Token type that must be present.
     ///
+    /// # Returns
+    /// 
+    /// Returns `Ok(())` if the next token is of the expected type
+    /// 
     /// # Errors
     ///
-    /// Returns an error if the current token does not match
+    /// Returns an error if:
+    /// - the current token does not match
+    /// - the current token is `None`
     /// the expected type.
     fn expect(&mut self, expected: &TokenType) -> Result<(), String> {
         match self.peek() {
@@ -207,6 +213,12 @@ impl AstParser {
     /// 0x5A4D
     /// 500KB
     /// ```
+    /// 
+    /// # Errors
+    /// 
+    /// Returns an error if:
+    /// - the current token is not of type `TokenType::Number`
+    /// - the current token is `None`
     fn expect_number(&mut self) -> Result<String, String> {
         match self.advance() {
             Some(Token {
@@ -231,6 +243,13 @@ impl AstParser {
     /// # Returns
     ///
     /// The corresponding Rust boolean value.
+    /// 
+    /// # Errors 
+    /// 
+    /// Returns an error if:
+    /// - the token is `None`
+    /// - the token is not of `TokenType::Keyword`
+    /// - the token is a keyword not equal to either `true` or `false`
     fn expect_boolean(&mut self) -> Result<bool, String> {
         match self.advance() {
             Some(Token {
@@ -260,7 +279,13 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// Identifier name.
+    /// Return the identifier name
+    /// 
+    /// # Errors
+    /// 
+    /// Returns an error if:
+    /// - the current token is not of `TokenType::Identifier`
+    /// - the current token is `None`
     fn expect_identifier(&mut self) -> Result<String, String> {
         match self.advance() {
             Some(Token {
@@ -286,7 +311,13 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// Identifier name.
+    /// Returns the identifier name.
+    /// 
+    /// # Errors
+    /// 
+    /// Returns an error if:
+    /// - current token is not of `TokenType::StringLiteral`
+    /// - current token is `None`
     fn expect_string_literal(&mut self) -> Result<String, String> {
         match self.advance() {
             Some(Token {
@@ -314,7 +345,13 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// Identifier name.
+    /// Returns the identifier name.
+    /// 
+    /// # Errors
+    /// 
+    /// Returns an error if:
+    /// - the current token is not of `TokenType::StringIdentifier`
+    /// - the current token is `None`
     fn expect_string_identifier(&mut self) -> Result<String, String> {
         match self.advance() {
             Some(Token {
@@ -336,11 +373,15 @@ impl AstParser {
     /// # Arguments
     ///
     /// * `keyword` - Expected keyword value.
+    /// 
+    /// # Returns
+    /// 
+    /// Returns `Ok(())` if the current toke is the requested keyword
     ///
     /// # Errors
     ///
-    /// Returns an error if the current token is not the
-    /// requested keyword.
+    /// Returns an error if:
+    /// - the current token is not the requested keyword.
     fn expect_keyword(&mut self, keyword: &str) -> Result<(), String> {
         match self.advance() {
             Some(Token {
@@ -370,6 +411,12 @@ impl AstParser {
     /// ascii
     /// nocase
     /// ```
+    /// 
+    /// # Errors
+    /// 
+    /// Returns an error if:
+    /// - the current token is not of `TokenType::Keyword`
+    /// - the current token is `None`
     pub fn expect_any_keyword(&mut self) -> Result<String, String> {
         match self.advance() {
             Some(Token {
@@ -407,12 +454,23 @@ impl AstParser {
     ///         $a
     /// }
     /// ```
+    /// 
+    /// # Arguments
+    /// 
+    /// * `parser` - an AstParser positioned at the beginning of
+    ///  a YARA rule
     ///
     /// # Returns
     ///
     /// A fully populated [`RuleNode`] representing the rule.
+    /// 
+    /// ## Errors
+    /// 
+    /// Returns an error if:
+    /// - The rule is malformed
     fn parse_rule(parser: &mut AstParser) -> Result<RuleNode, String> {
         parser.expect_keyword("rule")?;
+        // Debug
         //println!("matched rule keyword");
 
         let name = parser.expect_identifier()?;
@@ -462,6 +520,16 @@ impl AstParser {
     ///
     /// The parser consumes tokens sequentially and delegates
     /// rule parsing to [`AstParser::parse_rule`].
+    /// 
+    /// # Arguments
+    /// 
+    /// * `parser` - and `AstParser` positioned at the beginning of a
+    /// YARA file
+    /// 
+    /// # Errors
+    /// 
+    /// Returns an error if:
+    /// - The YARA file or any of its rules is malformed
     pub fn parse_rule_file(mut parser: AstParser) -> Result<RuleFileNode, String> {
         let mut imports: Vec<String> = Vec::new();
         while parser.peek_keyword("import") {
