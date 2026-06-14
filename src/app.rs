@@ -4,8 +4,9 @@
 //! including file discovery, validation, and parsing.
 
 use crate::cli::Args;
-use crate::cli::output::{print_file_summary, print_valid_file_summary};
+use crate::cli::output::{print_file_summary, print_valid_file_summary, print_yara_rule_files};
 
+use crate::config::verbose;
 use crate::filesystem::collect_yara_files;
 use crate::linter;
 use crate::linter::context::LintContext;
@@ -39,8 +40,8 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
     let yara_rule_files: Vec<RuleFileNode> = parse_files(&valid_files)?;
 
-    for rule_file in yara_rule_files {
-        let context = LintContext { file: &rule_file };
+    for rule_file in &yara_rule_files {
+        let context = LintContext { file: rule_file };
 
         let engine = linter::default_engine();
 
@@ -53,8 +54,8 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
             );
         }
     }
-    //for rule in &yara_rule_files {
-    //    println!("{:#?}", rule);
-    //}
+    if verbose() {
+        print_yara_rule_files(&yara_rule_files);
+    }
     Ok(())
 }
