@@ -19,11 +19,20 @@ use crate::filesystem::filters::is_yara_file;
 /// When recursive scanning is enabled, the traversal depth may be
 /// limited by `depth`. If no depth is provided, traversal is
 /// unbounded.
+/// 
+/// # Arguments
+/// 
+/// * `path` - file or directory path to scan
+/// * `recursive` - recursively traverse subdirectories when scanning
+///  a directory
+/// * `depth` - maximum traversal depth when recursive scanning is
+/// enabled; ignored if `recursive` is not `true`
 ///
 /// # Errors
 ///
-/// Returns an error if the supplied path does not exist or if a
-/// filesystem traversal error occurs.
+/// Returns an error if:
+/// - the supplied path does not exist
+/// - a filesystem traversal error occurs
 ///
 /// Non-YARA files are ignored and do not produce an error
 pub fn collect_yara_files(
