@@ -8,6 +8,10 @@ use colored::Colorize;
 use std::path::Path;
 
 /// Displays the path currently being scanned.
+/// 
+/// # Arguments
+/// 
+/// * `path` - File or directory path being scanned
 pub fn print_scan_start(path: &str) {
     println!("Scanning {}", path);
 }
@@ -23,22 +27,39 @@ pub fn print_recursive_warning() {
             .yellow()
     );
 }
+
 /// Displays the total number of YARA files discovered during collection.
+/// 
+/// # Arguments
+/// 
+/// * `count` - number of YARA files discovered during collection
 pub fn print_file_summary(count: usize) {
     println!("{}", format!("Found {} YARA files", count).green());
 }
 
 /// Displays the total number of files that passed validation.
+/// 
+/// # Arguments
+/// 
+/// * `count` - number of files that passed validation
 pub fn print_valid_file_summary(count: usize) {
     println!("{}", format!("Found {} Valid YARA files", count).green());
 }
 
 /// Prints a file path to standard output.
+/// 
+/// # Arguments
+/// 
+/// * `path` - file path to standard output
 pub fn print_file(path: &Path) {
     println!("{}", path.display());
 }
 
 /// Prints an error message to standard error using colored output.
+/// 
+/// # Arguments
+/// 
+/// * `err` - error message to be printed
 pub fn print_error(err: &str) {
     eprintln!("{}", format!("Error: {}", err).red())
 }
