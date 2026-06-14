@@ -20,11 +20,15 @@ use crate::validation::validate_files;
 /// 3. File parsing
 ///
 /// Progress information is reported to the user between stages.
+/// 
+/// # Arguments
+/// * `args` - The parsed arguments provided by the user
 ///
 /// # Errors
 ///
-/// Returns an error if any stage of the pipeline encounters a
-/// fatal failure that prevents processing from continuing.
+/// Returns an error if:
+/// - Any stage of the pipeline encounters a fatal failure that
+/// prevents processing from continuing.
 pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
     let files: Vec<std::path::PathBuf> =
         collect_yara_files(&args.path, args.recursive, args.depth)?;
@@ -37,6 +41,7 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
     let _yara_rule_files: Vec<RuleFileNode> = parse_files(&valid_files)?;
 
+    // Debug
     //for rule in &yara_rule_files {
     //    println!("{:#?}", rule);
     //}
