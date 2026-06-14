@@ -1,4 +1,4 @@
-rule GOGGL-ES_APT1
+rule BadRule
 {
 
     meta:
@@ -8,8 +8,9 @@ rule GOGGL-ES_APT1
     strings:
         $s1 = "Kill process success!" wide ascii
         $s2 = "Kill process failed!" wide ascii
-        $s3 = "Sleep success!" wide ascii
-        $s4 = "based on gloox" wide ascii
+        $s3 = ""
+        $s4 = "" wide ascii
+        $s5 = "" wide ascii
         $pdb = "glooxtest.pdb" wide ascii
         $s5 = "C:/Windows/System32"
 

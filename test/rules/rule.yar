@@ -1,4 +1,4 @@
-rule GOGGLES_APT1
+rule GoodRule
 {
 
     meta:
