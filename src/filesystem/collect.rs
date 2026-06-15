@@ -22,10 +22,10 @@ use crate::filesystem::filters::is_yara_file;
 /// 
 /// # Arguments
 /// 
-/// * `path` - file or directory path to scan
-/// * `recursive` - recursively traverse subdirectories when scanning
+/// * `path` (`&str`) - file or directory path to scan
+/// * `recursive` (`bool`) - recursively traverse subdirectories when scanning
 ///  a directory
-/// * `depth` - maximum traversal depth when recursive scanning is
+/// * `depth` (`Option<usize>`) - maximum traversal depth when recursive scanning is
 /// enabled; ignored if `recursive` is not `true`
 ///
 /// # Errors

@@ -11,7 +11,7 @@ use std::path::Path;
 /// 
 /// # Arguments
 /// 
-/// * `path` - File or directory path being scanned
+/// * `path` (`&str`)- File or directory path being scanned
 pub fn print_scan_start(path: &str) {
     println!("Scanning {}", path);
 }
@@ -32,7 +32,7 @@ pub fn print_recursive_warning() {
 /// 
 /// # Arguments
 /// 
-/// * `count` - number of YARA files discovered during collection
+/// * `count` (`usize`) - number of YARA files discovered during collection
 pub fn print_file_summary(count: usize) {
     println!("{}", format!("Found {} YARA files", count).green());
 }
@@ -41,7 +41,7 @@ pub fn print_file_summary(count: usize) {
 /// 
 /// # Arguments
 /// 
-/// * `count` - number of files that passed validation
+/// * `count` (`usize`) - number of files that passed validation
 pub fn print_valid_file_summary(count: usize) {
     println!("{}", format!("Found {} Valid YARA files", count).green());
 }
@@ -50,7 +50,7 @@ pub fn print_valid_file_summary(count: usize) {
 /// 
 /// # Arguments
 /// 
-/// * `path` - file path to standard output
+/// * `path` (`&Path`) - file path to standard output
 pub fn print_file(path: &Path) {
     println!("{}", path.display());
 }
@@ -59,7 +59,7 @@ pub fn print_file(path: &Path) {
 /// 
 /// # Arguments
 /// 
-/// * `err` - error message to be printed
+/// * `err` (`&str`) - error message to be printed
 pub fn print_error(err: &str) {
     eprintln!("{}", format!("Error: {}", err).red())
 }

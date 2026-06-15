@@ -15,7 +15,7 @@ const GIGABYTE_SIZE: u64 = 1073741824;
 ///
 /// # Arguments
 /// 
-/// * `file` - file path of the file to be validated
+/// * `file` (`&PathBuf`) - file path of the file to be validated
 /// 
 /// # Returns
 /// 

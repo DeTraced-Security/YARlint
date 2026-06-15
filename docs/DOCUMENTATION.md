@@ -34,8 +34,8 @@ to include that information as shown below.
 /// 
 /// # Arguments
 /// 
-/// * `[argument 1 name]` - [Text about argument]
-/// * `[argument 2 name]` - [Text about argument]
+/// * `[argument 1 name]` (`[argument 1 type]`) - [Text about argument]
+/// * `[argument 2 name]` (`[argument 2 type]`) - [Text about argument]
 /// 
 /// # Returns
 /// 
@@ -64,8 +64,8 @@ sections of the doc comment.
 /// 
 /// # Arguments
 /// 
-/// * `[argument 1 name]` - [Text about argument]
-/// * `[argument 2 name]` - [Text about argument]
+/// * `[argument 1 name]` (`[argument 1 type]`) - [Text about argument]
+/// * `[argument 2 name]` (`[argument 2 type]`) - [Text about argument]
 ```
 
 Keep in mind that rustdoc allows for the use of markdown formatting in doc

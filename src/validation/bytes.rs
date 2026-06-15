@@ -18,7 +18,7 @@
 /// 
 /// # Arguments
 /// 
-/// * `file` - file path of the file to be validated
+/// * `file` (`&[u8]`) - file path of the file to be validated
 /// 
 /// # Returns
 /// 

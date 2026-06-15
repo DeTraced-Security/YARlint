@@ -12,7 +12,7 @@ use std::path::Path;
 /// 
 /// # Arguments
 /// 
-/// * `path` - file path to file being checked
+/// * `path` (`&Path`) - file path to file being checked
 /// 
 /// # Returns
 /// 

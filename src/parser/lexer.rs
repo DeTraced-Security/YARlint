@@ -106,7 +106,7 @@ impl<'a> Lexer<'a> {
     /// 
     /// # Arguments
     /// 
-    /// * `source` - the source to be lexed
+    /// * `source` (`&'a str`) - the source to be lexed
     fn new(source: &'a str) -> Self {
         Self {
             chars: source.chars().peekable(),
@@ -181,7 +181,7 @@ impl<'a> Lexer<'a> {
 ///
 /// # Arguments
 /// 
-/// * `source` - the source text to be tokenised
+/// * `source` (`&str`) - the source text to be tokenised
 /// 
 /// # Errors
 ///
@@ -453,6 +453,7 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
         }
     }
 
+    // Debug
     //for token in &tokens {
     //    println!(
     //        "{:?}, {}:{}",
