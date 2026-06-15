@@ -6,12 +6,12 @@
 
 use clap::Parser;
 
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
 /// Command-line arguments accepted by YARlint.
 ///
 /// These arguments control file discovery and traversal behavior
 /// before validation and parsing begin.
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
 pub struct Args {
     /// File or directory path to scan.
     #[arg(short, long)]
