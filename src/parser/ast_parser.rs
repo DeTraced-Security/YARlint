@@ -299,19 +299,11 @@ impl AstParser {
         }
     }
 
-    /// Consumes a standard identifier.
-    ///
-    /// Examples:
-    ///
-    /// ```yara
-    /// filesize
-    /// pe
-    /// imphash
-    /// ```
+    /// Consumes a string literal
     ///
     /// # Returns
     ///
-    /// Returns the identifier name.
+    /// Returns the string literal
     /// 
     /// # Errors
     /// 
