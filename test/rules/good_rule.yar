@@ -1,4 +1,4 @@
-rule GOGGL-ES_APT1
+rule GoodRule
 {
 
     meta:
