@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [0.1.4](https://github.com/DeTraced-Security/YARlint/compare/v0.1.3...v0.1.4) - 2026-06-15
+
+### Features
+
+- add camel case identifier rule
+- add duplicate string rule
+- add empty string block rule
+- add empty string ruie
+
+### Refactored
+
+- emptystringblock rule name
+- relocate test rules
+- *(naming lint)* change filename to reflect new location
+
 ## [0.1.3](https://github.com/DeTraced-Security/YARlint/compare/v0.1.2...v0.1.3) - 2026-06-14
 
 ### Features
