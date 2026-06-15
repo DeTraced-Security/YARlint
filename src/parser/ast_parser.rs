@@ -390,13 +390,8 @@ impl AstParser {
         }
     }
 
-    // TODO: Correct Examples section
     /// Consumes any keyword token.
-    ///
-    /// # Returns
-    ///
-    /// The keyword value that was consumed.
-    ///
+    /// 
     /// Examples:
     ///
     /// ```yara
@@ -404,6 +399,10 @@ impl AstParser {
     /// ascii
     /// nocase
     /// ```
+    ///
+    /// # Returns
+    ///
+    /// The keyword value that was consumed.
     /// 
     /// # Errors
     /// 
