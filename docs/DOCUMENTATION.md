@@ -68,6 +68,31 @@ sections of the doc comment.
 /// * `[argument 2 name]` (`[argument 2 type]`) - [Text about argument]
 ```
 
+## Structs
+
+Structs should be documented similarly to modules but with additionaly
+descriptions given for each of their values as shown in the example below
+
+```rust
+/// [Brief struct description ( < a sentence )]
+/// 
+/// [In-depth description of the function's purpose/functionality]
+#[attribute]
+struct SampleStruct {
+    /// [Brief value description]
+    value1: String,
+
+    /// [Brief value description]
+    #[attribute]
+    value2: bool,
+}
+```
+
+Note that when attributes are present, they should always come after the doc
+comment.
+
+## Additional Notes
+
 Keep in mind that rustdoc allows for the use of markdown formatting in doc
 comments. The use of markdown formatting is encouraged so long as it improves
 the descriptiveness of the documentation being written.
