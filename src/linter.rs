@@ -14,6 +14,7 @@ use cops::{
         empty_strings_block::LintEmptyStringsBlock,
     },
     naming::rule_name::NamingRuleName,
+    style::string_identifier::StyleStringIdentifier,
 };
 
 /// Creates the default lint engine with all built-in cops.
@@ -24,6 +25,7 @@ pub fn default_engine() -> LintEngine {
     engine.register(LintEmptyString);
     engine.register(LintEmptyStringsBlock);
     engine.register(LintDuplicateString);
+    engine.register(StyleStringIdentifier);
 
     engine
 }
