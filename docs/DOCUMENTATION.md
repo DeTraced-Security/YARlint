@@ -47,6 +47,27 @@ to include that information as shown below.
 /// - [Error condition]
 ```
 
+If a function is accompanied by an example, that example should be included in
+the rustdoc as a codeblock below the in-depth description and before any other
+sections of the doc comment.
+
+```rust
+/// [Brief function description ( < a sentence )]
+/// 
+/// [In-depth description of the function's purpose/functionality]
+/// 
+/// Example(s):
+/// 
+/// ```[format name]
+/// [example contents]
+/// ```
+/// 
+/// # Arguments
+/// 
+/// * `[argument 1 name]` - [Text about argument]
+/// * `[argument 2 name]` - [Text about argument]
+```
+
 Keep in mind that rustdoc allows for the use of markdown formatting in doc
 comments. The use of markdown formatting is encouraged so long as it improves
 the descriptiveness of the documentation being written.
