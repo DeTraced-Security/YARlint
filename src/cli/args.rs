@@ -11,7 +11,7 @@ use clap::Parser;
 /// These arguments control file discovery and traversal behavior
 /// before validation and parsing begin.
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(version, about, long_about = None, arg_required_else_help = true)]
 pub struct Args {
     /// File or directory path to scan.
     #[arg(short, long)]
@@ -26,4 +26,8 @@ pub struct Args {
     /// Ignored unless `--recursive` is specified.
     #[arg(short, long)]
     pub depth: Option<usize>,
+
+    /// Enables verbose output
+    #[arg(short, long)]
+    pub verbose: bool,
 }

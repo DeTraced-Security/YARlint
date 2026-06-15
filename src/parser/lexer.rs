@@ -5,9 +5,12 @@
 
 use std::{iter::Peekable, str::Chars};
 
-use crate::parser::{
-    span::Span,
-    token::{Token, TokenType},
+use crate::{
+    config::verbose,
+    parser::{
+        span::Span,
+        token::{Token, TokenType},
+    },
 };
 
 /// Reserved keywords recognized by the YARA language.
@@ -453,13 +456,14 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
         }
     }
 
-    // Debug
-    //for token in &tokens {
-    //    println!(
-    //        "{:?}, {}:{}",
-    //        token.token_type, token.span.line, token.span.column
-    //    )
-    //}
+    if verbose() {
+        for token in &tokens {
+            println!(
+                "{:?}, {}:{}",
+                token.token_type, token.span.line, token.span.column
+            )
+        }
+    }
 
     Ok(tokens)
 }

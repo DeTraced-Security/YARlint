@@ -31,7 +31,7 @@ pub struct StringNode {
 }
 
 /// Modifiers that alter how a YARA string is interpreted and matched.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, Hash, PartialEq, Ord, PartialOrd)]
 pub enum StringModifier {
     /// Match the string as ASCII text.
     Ascii,
