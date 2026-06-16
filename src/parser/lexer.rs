@@ -106,6 +106,10 @@ impl<'a> Lexer<'a> {
     ///
     /// The lexer is initialized at the beginning of the input with the
     /// current position set to line 1, column 0.
+    ///
+    /// # Arguments
+    ///
+    /// * `source` (`&'a str`) - the source to be lexed
     fn new(source: &'a str) -> Self {
         Self {
             chars: source.chars().peekable(),
@@ -118,6 +122,10 @@ impl<'a> Lexer<'a> {
     ///
     /// This position can be attached to tokens and syntax nodes to aid
     /// in error reporting and diagnostics.
+    ///
+    /// # Returns
+    ///
+    /// Returns the current source position of the lexer
     fn current_span(&self) -> Span {
         Span {
             line: self.line,
@@ -127,7 +135,10 @@ impl<'a> Lexer<'a> {
 
     /// Returns the next character without consuming it.
     ///
-    /// Returns `None` if the end of the input has been reached.
+    /// # Returns
+    ///
+    /// Returns the next character of the source or `None` if the end
+    /// of the input has been reached
     fn peek(&mut self) -> Option<&char> {
         self.chars.peek()
     }
@@ -138,7 +149,10 @@ impl<'a> Lexer<'a> {
     /// Newline characters increment the line counter and reset the column
     /// counter to zero.
     ///
-    /// Returns `None` if the end of the input has been reached.
+    /// # Returns
+    ///
+    /// Returns the next character of the source or `None` if the end
+    /// of the input has been reached.
     fn next(&mut self) -> Option<char> {
         let ch = self.chars.next()?;
 
@@ -167,6 +181,10 @@ impl<'a> Lexer<'a> {
 /// - Operators and punctuation
 ///
 /// Comments are ignored and are not included in the output token stream.
+///
+/// # Arguments
+///
+/// * `source` (`&str`) - the source text to be tokenised
 ///
 /// # Errors
 ///

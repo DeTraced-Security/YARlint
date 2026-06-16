@@ -28,8 +28,9 @@ use crate::parser::{
 ///
 /// # Errors
 ///
-/// Returns an error if the condition expression contains invalid
-/// syntax or ends unexpectedly.
+/// Returns an error if:
+/// - the condition expression contains invalid syntax
+/// - the condition expression ends unexpectedly
 pub fn parse_condition(parser: &mut AstParser) -> Result<ConditionNode, String> {
     let expression = parse_expr(parser)?;
 
@@ -54,8 +55,9 @@ pub fn parse_condition(parser: &mut AstParser) -> Result<ConditionNode, String> 
 ///
 /// # Errors
 ///
-/// Returns an error if the expression contains invalid syntax or
-/// cannot be parsed.
+/// Returns an error if:
+/// - the expression contains invalid syntax
+/// - the expression cannot be parsed
 pub fn parse_expr(parser: &mut AstParser) -> Result<ExprNode, String> {
     parse_or(parser)
 }
@@ -107,6 +109,21 @@ pub fn parse_expr(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// ├── $a
 /// └── $b
 /// ```
+///
+/// # Arguments
+///
+/// * `parser` - an `AstParser` positioned at the start of a logical
+///   OR expression
+///
+/// # Returns
+///
+/// Returns the root [`ExprNode`] of the parsed OR expression
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - the expression contains invalid syntax
+/// - the expression cannot be parsed
 fn parse_or(parser: &mut AstParser) -> Result<ExprNode, String> {
     let mut left = parse_and(parser)?;
 
@@ -142,6 +159,21 @@ fn parse_or(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// ├── $a
 /// └── $b
 /// ```
+///
+/// # Arguments
+///
+/// * `parser` - an `AstParser` positioned at the start of a logical
+///   AND expression
+///
+/// # Returns
+///
+/// Returns the root [`ExprNode`] of the parsed AND expression
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - the expression contains invalid syntax
+/// - the expression cannot be parsed
 fn parse_and(parser: &mut AstParser) -> Result<ExprNode, String> {
     let mut left = parse_comparison(parser)?;
 
@@ -183,6 +215,21 @@ fn parse_and(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// ├── filesize
 /// └── 100KB
 /// ```
+///
+/// # Arguments
+///
+/// * `parser` - an `AstParser` positioned at the start of a
+///   comparison expression
+///
+/// # Returns
+///
+/// Returns the root [`ExprNode`] of the parsed comparison expression
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - the expression contains invalid syntax
+/// - the expression cannot be parsed
 fn parse_comparison(parser: &mut AstParser) -> Result<ExprNode, String> {
     let mut left = parse_primary(parser)?;
 
@@ -229,8 +276,21 @@ fn parse_comparison(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// contained expression, allowing grouping and precedence handling at
 /// higher parsing levels.
 ///
+/// # Arguments
+///
+/// * `parser` - an `AstParser` positioned at the start of a primary
+///   expression
+///
+/// # Returns
+///
 /// Returns an [`ExprNode`] representing the parsed primary expression,
 /// or an error if the current token cannot begin a valid expression.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - the expression contains invalid syntax
+/// - the expression cannot be parsed
 fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
     match parser.peek() {
         Some(Token {

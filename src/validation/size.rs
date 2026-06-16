@@ -13,7 +13,14 @@ const GIGABYTE_SIZE: u64 = 1073741824;
 /// Files larger than one gigabyte are rejected to prevent excessive
 /// memory consumption during validation and parsing.
 ///
-/// Returns `Ok(false)` when the file exceeds the maximum allowed size.
+/// # Arguments
+///
+/// * `file` (`&PathBuf`) - file path of the file to be validated
+///
+/// # Returns
+///
+/// Returns `Ok(false)` when the file exceeds the maximum allowed
+/// size, and `Ok(true)` otherwise
 pub fn validate_size(file: &PathBuf) -> Result<bool, String> {
     let file_metadata = std::fs::metadata(file).map_err(|e| e.to_string())?;
     if file_metadata.len() > GIGABYTE_SIZE {

@@ -33,12 +33,19 @@ pub mod size;
 /// - UTF-8 encoding validation
 /// - Byte-level safety validation
 ///
+/// # Arguments
+///
+/// * `files` (`&Vec<PathBuf>`) - a vector containing files to be validated
+///
+/// # Returns
+///
 /// Returns a vector containing only files that passed all validation
 /// checks.
 ///
 /// # Errors
 ///
-/// Returns an error if a file cannot be opened or read.
+/// Returns an error if:
+/// - a file cannot be opened or read
 pub fn validate_files(files: &Vec<PathBuf>) -> Result<Vec<PathBuf>, String> {
     let mut valid_files: Vec<PathBuf> = Vec::new();
 
