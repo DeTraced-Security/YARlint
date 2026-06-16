@@ -10,7 +10,7 @@ pub trait Rule {
     /// format [category]/[rule name]
     /// 
     /// Examples:
-    /// ```rust
+    /// ```
     /// "Naming/RuleName" // -> found in naming/rule_name.rs
     /// "Lint/DuplicateString" // -> found in lint/duplicate_string.rs
     /// ```
