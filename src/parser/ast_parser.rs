@@ -182,7 +182,7 @@ impl AstParser {
     /// Returns an error if:
     /// - the current token does not match
     /// - the current token is `None`
-    /// the expected type.
+    ///   the expected type.
     fn expect(&mut self, expected: &TokenType) -> Result<(), String> {
         match self.peek() {
             Some(t) if &t.token_type == expected => {
@@ -470,7 +470,7 @@ impl AstParser {
     /// # Arguments
     ///
     /// * `parser` (`&mut AstParser`) - an AstParser positioned at the beginning of
-    ///  a YARA rule
+    ///   a YARA rule
     ///
     /// # Returns
     ///
@@ -536,7 +536,7 @@ impl AstParser {
     /// # Arguments
     ///
     /// * `parser` (`AstParser`) - an `AstParser` positioned at the beginning of a
-    /// YARA file
+    ///   YARA file
     ///
     /// # Errors
     ///

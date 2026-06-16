@@ -113,7 +113,7 @@ pub fn parse_expr(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// # Arguments
 ///
 /// * `parser` - an `AstParser` positioned at the start of a logical
-/// OR expression
+///   OR expression
 ///
 /// # Returns
 ///

@@ -26,7 +26,7 @@ use std::{
 /// # Arguments
 ///
 /// * `files` (`&Vec<std::path::PathBuf>`) - A collection of paths to YARA
-/// files that should be parsed.
+///   files that should be parsed.
 ///
 /// # Returns
 ///

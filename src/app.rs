@@ -31,7 +31,7 @@ use crate::validation::validate_files;
 ///
 /// Returns an error if:
 /// - Any stage of the pipeline encounters a fatal failure that
-/// prevents processing from continuing.
+///   prevents processing from continuing.
 pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
     let files: Vec<std::path::PathBuf> =
         collect_yara_files(&args.path, args.recursive, args.depth)?;

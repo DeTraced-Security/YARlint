@@ -31,7 +31,7 @@ impl LintEngine {
     /// # Arguments
     ///
     /// * `context` (`&LintContext`) - a LintContext containing YARA rules to
-    /// be tested
+    ///   be tested
     ///
     /// # Returns
     ///
