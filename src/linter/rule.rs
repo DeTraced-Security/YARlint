@@ -10,10 +10,9 @@ pub trait Rule {
     /// format [category]/[rule name]
     /// 
     /// Examples:
-    /// ```
-    /// "Naming/RuleName" // -> found in naming/rule_name.rs
-    /// "Lint/DuplicateString" // -> found in lint/duplicate_string.rs
-    /// ```
+    /// - "Naming/RuleName" -> found in naming/rule_name.rs
+    /// - "Lint/DuplicateString" -> found in lint/duplicate_string.rs
+    /// 
     fn name(&self) -> &'static str;
 
     /// Execute the rule
