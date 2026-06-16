@@ -163,7 +163,7 @@ fn parse_or(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// # Arguments
 ///
 /// * `parser` - an `AstParser` positioned at the start of a logical
-/// AND expression
+///   AND expression
 ///
 /// # Returns
 ///
@@ -219,7 +219,7 @@ fn parse_and(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// # Arguments
 ///
 /// * `parser` - an `AstParser` positioned at the start of a
-/// comparison expression
+///   comparison expression
 ///
 /// # Returns
 ///
@@ -279,7 +279,7 @@ fn parse_comparison(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// # Arguments
 ///
 /// * `parser` - an `AstParser` positioned at the start of a primary
-/// expression
+///   expression
 ///
 /// # Returns
 ///

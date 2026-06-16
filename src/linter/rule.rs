@@ -24,7 +24,7 @@ pub trait Rule {
     /// # Arguments
     ///
     /// * `context` (`&LintContext`) - A `LintContext` containing the
-    /// `RuleNode`s to be checked
+    ///   `RuleNode`s to be checked
     /// * `findings` (`&mut Vec<Finding>`) - Vector to push Finding to
     fn check(&self, context: &LintContext, findings: &mut Vec<Finding>);
 }
