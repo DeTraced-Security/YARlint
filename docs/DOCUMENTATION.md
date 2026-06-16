@@ -1,7 +1,7 @@
 # Documentation
 
 YARLint's documentation is made up entirely of rustdoc comments. Considering
-this, all new additions to YARLint must have corectly formatted doc comments.
+this, all new additions to YARLint must have correctly formatted doc comments.
 
 ## Modules
 
@@ -70,7 +70,7 @@ sections of the doc comment.
 
 ## Structs
 
-Structs should be documented similarly to modules but with additionaly
+Structs should be documented similarly to modules but with additionally
 descriptions given for each of their values as shown in the example below
 
 ```rust
