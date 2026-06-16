@@ -10,10 +10,25 @@ use crate::linter::{
 pub struct StyleStringIdentifier;
 
 impl Rule for StyleStringIdentifier {
+    /// Returns the name of the rule
+    /// 
+    /// # Returns
+    /// 
+    /// Returns "Style/StringIdenifier"
     fn name(&self) -> &'static str {
         "Style/StringIdentifier"
     }
 
+    /// Checks for compliance with the rule
+    /// 
+    /// This rule is violated if any rules contain `StringNode`s not in snake
+    /// case
+    /// 
+    /// # Arguments
+    /// 
+    /// * `context` (`&LintContext`) - A `LintContext` containing the
+    /// `RuleNode`s to be checked
+    /// * `findings` (`&mut Vec<Finding>`) - Vector to push Finding to
     fn check(&self, context: &LintContext, findings: &mut Vec<Finding>) {
         for rule in &context.file.rules {
             for string in &rule.strings {
@@ -31,7 +46,18 @@ impl Rule for StyleStringIdentifier {
         }
     }
 }
-/// Checks if string passed is snake case. Returns true if, and false if not.
+
+/// Checks if string passed is snake case
+/// 
+/// # Arguments
+/// 
+/// * `s` (`&str`) - the string to be evaluated
+/// 
+/// # Returns
+/// 
+/// Returns `true` if string is in snake case
+/// Returns `false` if string is not in snake case
+/// Returns `false` if string is empty
 fn is_snake_case(s: &str) -> bool {
     if s.is_empty() {
         return false;

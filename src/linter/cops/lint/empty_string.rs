@@ -10,7 +10,11 @@ use crate::linter::{
 pub struct LintEmptyString;
 
 impl Rule for LintEmptyString {
-    /// Returns the name of the rule - "Lint/EmptyString"
+    /// Returns the name of the rule
+    /// 
+    /// # Returns
+    /// 
+    /// Returns "Lint/EmptyString"
     fn name(&self) -> &'static str {
         "Lint/EmptyString"
     }

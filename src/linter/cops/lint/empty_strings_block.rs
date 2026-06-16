@@ -8,7 +8,11 @@ use crate::linter::{
 pub struct LintEmptyStringsBlock;
 
 impl Rule for LintEmptyStringsBlock {
-    /// Returns the name of the rule - "Lint/EmptyStringsBlock"
+    /// Returns the name of the rule
+    /// 
+    /// # Returns
+    /// 
+    /// Returns "Lint/EmptyStringsBlock"
     fn name(&self) -> &'static str {
         "Lint/EmptyStringsBlock"
     }

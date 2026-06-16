@@ -19,7 +19,11 @@ use crate::{
 pub struct LintDuplicateString;
 
 impl Rule for LintDuplicateString {
-    /// Returns the name of the rule - "Lint/DuplicateString"
+    /// Returns the name of the rule
+    /// 
+    /// # Returns
+    /// 
+    /// Returns "Lint/DuplicateString"
     fn name(&self) -> &'static str {
         "Lint/DuplicateString"
     }

@@ -10,7 +10,11 @@ use crate::linter::{
 pub struct NamingRuleName;
 
 impl Rule for NamingRuleName {
-    /// Returns the name of the rule - "Naming/RuleName"
+    /// Returns the name of the rule
+    /// 
+    /// # Returns
+    /// 
+    /// Returns "Naming/RuleName"
     fn name(&self) -> &'static str {
         "Naming/RuleName"
     }
