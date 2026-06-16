@@ -15,13 +15,13 @@
 ///
 /// This validation is intended to prevent malformed or potentially
 /// deceptive content from reaching the parsing stage.
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `file` (`&[u8]`) - file path of the file to be validated
-/// 
+///
 /// # Returns
-/// 
+///
 /// Returns `Ok(true)` if the file passes the validation process, or
 /// `Ok(false)` if the file did not pass
 pub fn validate_bytes(file: &[u8]) -> Result<bool, String> {

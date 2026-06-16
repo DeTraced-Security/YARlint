@@ -11,20 +11,20 @@ pub struct NamingRuleName;
 
 impl Rule for NamingRuleName {
     /// Returns the name of the rule
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// Returns "Naming/RuleName"
     fn name(&self) -> &'static str {
         "Naming/RuleName"
     }
 
     /// Checks for compliance with the rule
-    /// 
+    ///
     /// This rule is violated if a `RuleNode`'s name includes any '-'s
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `context` (`&LintContext`) - A `LintContext` containing the
     /// `RuleNode`s to be checked
     /// * `findings` (`&mut Vec<Finding>`) - Vector to push Finding to

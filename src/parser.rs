@@ -25,7 +25,7 @@ use std::{
 ///
 /// # Arguments
 ///
-/// * `files` (`&Vec<std::path::PathBuf>`) - A collection of paths to YARA 
+/// * `files` (`&Vec<std::path::PathBuf>`) - A collection of paths to YARA
 /// files that should be parsed.
 ///
 /// # Returns
@@ -33,7 +33,7 @@ use std::{
 /// Returns `Ok(())` if all files were successfully read and tokenized.
 ///
 /// # Errors
-/// 
+///
 /// Returns an error if:
 /// - A file cannot be opened
 /// - A file cannot be read

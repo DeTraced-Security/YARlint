@@ -9,13 +9,13 @@
 ///
 /// Files containing malformed UTF-8 sequences are rejected before
 /// byte-level validation and parsing.
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `file` (`&[u8]`) - file path of the file to have its contents validated
-/// 
+///
 /// # Returns
-/// 
+///
 /// Returns `Ok(true)` if the file passes the validation process, or
 /// `Ok(false)` if the file does not pass
 pub fn validate_encoding(file: &[u8]) -> Result<bool, String> {

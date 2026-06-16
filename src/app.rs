@@ -23,7 +23,7 @@ use crate::validation::validate_files;
 /// 3. File parsing
 ///
 /// Progress information is reported to the user between stages.
-/// 
+///
 /// # Arguments
 /// * `args` (`&Args`) - The parsed arguments provided by the user
 ///

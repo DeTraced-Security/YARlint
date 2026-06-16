@@ -15,9 +15,9 @@ impl LintEngine {
     }
 
     /// Register a rule.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `rule` (`R`) - rule to be registered to the engine
     pub fn register<R>(&mut self, rule: R)
     where
@@ -27,14 +27,14 @@ impl LintEngine {
     }
 
     /// Run all registered rules.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `context` (`&LintContext`) - a LintContext containing YARA rules to
     /// be tested
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// Returns a vector containing the any violations found in the rules
     /// checked
     pub fn run(&self, context: &LintContext) -> Vec<Finding> {

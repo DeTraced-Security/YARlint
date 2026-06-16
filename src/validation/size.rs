@@ -14,11 +14,11 @@ const GIGABYTE_SIZE: u64 = 1073741824;
 /// memory consumption during validation and parsing.
 ///
 /// # Arguments
-/// 
+///
 /// * `file` (`&PathBuf`) - file path of the file to be validated
-/// 
+///
 /// # Returns
-/// 
+///
 /// Returns `Ok(false)` when the file exceeds the maximum allowed
 /// size, and `Ok(true)` otherwise
 pub fn validate_size(file: &PathBuf) -> Result<bool, String> {

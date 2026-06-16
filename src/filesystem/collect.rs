@@ -19,9 +19,9 @@ use crate::filesystem::filters::is_yara_file;
 /// When recursive scanning is enabled, the traversal depth may be
 /// limited by `depth`. If no depth is provided, traversal is
 /// unbounded.
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `path` (`&str`) - file or directory path to scan
 /// * `recursive` (`bool`) - recursively traverse subdirectories when scanning
 ///  a directory

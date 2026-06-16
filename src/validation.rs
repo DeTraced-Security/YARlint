@@ -32,13 +32,13 @@ pub mod size;
 /// - File size validation
 /// - UTF-8 encoding validation
 /// - Byte-level safety validation
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `files` (`&Vec<PathBuf>`) - a vector containing files to be validated
 ///
 /// # Returns
-/// 
+///
 /// Returns a vector containing only files that passed all validation
 /// checks.
 ///

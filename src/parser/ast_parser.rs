@@ -174,9 +174,9 @@ impl AstParser {
     /// * `expected` (`&TokenType`) - Token type that must be present.
     ///
     /// # Returns
-    /// 
+    ///
     /// Returns `Ok(())` if the next token is of the expected type
-    /// 
+    ///
     /// # Errors
     ///
     /// Returns an error if:
@@ -207,9 +207,9 @@ impl AstParser {
     /// 0x5A4D
     /// 500KB
     /// ```
-    /// 
+    ///
     /// # Errors
-    /// 
+    ///
     /// Returns an error if:
     /// - the current token is not of type `TokenType::Number`
     /// - the current token is `None`
@@ -237,9 +237,9 @@ impl AstParser {
     /// # Returns
     ///
     /// The corresponding Rust boolean value.
-    /// 
-    /// # Errors 
-    /// 
+    ///
+    /// # Errors
+    ///
     /// Returns an error if:
     /// - the token is `None`
     /// - the token is not of `TokenType::Keyword`
@@ -274,9 +274,9 @@ impl AstParser {
     /// # Returns
     ///
     /// Return the identifier name
-    /// 
+    ///
     /// # Errors
-    /// 
+    ///
     /// Returns an error if:
     /// - the current token is not of `TokenType::Identifier`
     /// - the current token is `None`
@@ -298,9 +298,9 @@ impl AstParser {
     /// # Returns
     ///
     /// Returns the string literal
-    /// 
+    ///
     /// # Errors
-    /// 
+    ///
     /// Returns an error if:
     /// - current token is not of `TokenType::StringLiteral`
     /// - current token is `None`
@@ -332,9 +332,9 @@ impl AstParser {
     /// # Returns
     ///
     /// Returns the identifier name.
-    /// 
+    ///
     /// # Errors
-    /// 
+    ///
     /// Returns an error if:
     /// - the current token is not of `TokenType::StringIdentifier`
     /// - the current token is `None`
@@ -359,9 +359,9 @@ impl AstParser {
     /// # Arguments
     ///
     /// * `keyword` (`&str`) - Expected keyword value.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// Returns `Ok(())` if the current toke is the requested keyword
     ///
     /// # Errors
@@ -385,7 +385,7 @@ impl AstParser {
     }
 
     /// Consumes any keyword token.
-    /// 
+    ///
     /// Examples:
     ///
     /// ```yara
@@ -397,9 +397,9 @@ impl AstParser {
     /// # Returns
     ///
     /// The keyword value that was consumed.
-    /// 
+    ///
     /// # Errors
-    /// 
+    ///
     /// Returns an error if:
     /// - the current token is not of `TokenType::Keyword`
     /// - the current token is `None`
@@ -466,18 +466,18 @@ impl AstParser {
     ///         $a
     /// }
     /// ```
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `parser` (`&mut AstParser`) - an AstParser positioned at the beginning of
     ///  a YARA rule
     ///
     /// # Returns
     ///
     /// A fully populated [`RuleNode`] representing the rule.
-    /// 
+    ///
     /// ## Errors
-    /// 
+    ///
     /// Returns an error if:
     /// - The rule is malformed
     fn parse_rule(parser: &mut AstParser) -> Result<RuleNode, String> {
@@ -532,14 +532,14 @@ impl AstParser {
     ///
     /// The parser consumes tokens sequentially and delegates
     /// rule parsing to [`AstParser::parse_rule`].
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `parser` (`AstParser`) - an `AstParser` positioned at the beginning of a
     /// YARA file
-    /// 
+    ///
     /// # Errors
-    /// 
+    ///
     /// Returns an error if:
     /// - The YARA file or any of its rules is malformed
     pub fn parse_rule_file(mut parser: AstParser) -> Result<RuleFileNode, String> {
