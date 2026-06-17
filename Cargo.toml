@@ -23,3 +23,4 @@ walkdir = "2.5.0"
 [dev-dependencies]
 assert_cmd = "2"
 predicates = "3"
+tempfile = "3.27.0"
