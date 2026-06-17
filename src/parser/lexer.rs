@@ -234,6 +234,12 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 span,
             }),
 
+            ',' => tokens.push(Token {
+                token_type: TokenType::Comma,
+                span,
+            }),
+
+
             '=' => {
                 if matches!(lexer.peek(), Some('=')) {
                     lexer.next();
