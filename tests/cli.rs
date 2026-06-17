@@ -41,7 +41,7 @@ fn verbose_flag_exits_zero() {
     cmd.assert().success();
 }
 
-// --- return values ---
+// --- output ---
 
 #[test]
 fn returns_version() {
@@ -49,4 +49,60 @@ fn returns_version() {
     let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
     cmd.arg("-V");
     cmd.assert().stdout(predicates::str::contains(version));
+}
+
+#[test]
+fn scan_start_message_is_printed() {
+    let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
+    cmd.arg("--path").arg("tests/fixtures/good_rule.yar");
+
+    cmd.assert().stdout(predicates::str::contains(
+        "Scanning tests/fixtures/good_rule.yar",
+    ));
+}
+
+#[test]
+fn file_summary_is_printed() {
+    let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
+    cmd.arg("--path").arg("tests/fixtures/good_rule.yar");
+
+    cmd.assert()
+        .stdout(predicates::str::contains("Found 1 YARA files"));
+}
+
+#[test]
+fn valid_file_summary_is_printed() {
+    let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
+    cmd.arg("--path").arg("tests/fixtures/good_rule.yar");
+
+    cmd.assert()
+        .stdout(predicates::str::contains("Found 1 Valid YARA files"));
+}
+
+#[test]
+fn recursive_warning_is_printed_when_recursive_flag_set() {
+    let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
+    cmd.arg("--path").arg("tests/fixtures").arg("--recursive");
+
+    cmd.assert()
+        .stdout(predicates::str::contains("Warning: Recursive scanning"));
+}
+
+#[test]
+fn error_is_printed_to_stderr_on_bad_path() {
+    let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
+    cmd.arg("--path").arg("/nonexistent");
+
+    cmd.assert().stderr(predicates::str::contains("Error:"));
+}
+
+#[test]
+fn verbose_flag_prints_rule_file_debug_output() {
+    let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
+    cmd.arg("--path")
+        .arg("tests/fixtures/good_rule.yar")
+        .arg("--verbose");
+
+    cmd.assert()
+        .stdout(predicates::str::contains("RuleFileNode"));
 }
