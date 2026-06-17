@@ -4,7 +4,7 @@
 
 use crate::parser::span::Span;
 
-#[derive(Debug)]
+#[derive(PartialEq, Debug)]
 
 /// A token produced by the lexer.
 ///
@@ -18,7 +18,7 @@ pub struct Token {
 }
 
 /// Represents a lexical token recognized by the YARA lexer.
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum TokenType {
     /// A standard identifier such as a rule name, metadata key,
     /// module name, or function name.

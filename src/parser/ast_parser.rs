@@ -555,3 +555,386 @@ impl AstParser {
         Ok(RuleFileNode { imports, rules })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::parser::{
+        span::Span,
+        token::{Token, TokenType},
+    };
+
+    fn make_token(token_type: TokenType) -> Token {
+        Token {
+            token_type,
+            span: Span { line: 1, column: 1 },
+        }
+    }
+
+    fn make_parser(types: Vec<TokenType>) -> AstParser {
+        AstParser::new(types.into_iter().map(make_token).collect())
+    }
+
+    // --- peek ---
+
+    #[test]
+    fn peek_returns_current_token_without_consuming() {
+        let parser = make_parser(vec![TokenType::LBrace]);
+
+        let _ = parser.peek();
+        let _ = parser.peek();
+
+        assert_eq!(parser.pos, 0);
+    }
+
+    #[test]
+    fn peek_returns_none_on_empty_stream() {
+        let parser = make_parser(vec![]);
+
+        assert!(parser.peek().is_none());
+    }
+
+    // --- check ---
+
+    #[test]
+    fn check_returns_true_when_token_matches() {
+        let parser = make_parser(vec![TokenType::LBrace]);
+
+        assert!(parser.check(&TokenType::LBrace));
+    }
+
+    #[test]
+    fn check_returns_false_when_token_does_not_match() {
+        let parser = make_parser(vec![TokenType::RBrace]);
+
+        assert!(!parser.check(&TokenType::LBrace));
+    }
+
+    #[test]
+    fn check_returns_false_on_empty_stream() {
+        let parser = make_parser(vec![]);
+
+        assert!(!parser.check(&TokenType::LBrace));
+    }
+
+    // --- peek_keyword ---
+
+    #[test]
+    fn peek_keyword_returns_true_when_keyword_matches() {
+        let parser = make_parser(vec![TokenType::Keyword("rule".to_string())]);
+
+        assert!(parser.peek_keyword("rule"));
+    }
+
+    #[test]
+    fn peek_keyword_returns_false_when_keyword_differs() {
+        let parser = make_parser(vec![TokenType::Keyword("condition".to_string())]);
+
+        assert!(!parser.peek_keyword("rule"));
+    }
+
+    #[test]
+    fn peek_keyword_returns_false_when_token_is_not_keyword() {
+        let parser = make_parser(vec![TokenType::Identifier("rule".to_string())]);
+
+        assert!(!parser.peek_keyword("rule"));
+    }
+
+    // --- peek_string_identifier ---
+
+    #[test]
+    fn peek_string_identifier_returns_true_for_string_identifier() {
+        let parser = make_parser(vec![TokenType::StringIdentifier("$foo".to_string())]);
+
+        assert!(parser.peek_string_identifier());
+    }
+
+    #[test]
+    fn peek_string_identifier_returns_false_for_identifier() {
+        let parser = make_parser(vec![TokenType::Identifier("foo".to_string())]);
+
+        assert!(!parser.peek_string_identifier());
+    }
+
+    // --- advance ---
+
+    #[test]
+    fn advance_consumes_and_returns_current_token() {
+        let mut parser = make_parser(vec![TokenType::LBrace]);
+
+        let token = parser.advance();
+
+        assert!(token.is_some());
+        assert_eq!(parser.pos, 1);
+    }
+
+    #[test]
+    fn advance_returns_none_at_end_of_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.advance().is_none());
+    }
+
+    #[test]
+    fn advance_moves_through_tokens_in_order() {
+        let mut parser = make_parser(vec![TokenType::LBrace, TokenType::RBrace]);
+
+        let first = parser.advance().unwrap().token_type.clone();
+        let second = parser.advance().unwrap().token_type.clone();
+
+        assert_eq!(first, TokenType::LBrace);
+        assert_eq!(second, TokenType::RBrace);
+    }
+
+    // --- expect ---
+
+    #[test]
+    fn expect_succeeds_and_consumes_when_token_matches() {
+        let mut parser = make_parser(vec![TokenType::LBrace]);
+
+        let result = parser.expect(&TokenType::LBrace);
+
+        assert!(result.is_ok());
+        assert_eq!(parser.pos, 1);
+    }
+
+    #[test]
+    fn expect_returns_err_when_token_does_not_match() {
+        let mut parser = make_parser(vec![TokenType::RBrace]);
+
+        let result = parser.expect(&TokenType::LBrace);
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn expect_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        let result = parser.expect(&TokenType::LBrace);
+
+        assert!(result.is_err());
+    }
+
+    // --- expect_number ---
+
+    #[test]
+    fn expect_number_returns_value_on_number_token() {
+        let mut parser = make_parser(vec![TokenType::Number("42".to_string())]);
+
+        let result = parser.expect_number();
+
+        assert_eq!(result, Ok("42".to_string()));
+    }
+
+    #[test]
+    fn expect_number_returns_err_on_non_number_token() {
+        let mut parser = make_parser(vec![TokenType::Identifier("foo".to_string())]);
+
+        assert!(parser.expect_number().is_err());
+    }
+
+    #[test]
+    fn expect_number_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_number().is_err());
+    }
+
+    // --- expect_boolean ---
+
+    #[test]
+    fn expect_boolean_returns_true_for_true_keyword() {
+        let mut parser = make_parser(vec![TokenType::Keyword("true".to_string())]);
+
+        assert_eq!(parser.expect_boolean(), Ok(true));
+    }
+
+    #[test]
+    fn expect_boolean_returns_false_for_false_keyword() {
+        let mut parser = make_parser(vec![TokenType::Keyword("false".to_string())]);
+
+        assert_eq!(parser.expect_boolean(), Ok(false));
+    }
+
+    #[test]
+    fn expect_boolean_returns_err_for_non_boolean_keyword() {
+        let mut parser = make_parser(vec![TokenType::Keyword("rule".to_string())]);
+
+        assert!(parser.expect_boolean().is_err());
+    }
+
+    #[test]
+    fn expect_boolean_returns_err_for_non_keyword_token() {
+        let mut parser = make_parser(vec![TokenType::Identifier("true".to_string())]);
+
+        assert!(parser.expect_boolean().is_err());
+    }
+
+    #[test]
+    fn expect_boolean_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_boolean().is_err());
+    }
+
+    // --- expect_identifier ---
+
+    #[test]
+    fn expect_identifier_returns_name_on_identifier_token() {
+        let mut parser = make_parser(vec![TokenType::Identifier("foo".to_string())]);
+
+        assert_eq!(parser.expect_identifier(), Ok("foo".to_string()));
+    }
+
+    #[test]
+    fn expect_identifier_returns_err_on_keyword_token() {
+        let mut parser = make_parser(vec![TokenType::Keyword("rule".to_string())]);
+
+        assert!(parser.expect_identifier().is_err());
+    }
+
+    #[test]
+    fn expect_identifier_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_identifier().is_err());
+    }
+
+    // --- expect_string_literal ---
+
+    #[test]
+    fn expect_string_literal_returns_value_on_string_literal_token() {
+        let mut parser = make_parser(vec![TokenType::StringLiteral("cmd.exe".to_string())]);
+
+        assert_eq!(parser.expect_string_literal(), Ok("cmd.exe".to_string()));
+    }
+
+    #[test]
+    fn expect_string_literal_returns_err_on_identifier_token() {
+        let mut parser = make_parser(vec![TokenType::Identifier("foo".to_string())]);
+
+        assert!(parser.expect_string_literal().is_err());
+    }
+
+    #[test]
+    fn expect_string_literal_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_string_literal().is_err());
+    }
+
+    // --- expect_string_identifier ---
+
+    #[test]
+    fn expect_string_identifier_returns_value_on_string_identifier_token() {
+        let mut parser = make_parser(vec![TokenType::StringIdentifier("$foo".to_string())]);
+
+        assert_eq!(parser.expect_string_identifier(), Ok("$foo".to_string()));
+    }
+
+    #[test]
+    fn expect_string_identifier_returns_err_on_identifier_token() {
+        let mut parser = make_parser(vec![TokenType::Identifier("foo".to_string())]);
+
+        assert!(parser.expect_string_identifier().is_err());
+    }
+
+    #[test]
+    fn expect_string_identifier_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_string_identifier().is_err());
+    }
+
+    // --- expect_keyword ---
+
+    #[test]
+    fn expect_keyword_succeeds_when_keyword_matches() {
+        let mut parser = make_parser(vec![TokenType::Keyword("rule".to_string())]);
+
+        assert!(parser.expect_keyword("rule").is_ok());
+    }
+
+    #[test]
+    fn expect_keyword_returns_err_when_keyword_differs() {
+        let mut parser = make_parser(vec![TokenType::Keyword("condition".to_string())]);
+
+        assert!(parser.expect_keyword("rule").is_err());
+    }
+
+    #[test]
+    fn expect_keyword_returns_err_on_non_keyword_token() {
+        let mut parser = make_parser(vec![TokenType::Identifier("rule".to_string())]);
+
+        assert!(parser.expect_keyword("rule").is_err());
+    }
+
+    #[test]
+    fn expect_keyword_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_keyword("rule").is_err());
+    }
+
+    // --- expect_any_keyword ---
+
+    #[test]
+    fn expect_any_keyword_returns_keyword_value() {
+        let mut parser = make_parser(vec![TokenType::Keyword("wide".to_string())]);
+
+        assert_eq!(parser.expect_any_keyword(), Ok("wide".to_string()));
+    }
+
+    #[test]
+    fn expect_any_keyword_returns_err_on_non_keyword_token() {
+        let mut parser = make_parser(vec![TokenType::Identifier("wide".to_string())]);
+
+        assert!(parser.expect_any_keyword().is_err());
+    }
+
+    #[test]
+    fn expect_any_keyword_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_any_keyword().is_err());
+    }
+
+    // --- expect_rule_name ---
+
+    #[test]
+    fn expect_rule_name_parses_simple_name() {
+        let mut parser = make_parser(vec![
+            TokenType::Identifier("my_rule".to_string()),
+            TokenType::LBrace,
+        ]);
+
+        assert_eq!(parser.expect_rule_name(), Ok("my_rule".to_string()));
+    }
+
+    #[test]
+    fn expect_rule_name_parses_name_with_dash() {
+        let mut parser = make_parser(vec![
+            TokenType::Identifier("my".to_string()),
+            TokenType::Minus,
+            TokenType::Identifier("rule".to_string()),
+            TokenType::LBrace,
+        ]);
+
+        assert_eq!(parser.expect_rule_name(), Ok("my-rule".to_string()));
+    }
+
+    #[test]
+    fn expect_rule_name_returns_err_on_unexpected_token_in_name() {
+        let mut parser = make_parser(vec![TokenType::LParen, TokenType::LBrace]);
+
+        assert!(parser.expect_rule_name().is_err());
+    }
+
+    #[test]
+    fn expect_rule_name_returns_err_on_empty_stream() {
+        let mut parser = make_parser(vec![]);
+
+        assert!(parser.expect_rule_name().is_err());
+    }
+}

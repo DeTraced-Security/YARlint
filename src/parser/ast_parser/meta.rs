@@ -70,3 +70,126 @@ pub fn parse_meta(parser: &mut AstParser) -> Result<Vec<MetaEntryNode>, String> 
 
     Ok(meta_entries)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::parser::{ast_parser::AstParser, lexer::tokenize, syntax::MetaValue};
+
+    fn make_parser_for_meta(source: &str) -> AstParser {
+        // wrap in a fake rule context so the meta parser has a "strings" keyword to stop at
+        let full = format!("{} strings:", source);
+        let tokens = tokenize(&full).unwrap();
+        AstParser::new(tokens)
+    }
+
+    // --- happy path ---
+
+    #[test]
+    fn parse_meta_returns_empty_vec_when_no_entries() {
+        let mut parser = make_parser_for_meta("");
+
+        let result = parse_meta(&mut parser).unwrap();
+
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn parse_meta_parses_string_value() {
+        let mut parser = make_parser_for_meta(r#"author = "DeTraced Security""#);
+
+        let result = parse_meta(&mut parser).unwrap();
+
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].key, "author");
+        assert!(matches!(&result[0].value, MetaValue::String(s) if s == "DeTraced Security"));
+    }
+
+    #[test]
+    fn parse_meta_parses_number_value() {
+        let mut parser = make_parser_for_meta("version = 1");
+
+        let result = parse_meta(&mut parser).unwrap();
+
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].key, "version");
+        assert!(matches!(&result[0].value, MetaValue::Number(n) if n == "1"));
+    }
+
+    #[test]
+    fn parse_meta_parses_true_boolean_value() {
+        let mut parser = make_parser_for_meta("is_test = true");
+
+        let result = parse_meta(&mut parser).unwrap();
+
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].key, "is_test");
+        assert!(matches!(&result[0].value, MetaValue::Boolean(true)));
+    }
+
+    #[test]
+    fn parse_meta_parses_false_boolean_value() {
+        let mut parser = make_parser_for_meta("is_test = false");
+
+        let result = parse_meta(&mut parser).unwrap();
+
+        assert_eq!(result.len(), 1);
+        assert!(matches!(&result[0].value, MetaValue::Boolean(false)));
+    }
+
+    #[test]
+    fn parse_meta_parses_multiple_entries() {
+        let mut parser =
+            make_parser_for_meta(r#"author = "DeTraced Security" version = 1 is_test = true"#);
+
+        let result = parse_meta(&mut parser).unwrap();
+
+        assert_eq!(result.len(), 3);
+        assert_eq!(result[0].key, "author");
+        assert_eq!(result[1].key, "version");
+        assert_eq!(result[2].key, "is_test");
+    }
+
+    #[test]
+    fn parse_meta_stops_at_strings_keyword() {
+        let mut parser = make_parser_for_meta(r#"author = "DeTraced Security""#);
+
+        let result = parse_meta(&mut parser).unwrap();
+
+        // should not consume the "strings" keyword — it belongs to the parent parser
+        assert_eq!(result.len(), 1);
+    }
+
+    // --- error cases ---
+
+    #[test]
+    fn parse_meta_returns_err_on_missing_equals() {
+        let mut parser = make_parser_for_meta(r#"author "DeTraced Security""#);
+
+        assert!(parse_meta(&mut parser).is_err());
+    }
+
+    #[test]
+    fn parse_meta_returns_err_on_invalid_key() {
+        // key must be an identifier, not a string literal
+        let mut parser = make_parser_for_meta(r#""author" = "DeTraced Security""#);
+
+        assert!(parse_meta(&mut parser).is_err());
+    }
+
+    #[test]
+    fn parse_meta_returns_err_on_unsupported_value_type() {
+        // LBrace is not a valid meta value
+        let mut parser = make_parser_for_meta("author = {");
+
+        assert!(parse_meta(&mut parser).is_err());
+    }
+
+    #[test]
+    fn parse_meta_returns_err_on_non_boolean_keyword_value() {
+        // "rule" is a keyword but not a valid meta value
+        let mut parser = make_parser_for_meta("author = rule");
+
+        assert!(parse_meta(&mut parser).is_err());
+    }
+}

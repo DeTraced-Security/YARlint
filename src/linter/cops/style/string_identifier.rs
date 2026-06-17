@@ -90,3 +90,85 @@ fn is_snake_case(s: &str) -> bool {
 
     true
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // is_snake_case - valid cases
+    #[test]
+    fn is_snake_case_accepts_lowercase_word() {
+        assert!(is_snake_case("foo"));
+    }
+
+    #[test]
+    fn is_snake_case_accepts_dollar_prefix() {
+        assert!(is_snake_case("$foo"));
+    }
+
+    #[test]
+    fn is_snake_case_accepts_underscore_prefix() {
+        assert!(is_snake_case("_foo"));
+    }
+
+    #[test]
+    fn is_snake_case_accepts_words_joined_by_underscore() {
+        assert!(is_snake_case("foo_bar"));
+    }
+
+    #[test]
+    fn is_snake_case_accepts_digits_in_identifier() {
+        assert!(is_snake_case("foo_1"));
+    }
+
+    #[test]
+    fn is_snake_case_accepts_dollar_prefix_with_underscores() {
+        assert!(is_snake_case("$foo_bar"));
+    }
+
+    // is_snake_case - invalid cases
+    #[test]
+    fn is_snake_case_rejects_empty_string() {
+        assert!(!is_snake_case(""));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_uppercase_start() {
+        assert!(!is_snake_case("Foo"));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_camel_case() {
+        assert!(!is_snake_case("fooBar"));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_dollar_prefix_followed_by_uppercase() {
+        assert!(!is_snake_case("$Foo"));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_trailing_underscore() {
+        assert!(!is_snake_case("foo_"));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_double_underscore() {
+        assert!(!is_snake_case("foo__bar"));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_digit_start() {
+        assert!(!is_snake_case("1foo"));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_underscore_only() {
+        assert!(!is_snake_case("_"));
+    }
+
+    #[test]
+    fn is_snake_case_rejects_dollar_only() {
+        assert!(!is_snake_case("$"));
+    }
+}

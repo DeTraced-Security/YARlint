@@ -5,7 +5,6 @@
 //! and parsing logic.
 
 use colored::Colorize;
-use std::path::Path;
 
 use crate::parser::syntax::rule_file::RuleFileNode;
 
@@ -46,15 +45,6 @@ pub fn print_file_summary(count: usize) {
 /// * `count` (`usize`) - number of files that passed validation
 pub fn print_valid_file_summary(count: usize) {
     println!("{}", format!("Found {} Valid YARA files", count).green());
-}
-
-/// Prints a file path to standard output.
-///
-/// # Arguments
-///
-/// * `path` (`&Path`) - file path to standard output
-pub fn print_file(path: &Path) {
-    println!("{}", path.display());
 }
 
 /// Prints an error message to standard error using colored output.

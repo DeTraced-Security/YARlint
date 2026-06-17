@@ -252,6 +252,11 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 span,
             }),
 
+            ',' => tokens.push(Token {
+                token_type: TokenType::Comma,
+                span,
+            }),
+
             '=' => {
                 if matches!(lexer.peek(), Some('=')) {
                     lexer.next();
@@ -325,6 +330,7 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                                     if matches!(lexer.peek(), Some('/')) {
                                         lexer.next(); // consume '/'
                                         break;
+                                        // do not worry about llvm-cov
                                     }
                                 }
 
