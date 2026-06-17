@@ -47,7 +47,6 @@ pub fn print_valid_file_summary(count: usize) {
     println!("{}", format!("Found {} Valid YARA files", count).green());
 }
 
-
 /// Prints an error message to standard error using colored output.
 ///
 /// # Arguments

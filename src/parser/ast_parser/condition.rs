@@ -520,7 +520,7 @@ mod tests {
             operator, right, ..
         } = result
         else {
-            // do not worry about llvm-cov 
+            // do not worry about llvm-cov
             panic!("expected binary expression");
         };
 

@@ -139,7 +139,8 @@ mod tests {
 
     #[test]
     fn parse_meta_parses_multiple_entries() {
-        let mut parser = make_parser_for_meta(r#"author = "DeTraced Security" version = 1 is_test = true"#);
+        let mut parser =
+            make_parser_for_meta(r#"author = "DeTraced Security" version = 1 is_test = true"#);
 
         let result = parse_meta(&mut parser).unwrap();
 

@@ -1,9 +1,6 @@
 use yarlint::linter::{context::LintContext, default_engine};
 use yarlint::parser::syntax::{
-    condition::ConditionNode,
-    expr::ExprNode,
-    rule::RuleNode,
-    rule_file::RuleFileNode,
+    condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,
     strings::StringNode,
 };
 
@@ -30,7 +27,9 @@ fn default_engine_has_cops_registered() {
                 value: "foo".to_string(),
                 modifiers: vec![],
             }],
-            condition: ConditionNode { expression: ExprNode::AllOfThem },
+            condition: ConditionNode {
+                expression: ExprNode::AllOfThem,
+            },
         }],
     };
     let context = LintContext { file: &file };
@@ -55,7 +54,9 @@ fn default_engine_produces_no_findings_for_clean_rule() {
                 value: "cmd.exe".to_string(),
                 modifiers: vec![],
             }],
-            condition: ConditionNode { expression: ExprNode::AllOfThem },
+            condition: ConditionNode {
+                expression: ExprNode::AllOfThem,
+            },
         }],
     };
     let context = LintContext { file: &file };
