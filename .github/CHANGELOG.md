@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## [0.1.5](https://github.com/DeTraced-Security/YARlint/compare/v0.1.4...v0.1.5) - 2026-06-17
+
+### Features
+
+- add comma lexing
+
+### Other
+
+- add the rest of doable testing
+- add output testing
+- add filesystem tests
+- add linter.rs tests
+- add pipeline testing
+- add parsing and lexing tests
+- add validation tests
+- add test scaffolding and cops tests
+- move test rules
+
+### Refactored
+
+- remove dead code
+
+### Documentation:
+
+- updated and expanded documentation across the project 
+
 ## [0.1.4](https://github.com/DeTraced-Security/YARlint/compare/v0.1.3...v0.1.4) - 2026-06-15
 
 ### Features
