@@ -375,3 +375,338 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
         None => Err("Unexpected EOF".into()),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::parser::{
+        ast_parser::AstParser,
+        lexer::tokenize,
+        syntax::{BinaryOperator, ExprNode},
+    };
+
+    fn parse_expr_from(source: &str) -> Result<ExprNode, String> {
+        let tokens = tokenize(source).unwrap();
+        let mut parser = AstParser::new(tokens);
+        parse_expr(&mut parser)
+    }
+
+    // --- parse_condition ---
+
+    #[test]
+    fn parse_condition_returns_err_on_empty_input() {
+        let tokens = vec![];
+        let mut parser = AstParser::new(tokens);
+
+        assert!(parse_condition(&mut parser).is_err());
+    }
+
+    // --- parse_expr / parse_or ---
+
+    #[test]
+    fn parse_expr_parses_single_identifier() {
+        let result = parse_expr_from("filesize").unwrap();
+
+        assert!(matches!(result, ExprNode::Identifier(s) if s == "filesize"));
+    }
+
+    #[test]
+    fn parse_expr_parses_or_expression() {
+        let result = parse_expr_from("$a or $b").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::Or,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_expr_parses_chained_or_expressions() {
+        // $a or $b or $c should produce a left-associative tree
+        let result = parse_expr_from("$a or $b or $c").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::Or,
+                ..
+            }
+        ));
+    }
+
+    // --- parse_and ---
+
+    #[test]
+    fn parse_expr_parses_and_expression() {
+        let result = parse_expr_from("$a and $b").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::And,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn and_has_higher_precedence_than_or() {
+        // "$a or $b and $c" should parse as "$a or ($b and $c)"
+        let result = parse_expr_from("$a or $b and $c").unwrap();
+
+        let ExprNode::Binary {
+            operator, right, ..
+        } = result
+        else {
+            panic!("expected binary expression");
+        };
+
+        assert_eq!(operator, BinaryOperator::Or);
+        assert!(matches!(
+            *right,
+            ExprNode::Binary {
+                operator: BinaryOperator::And,
+                ..
+            }
+        ));
+    }
+
+    // --- parse_comparison ---
+
+    #[test]
+    fn parse_expr_parses_equals_equals() {
+        let result = parse_expr_from("filesize == 100").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::Equals,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_expr_parses_less_than() {
+        let result = parse_expr_from("filesize < 100").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::LessThan,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_expr_parses_greater_than() {
+        let result = parse_expr_from("filesize > 100").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::GreaterThan,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_expr_parses_less_than_or_equal() {
+        let result = parse_expr_from("filesize <= 100").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::LessThanEqual,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_expr_parses_greater_than_or_equal() {
+        let result = parse_expr_from("filesize >= 100").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::GreaterThanEqual,
+                ..
+            }
+        ));
+    }
+
+    // --- parse_primary: numbers ---
+
+    #[test]
+    fn parse_primary_parses_number_literal() {
+        let result = parse_expr_from("42").unwrap();
+
+        assert!(matches!(result, ExprNode::Number(n) if n == "42"));
+    }
+
+    #[test]
+    fn parse_primary_parses_number_of_them() {
+        let result = parse_expr_from("2 of them").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Of {
+                pattern,
+                ..
+            } if pattern == "them"
+        ));
+    }
+
+    #[test]
+    fn parse_primary_parses_number_of_pattern() {
+        let result = parse_expr_from("2 of ($s*)").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Of { pattern, .. } if pattern == "$s"
+        ));
+    }
+
+    // --- parse_primary: string literals ---
+
+    #[test]
+    fn parse_primary_parses_string_literal() {
+        let result = parse_expr_from(r#""cmd.exe""#).unwrap();
+
+        assert!(matches!(result, ExprNode::StringLiteral(s) if s == "cmd.exe"));
+    }
+
+    // --- parse_primary: string identifiers ---
+
+    #[test]
+    fn parse_primary_parses_string_identifier() {
+        let result = parse_expr_from("$foo").unwrap();
+
+        assert!(matches!(result, ExprNode::Identifier(s) if s == "$foo"));
+    }
+
+    // --- parse_primary: identifiers and function calls ---
+
+    #[test]
+    fn parse_primary_parses_plain_identifier() {
+        let result = parse_expr_from("filesize").unwrap();
+
+        assert!(matches!(result, ExprNode::Identifier(s) if s == "filesize"));
+    }
+
+    #[test]
+    fn parse_primary_parses_function_call_with_no_args() {
+        let result = parse_expr_from("myfunc()").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::FunctionCall { name, arguments } if name == "myfunc" && arguments.is_empty()
+        ));
+    }
+
+    #[test]
+    fn parse_primary_parses_function_call_with_one_arg() {
+        let result = parse_expr_from("uint16(0)").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::FunctionCall { name, arguments } if name == "uint16" && arguments.len() == 1
+        ));
+    }
+
+    #[test]
+    fn parse_primary_parses_module_function_call() {
+        let result = parse_expr_from("pe.imphash()").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::ModuleFunction { module, function, arguments }
+                if module == "pe" && function == "imphash" && arguments.is_empty()
+        ));
+    }
+
+    #[test]
+    fn parse_primary_parses_module_function_call_with_args() {
+        let result = parse_expr_from("pe.exports(\"WinMain\")").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::ModuleFunction { module, function, arguments }
+                if module == "pe" && function == "exports" && arguments.len() == 1
+        ));
+    }
+
+    // --- parse_primary: grouped expressions ---
+
+    #[test]
+    fn parse_primary_parses_parenthesized_expression() {
+        let result = parse_expr_from("(filesize < 100)").unwrap();
+
+        // grouping is transparent — returns inner expression directly
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::LessThan,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_primary_parses_nested_parentheses() {
+        let result = parse_expr_from("((filesize < 100))").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::LessThan,
+                ..
+            }
+        ));
+    }
+
+    // --- parse_primary: all of ---
+
+    #[test]
+    fn parse_primary_parses_all_of_them() {
+        let result = parse_expr_from("all of them").unwrap();
+
+        assert!(matches!(result, ExprNode::AllOfThem));
+    }
+
+    #[test]
+    fn parse_primary_parses_all_of_pattern() {
+        let result = parse_expr_from("all of ($s*)").unwrap();
+
+        assert!(matches!(result, ExprNode::AllOf { pattern } if pattern == "$s"));
+    }
+
+    // --- error cases ---
+
+    #[test]
+    fn parse_primary_returns_err_on_unexpected_token() {
+        let result = parse_expr_from("}");
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_primary_returns_err_on_empty_input() {
+        let result = parse_expr_from("");
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_primary_returns_err_on_unclosed_paren() {
+        let result = parse_expr_from("(filesize < 100");
+
+        assert!(result.is_err());
+    }
+}
