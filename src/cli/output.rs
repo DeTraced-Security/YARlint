@@ -35,11 +35,6 @@ pub fn print_valid_file_summary(count: usize) {
     println!("{}", format!("Found {} Valid YARA files", count).green());
 }
 
-/// Prints a file path to standard output.
-pub fn print_file(path: &Path) {
-    println!("{}", path.display());
-}
-
 /// Prints an error message to standard error using colored output.
 pub fn print_error(err: &str) {
     eprintln!("{}", format!("Error: {}", err).red())
