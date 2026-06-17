@@ -8,8 +8,6 @@
 
 ### Other
 
-- pass ci/cd
-- Merge branch 'main' into test/add-testing
 - add the rest of doable testing
 - add output testing
 - add filesystem tests
@@ -23,7 +21,10 @@
 ### Refactored
 
 - remove dead code
-- remove dead code
+
+### Documentation:
+
+- updated and expanded documentation across the project 
 
 ## [0.1.4](https://github.com/DeTraced-Security/YARlint/compare/v0.1.3...v0.1.4) - 2026-06-15
 
