@@ -10,6 +10,9 @@ use yarlint::parser::syntax::{
 #[path = "linter/cops.rs"]
 pub mod cops;
 
+#[path = "linter/engine.rs"]
+pub mod engine;
+
 #[test]
 fn default_engine_has_cops_registered() {
     // an engine with no cops produces no findings regardless of input

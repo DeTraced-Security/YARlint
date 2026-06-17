@@ -28,3 +28,15 @@ fn nonexistent_file_returns_err() {
 
     assert!(result.is_err());
 }
+
+#[test]
+fn oversized_file_returns_false() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("large.yar");
+
+    let file = std::fs::File::create(&path).unwrap();
+    const GIGABYTE_SIZE: u64 = 1073741824;
+    file.set_len(GIGABYTE_SIZE + 1).unwrap();
+
+    assert!(!validate_size(&path).unwrap());
+}

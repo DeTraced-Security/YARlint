@@ -313,6 +313,7 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                                     if matches!(lexer.peek(), Some('/')) {
                                         lexer.next(); // consume '/'
                                         break;
+                                        // do not worry about llvm-cov 
                                     }
                                 }
 

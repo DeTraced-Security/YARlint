@@ -65,3 +65,10 @@ fn pipeline_succeeds_with_depth_limit() {
 
     assert!(result.is_ok());
 }
+
+#[test]
+fn pipeline_skips_file_with_no_tokens() {
+    let args = make_args("tests/fixtures/empty_tokens.yar");
+    let result = yarlint_pipeline(&args);
+    assert!(result.is_ok());
+}

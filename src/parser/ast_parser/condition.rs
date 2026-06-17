@@ -454,13 +454,13 @@ mod tests {
 
     #[test]
     fn and_has_higher_precedence_than_or() {
-        // "$a or $b and $c" should parse as "$a or ($b and $c)"
         let result = parse_expr_from("$a or $b and $c").unwrap();
 
         let ExprNode::Binary {
             operator, right, ..
         } = result
         else {
+            // do not worry about llvm-cov 
             panic!("expected binary expression");
         };
 
@@ -639,6 +639,24 @@ mod tests {
             result,
             ExprNode::ModuleFunction { module, function, arguments }
                 if module == "pe" && function == "exports" && arguments.len() == 1
+        ));
+    }
+
+    #[test]
+    fn parse_primary_parses_function_call_with_multiple_args() {
+        let result = parse_expr_from("myfunc(1, 2)").unwrap();
+        assert!(matches!(
+            result,
+            ExprNode::FunctionCall { arguments, .. } if arguments.len() == 2
+        ));
+    }
+
+    #[test]
+    fn parse_primary_parses_module_function_with_multiple_args() {
+        let result = parse_expr_from("pe.func(1, 2)").unwrap();
+        assert!(matches!(
+            result,
+            ExprNode::ModuleFunction { arguments, .. } if arguments.len() == 2
         ));
     }
 

@@ -210,6 +210,14 @@ fn condition_all_of_them_is_parsed() {
     ));
 }
 
+#[test]
+fn parse_rule_without_condition_uses_default_condition() {
+    // condition block is optional per the parser logic
+    let tokens = tokenize("rule foo { }").unwrap();
+    let result = AstParser::parse_rule_file(AstParser::new(tokens));
+    assert!(result.is_ok());
+}
+
 // --- error cases ---
 
 #[test]
