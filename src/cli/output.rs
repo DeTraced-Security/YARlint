@@ -5,7 +5,6 @@
 //! and parsing logic.
 
 use colored::Colorize;
-use std::path::Path;
 
 use crate::parser::syntax::rule_file::RuleFileNode;
 
