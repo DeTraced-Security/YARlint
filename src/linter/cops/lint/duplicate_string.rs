@@ -19,10 +19,24 @@ use crate::{
 pub struct LintDuplicateString;
 
 impl Rule for LintDuplicateString {
+    /// Returns the name of the rule
+    ///
+    /// # Returns
+    ///
+    /// Returns "Lint/DuplicateString"
     fn name(&self) -> &'static str {
         "Lint/DuplicateString"
     }
 
+    /// Checks for compliance with the rule
+    ///
+    /// This rule check fails if a string is defined more than once in a rule
+    ///
+    /// # Arguments
+    ///
+    /// * `context` (`&LintContext`) - A `LintContext` containing the
+    ///   `RuleNode`s to be checked
+    /// * `findings` (`&mut Vec<Finding>`) - Vector to push Finding to
     fn check(&self, context: &LintContext, findings: &mut Vec<Finding>) {
         for rule in &context.file.rules {
             let mut string_map: HashMap<(&str, Vec<StringModifier>), &str> = HashMap::new();

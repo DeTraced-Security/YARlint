@@ -9,6 +9,10 @@ use colored::Colorize;
 use crate::parser::syntax::rule_file::RuleFileNode;
 
 /// Displays the path currently being scanned.
+///
+/// # Arguments
+///
+/// * `path` (`&str`)- File or directory path being scanned
 pub fn print_scan_start(path: &str) {
     println!("Scanning {}", path);
 }
@@ -24,17 +28,31 @@ pub fn print_recursive_warning() {
             .yellow()
     );
 }
+
 /// Displays the total number of YARA files discovered during collection.
+///
+/// # Arguments
+///
+/// * `count` (`usize`) - number of YARA files discovered during collection
 pub fn print_file_summary(count: usize) {
     println!("{}", format!("Found {} YARA files", count).green());
 }
 
 /// Displays the total number of files that passed validation.
+///
+/// # Arguments
+///
+/// * `count` (`usize`) - number of files that passed validation
 pub fn print_valid_file_summary(count: usize) {
     println!("{}", format!("Found {} Valid YARA files", count).green());
 }
 
+
 /// Prints an error message to standard error using colored output.
+///
+/// # Arguments
+///
+/// * `err` (`&str`) - error message to be printed
 pub fn print_error(err: &str) {
     eprintln!("{}", format!("Error: {}", err).red())
 }

@@ -25,17 +25,19 @@ use std::{
 ///
 /// # Arguments
 ///
-/// * `files` - A collection of paths to YARA files that should be parsed.
+/// * `files` (`&Vec<std::path::PathBuf>`) - A collection of paths to YARA
+///   files that should be parsed.
 ///
 /// # Returns
 ///
 /// Returns `Ok(())` if all files were successfully read and tokenized.
 ///
-/// Returns `Err(String)` if:
+/// # Errors
 ///
-/// * A file cannot be opened.
-/// * A file cannot be read.
-/// * Tokenization fails.
+/// Returns an error if:
+/// - A file cannot be opened
+/// - A file cannot be read
+/// - Tokenization fails
 pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<RuleFileNode>, String> {
     let mut rule_files: Vec<RuleFileNode> = Vec::new();
     for file_path in files {
@@ -54,13 +56,16 @@ pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<RuleFileNode>,
             println!("Skipping {}: contains no YARA rule", file_path.display());
             continue;
         }
+        // Debug
         //for token in &tokens {
         //    println!("{:?}", token);
         //}
         let parser: AstParser = AstParser::new(tokens);
 
+        // Debug
         //println!("About to parse rule");
         let rule_file = AstParser::parse_rule_file(parser)?;
+        // Debug
         //println!("Rule parsed successfully");
         rule_files.push(rule_file);
     }
