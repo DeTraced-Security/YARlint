@@ -14,7 +14,7 @@ impl Rule for StyleStringIdentifier {
     ///
     /// # Returns
     ///
-    /// Returns "Style/StringIdenifier"
+    /// Returns "Style/StringIdentifier"
     fn name(&self) -> &'static str {
         "Style/StringIdentifier"
     }
