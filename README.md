@@ -2,7 +2,7 @@
 
 > **Early WIP / Pre-Alpha**: expect breaking changes, missing features, and rough edges.
 
-A YARA rule linter written in Rust. Catches syntax errors, style issues, logic problems, and performance pitfalls before they end up in production rulesets.
+A YARA rule linter written in Rust. Catches syntax errors, style issues, logic problems, and performance pitfalls before they end up in production rulesets. Inspired by [Rubocop](https://rubocop.org/)
 
 ---
 
@@ -45,12 +45,12 @@ A modern YARA linter written in Rust
 Usage: yarlint [OPTIONS] --path <PATH>
 
 Options:
-  -p, --path <PATH>       File or directory path to scan
-  -r, --recursive         Recursively traverse subdirectories when scanning a directory
-  -d, --depth <DEPTH>     Maximum traversal depth when recursive scanning is enabled.
-                          Ignored unless `--recursive` is specified.
-  -h, --help              Print help (see a summary with '-h')
-  -V, --version           Print version
+  -p, --path <PATH>    File or directory path to scan
+  -r, --recursive      Recursively traverse subdirectories when scanning a directory
+  -d, --depth <DEPTH>  Maximum traversal depth when recursive scanning is enabled
+  -v, --verbose        Enables verbose output
+  -h, --help           Print help (see more with '--help')
+  -V, --version        Print version
 ```
 
 **Examples:**
