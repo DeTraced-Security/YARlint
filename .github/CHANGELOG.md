@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## [0.1.6](https://github.com/DeTraced-Security/YARlint/compare/v0.1.5...v0.1.6) - 2026-06-18
+
+### Features
+- add Style/MetaKeysOrder cop
+- add Style/MissingRequiredMeta cop
+
+### Refactored
+
+- remove dead code form ast condition parser
+- remove debugging output from ast_parser
+ 
+### Documentation
+
+- add badges to README
+- reword parameter type
+- fix spelling mistakes
+- update README.md
+
+### Other
+- add testing for meta keys order and missing meta keys 
+
 ## [0.1.5](https://github.com/DeTraced-Security/YARlint/compare/v0.1.4...v0.1.5) - 2026-06-17
 
 ### Features
