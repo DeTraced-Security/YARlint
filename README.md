@@ -1,4 +1,13 @@
 # YARlint
+![GitHub Release](https://img.shields.io/github/v/release/DeTraced-Security/YARLINT)
+![Crates.io Total Downloads](https://img.shields.io/crates/d/yarlint)
+
+![docs.rs](https://img.shields.io/docsrs/yarlint)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/DeTraced-Security/YARlint/ci.yml?event=push&style=flat)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fyarlint.detraced.org)
+![Crates.io Size](https://img.shields.io/crates/size/yarlint)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DeTraced-Security/YARlint)
+
 
 > **Early WIP / Pre-Alpha**: expect breaking changes, missing features, and rough edges.
 
