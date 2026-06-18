@@ -62,36 +62,6 @@ pub fn parse_expr(parser: &mut AstParser) -> Result<ExprNode, String> {
     parse_or(parser)
 }
 
-///// Parses an `all of ($pattern*)` expression.
-/////
-///// Example:
-/////
-///// ```yara
-///// all of ($x*)
-///// ```
-/////
-///// Produces:
-/////
-///// ```rust
-///// ExprNode::AllOf {
-/////     pattern: "$x".to_string()
-///// }
-///// ```
-//fn parse_all_of(parser: &mut AstParser) -> Result<ExprNode, String> {
-//    parser.expect_keyword("all")?;
-//    parser.expect_keyword("of")?;
-//
-//    parser.expect(&TokenType::LParen)?;
-//
-//    let pattern = parser.expect_string_identifier()?;
-//
-//    parser.expect(&TokenType::Star)?;
-//
-//    parser.expect(&TokenType::RParen)?;
-//
-//    Ok(ExprNode::AllOf { pattern })
-//}
-
 /// Parses a logical OR expression.
 ///
 /// OR has the lowest precedence level.
