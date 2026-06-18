@@ -1,4 +1,5 @@
 use yarlint::linter::{context::LintContext, default_engine};
+use yarlint::parser::syntax::{MetaEntryNode, MetaValue};
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,
     strings::StringNode,
@@ -48,7 +49,26 @@ fn default_engine_produces_no_findings_for_clean_rule() {
             is_global: false,
             is_private: false,
             tags: vec![],
-            meta: vec![],
+            meta: vec![
+                MetaEntryNode {
+                    key: "author".to_string(),
+                    value: MetaValue::String("DeTraced Security".to_owned()),
+                },
+                MetaEntryNode {
+                    key: "description".to_string(),
+                    value: MetaValue::String("Good Rule :3".to_owned()),
+                },
+                MetaEntryNode {
+                    key: "reference".to_string(),
+                    value: MetaValue::String(
+                        "https://github.com/DeTraced-Security/YARlint".to_owned(),
+                    ),
+                },
+                MetaEntryNode {
+                    key: "date".to_string(),
+                    value: MetaValue::String("2026-06-18".to_owned()),
+                },
+            ],
             strings: vec![StringNode {
                 identifier: "$s1".to_string(),
                 value: "cmd.exe".to_string(),

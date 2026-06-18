@@ -12,10 +12,9 @@ release:
     cargo build --release --target x86_64-unknown-linux-gnu
     cargo zigbuild --release --target x86_64-apple-darwin
 
-doc:
-    git cliff
 all:
     cargo fmt --all -- --check
     cargo clippy --all-targets --all-features -- -D warnings
     cargo build --all-features --locked
     cargo test --all-features --locked
+    cargo llvm-cov --fail-under-lines 99 --fail-under-functions 97
