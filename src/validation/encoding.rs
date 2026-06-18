@@ -12,7 +12,7 @@
 ///
 /// # Arguments
 ///
-/// * `file` (`&[u8]`) - file path of the file to have its contents validated
+/// * `file` (`&[u8]`) - byte contents of the file to have its contents validated
 ///
 /// # Returns
 ///
