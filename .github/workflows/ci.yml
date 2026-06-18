@@ -1,47 +1,51 @@
 name: Rust CI
-
 on:
   push:
     branches:
       - main
       - master
   pull_request:
-
 permissions:
   contents: read
 
 jobs:
-  check:
+  fmt:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        toolchain:
-          - stable
-
     steps:
       - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo fmt --all -- --check
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --all-targets --all-features -- -D warnings
 
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --all-features --locked
 
-      - name: Cache dependencies
-        uses: Swatinem/rust-cache@v2
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --all-features --locked
 
-      - name: Check formatting
-        run: cargo fmt --all -- --check
-
-      - name: Check test coverage
-        run: cargo llvm-cov --fail-under-lines 99 --fail-under-functions 97
-
-      - name: Run clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
-
-      - name: Build
-        run: cargo build --all-features --locked
-
-      - name: Test
-        run: cargo test --all-features --locked
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@cargo-llvm-cov
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo llvm-cov --fail-under-lines 99 --fail-under-functions 97
