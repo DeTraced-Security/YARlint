@@ -1,3 +1,13 @@
+name: Rust CI
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+permissions:
+  contents: read
+
 jobs:
   fmt:
     runs-on: ubuntu-latest
