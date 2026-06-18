@@ -482,11 +482,8 @@ impl AstParser {
     /// - The rule is malformed
     fn parse_rule(parser: &mut AstParser) -> Result<RuleNode, String> {
         parser.expect_keyword("rule")?;
-        // Debug
-        //println!("matched rule keyword");
 
         let name = parser.expect_rule_name()?;
-        println!("Parsed rule name: {}", name);
         // TODO: tags
 
         parser.expect(&TokenType::LBrace)?;
