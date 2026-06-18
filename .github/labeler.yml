@@ -50,3 +50,45 @@ github:
   - changed-files:
       - any-glob-to-any-file:
           - '.github/**'
+
+naming cops:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/linter/cops/naming/**'
+          - 'src/linter/cops/naming.rs'
+
+lint cops:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/linter/cops/lint/**'
+          - 'src/linter/cops/lint.rs'
+
+performance cops:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/linter/cops/performance/**'
+          - 'src/linter/cops/performance.rs'
+
+style cops:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/linter/cops/style/**'
+          - 'src/linter/cops/style.rs'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'tests/**'
+
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'commitlintrc.json'
+          - 'Justfile'
+          - 'release-plz.toml'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Cargo.toml'
+          - 'Cargo.lock'
