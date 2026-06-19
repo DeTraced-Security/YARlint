@@ -24,7 +24,9 @@ use crate::parser::{
 ///
 /// # Returns
 ///
-/// Returns a populated [`ConditionNode`] on success.
+/// Returns a populated [`ConditionNode`] on success. If the next token is an
+/// ['RBrace'], it will return an ['ExprNode::Empty`] for `expression`, rather
+/// than a populated ['ExprNode'].
 ///
 /// # Errors
 ///
@@ -32,8 +34,14 @@ use crate::parser::{
 /// - the condition expression contains invalid syntax
 /// - the condition expression ends unexpectedly
 pub fn parse_condition(parser: &mut AstParser) -> Result<ConditionNode, String> {
+    if let Some(tok) = parser.peek()
+        && tok.token_type == TokenType::RBrace
+    {
+        return Ok(ConditionNode {
+            expression: ExprNode::Empty,
+        });
+    }
     let expression = parse_expr(parser)?;
-
     Ok(ConditionNode { expression })
 }
 

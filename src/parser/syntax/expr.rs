@@ -128,4 +128,9 @@ pub enum ExprNode {
     /// Grouping expressions allows precedence to be overridden
     /// during evaluation and parsing.
     Group(Box<ExprNode>),
+
+    /// Signifies an empty condition block for the linter to warn
+    /// on. Without this the ast_parser would crash if it got to a condition
+    /// block that was empty
+    Empty,
 }

@@ -7,9 +7,7 @@
 //! section of a YARA rule:
 //!
 //! - [`condition`] parses condition expressions.
-//! - [`expr`] provides expression parsing utilities.
 //! - [`meta`] parses metadata entries.
-//! - [`rule`] parses complete rule definitions.
 //! - [`strings`] parses string declarations and modifiers.
 
 /// Parsing of YARA condition expressions.
