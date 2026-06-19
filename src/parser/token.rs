@@ -30,6 +30,12 @@ pub enum TokenType {
     /// A quoted string literal.
     StringLiteral(String),
 
+    /// A regular expression.
+    Regex(String),
+
+    /// A String of hexadecimal bytes
+    HexString(String),
+
     /// A reserved YARA keyword.
     Keyword(String),
 

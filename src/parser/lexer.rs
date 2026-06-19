@@ -202,11 +202,6 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
         match ch {
             c if c.is_whitespace() => {}
 
-            '{' => tokens.push(Token {
-                token_type: TokenType::LBrace,
-                span,
-            }),
-
             '}' => tokens.push(Token {
                 token_type: TokenType::RBrace,
                 span,
@@ -256,6 +251,46 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 token_type: TokenType::Comma,
                 span,
             }),
+
+            '{' => {
+                let prev_is_equals = matches!(
+                    tokens.last().map(|t| &t.token_type),
+                    Some(TokenType::Equals)
+                );
+
+                if prev_is_equals {
+                    // Hex string body: consume raw chars until the
+                    // matching unescaped '}'.
+                    let mut value = String::new();
+                    let mut terminated = false;
+
+                    while let Some(next) = lexer.next() {
+                        if next == '}' {
+                            terminated = true;
+                            break;
+                        }
+
+                        value.push(next);
+                    }
+
+                    if !terminated {
+                        return Err(format!(
+                            "Unterminated hex string at {}:{}",
+                            span.line, span.column
+                        ));
+                    }
+
+                    tokens.push(Token {
+                        token_type: TokenType::HexString(value.trim().to_string()),
+                        span,
+                    });
+                } else {
+                    tokens.push(Token {
+                        token_type: TokenType::LBrace,
+                        span,
+                    });
+                }
+            }
 
             '=' => {
                 if matches!(lexer.peek(), Some('=')) {
@@ -346,12 +381,60 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                         }
                     }
 
-                    // division operator
+                    // division operator, or start of a regex literal
                     _ => {
-                        tokens.push(Token {
-                            token_type: TokenType::FSlash,
-                            span,
-                        });
+                        let prev_is_equals = matches!(
+                            tokens.last().map(|t| &t.token_type),
+                            Some(TokenType::Equals)
+                        );
+
+                        if prev_is_equals {
+                            // Regex body: consume raw chars until the
+                            // next unescaped '/'.
+                            let mut value = String::new();
+                            let mut escaped = false;
+                            let mut terminated = false;
+
+                            while let Some(next) = lexer.next() {
+                                if escaped {
+                                    value.push(next);
+                                    escaped = false;
+                                    continue;
+                                }
+
+                                match next {
+                                    '\\' => {
+                                        escaped = true;
+                                        value.push('\\');
+                                    }
+                                    '/' => {
+                                        terminated = true;
+                                        break;
+                                    }
+                                    _ => value.push(next),
+                                }
+                            }
+
+                            if !terminated {
+                                return Err(format!(
+                                    "Unterminated regex literal at {}:{}",
+                                    start_span.line, start_span.column
+                                ));
+                            }
+
+                            // TODO: consume trailing 'i'/'s' flags here
+                            // (e.g. /foo/is) before pushing the token.
+
+                            tokens.push(Token {
+                                token_type: TokenType::Regex(value),
+                                span,
+                            });
+                        } else {
+                            tokens.push(Token {
+                                token_type: TokenType::FSlash,
+                                span,
+                            });
+                        }
                     }
                 }
             }
