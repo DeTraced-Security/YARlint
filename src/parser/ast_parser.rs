@@ -15,6 +15,8 @@
 /// Parsing of YARA condition expressions.
 pub mod condition;
 
+pub mod hex;
+
 /// Parsing of YARA metadata sections.
 pub mod meta;
 
@@ -314,6 +316,52 @@ impl AstParser {
                 "Expected StringLiteral, found {:?}",
                 token.token_type
             )),
+
+            None => Err("Unexpected EOF".into()),
+        }
+    }
+
+    /// Consumes a YARA hex string
+    ///
+    /// # Returns
+    ///
+    /// Returns a [`TokenType::HexString`]
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - current token is not of `TokenType::HexString`
+    /// - current token is `None`
+    fn expect_hex_string(&mut self) -> Result<String, String> {
+        match self.advance() {
+            Some(Token {
+                token_type: TokenType::HexString(name),
+                ..
+            }) => Ok(name.clone()),
+            Some(token) => Err(format!("Expected HexString, found {:?}", token.token_type)),
+
+            None => Err("Unexpected EOF".into()),
+        }
+    }
+
+    /// Consumes a YARA Regular Expression String
+    ///
+    /// # Returns
+    ///
+    /// Returns a ['TokenType::Regex`]
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - current token is not of `TokenType::Regex`
+    /// - current token is `None`
+    fn expect_regex(&mut self) -> Result<String, String> {
+        match self.advance() {
+            Some(Token {
+                token_type: TokenType::Regex(name),
+                ..
+            }) => Ok(name.clone()),
+            Some(token) => Err(format!("Expected Regex, found {:?}", token.token_type)),
 
             None => Err("Unexpected EOF".into()),
         }

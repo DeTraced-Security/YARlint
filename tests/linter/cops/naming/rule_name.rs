@@ -1,5 +1,5 @@
 use yarlint::linter::{
-    context::LintContext, cops::naming::rule_name::NamingRuleName, finding::Severity, rule::Rule,
+    context::LintContext, finding::Severity, rule::Rule, rules::naming::rule_name::NamingRuleName,
 };
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,

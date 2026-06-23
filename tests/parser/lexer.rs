@@ -1,4 +1,4 @@
-use yarlint::parser::lexer::tokenize;
+use yarlint::parser::lexer::yara::tokenize;
 use yarlint::parser::token::TokenType;
 
 // --- happy path ---
@@ -289,7 +289,7 @@ fn strings_keyword_produces_keyword_token() {
 
 #[test]
 fn all_keywords_are_recognized() {
-    use yarlint::parser::lexer::KEYWORDS;
+    use yarlint::parser::lexer::yara::KEYWORDS;
 
     for keyword in KEYWORDS {
         let tokens = tokenize(keyword).unwrap();
@@ -326,7 +326,7 @@ fn identifier_with_underscore_prefix_is_tokenized() {
 
 #[test]
 fn all_identifiers_are_recognized() {
-    use yarlint::parser::lexer::IDENTIFIERS;
+    use yarlint::parser::lexer::yara::IDENTIFIERS;
 
     for identifier in IDENTIFIERS {
         let tokens = tokenize(identifier).unwrap();

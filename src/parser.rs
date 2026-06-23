@@ -10,7 +10,13 @@ pub mod syntax;
 pub mod token;
 
 use crate::parser::{
-    ast_parser::AstParser, lexer::tokenize, syntax::rule_file::RuleFileNode, token::Token,
+    ast_parser::{AstParser, hex::HexAstParser},
+    lexer::{hex::tokenize_hex, yara::tokenize},
+    syntax::{
+        hex::{HexExprNode, HexNode},
+        rule_file::RuleFileNode,
+    },
+    token::Token,
 };
 use std::{
     fs::File,
@@ -70,4 +76,45 @@ pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<RuleFileNode>,
         rule_files.push(rule_file);
     }
     Ok(rule_files)
+}
+
+/// Parses the contents of a YARA hex string into a [`HexNode`].
+///
+/// # Arguments
+///
+/// * `hex_string` (`&str`) - the raw text between a hex string's braces,
+///   e.g. `4D 5A ?? [4-6] ( AA | BB )`.
+///
+/// # Returns
+///
+/// Returns a [`HexNode`] containing both the parsed structure and the
+/// original raw text (kept for future use, e.g. autofix diffing).
+///
+/// # Errors
+///
+/// Returns an error if the hex string is malformed.
+pub fn parse_hex_string(hex_string: &str) -> Result<HexNode, String> {
+    let hex_tokens = tokenize_hex(hex_string)?;
+
+    if hex_tokens.is_empty() {
+        return Ok(HexNode {
+            expression: HexExprNode { atoms: Vec::new() },
+            original_string: hex_string.to_string(),
+        });
+    }
+
+    let mut hex_parser = HexAstParser::new(hex_tokens);
+    let atoms = hex_parser.parse_sequence()?;
+
+    if let Some(token) = hex_parser.peek() {
+        return Err(format!(
+            "Unexpected trailing token in hex string: {:?}",
+            token.token_type
+        ));
+    }
+
+    Ok(HexNode {
+        expression: HexExprNode { atoms },
+        original_string: hex_string.to_string(),
+    })
 }

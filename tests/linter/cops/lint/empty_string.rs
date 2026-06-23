@@ -1,6 +1,7 @@
 use yarlint::linter::{
-    context::LintContext, cops::lint::empty_string::LintEmptyString, finding::Severity, rule::Rule,
+    context::LintContext, finding::Severity, rule::Rule, rules::lint::empty_string::LintEmptyString,
 };
+use yarlint::parser::syntax::strings::StringType;
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,
     strings::StringNode,
@@ -17,7 +18,7 @@ fn make_file_with_string(identifier: &str, value: &str) -> RuleFileNode {
             meta: vec![],
             strings: vec![StringNode {
                 identifier: identifier.to_string(),
-                value: value.to_string(),
+                value: StringType::Text(value.to_string()),
                 modifiers: vec![],
             }],
             condition: ConditionNode {
@@ -65,12 +66,12 @@ fn multiple_empty_strings_produce_one_finding_each() {
             strings: vec![
                 StringNode {
                     identifier: "$s1".to_string(),
-                    value: "".to_string(),
+                    value: StringType::Text("".to_string()),
                     modifiers: vec![],
                 },
                 StringNode {
                     identifier: "$s2".to_string(),
-                    value: "".to_string(),
+                    value: StringType::Text("".to_string()),
                     modifiers: vec![],
                 },
             ],
@@ -100,12 +101,12 @@ fn mixed_strings_only_produces_findings_for_empty_ones() {
             strings: vec![
                 StringNode {
                     identifier: "$s1".to_string(),
-                    value: "cmd.exe".to_string(),
+                    value: StringType::Text("cmd.exe".to_string()),
                     modifiers: vec![],
                 },
                 StringNode {
                     identifier: "$s2".to_string(),
-                    value: "".to_string(),
+                    value: StringType::Text("".to_string()),
                     modifiers: vec![],
                 },
             ],

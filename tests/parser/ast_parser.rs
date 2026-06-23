@@ -1,7 +1,7 @@
 use yarlint::parser::{
     ast_parser::AstParser,
-    lexer::tokenize,
-    syntax::{expr::ExprNode, rule_file::RuleFileNode},
+    lexer::yara::tokenize,
+    syntax::{expr::ExprNode, rule_file::RuleFileNode, strings::StringType},
 };
 
 fn parse(source: &str) -> Result<RuleFileNode, String> {
@@ -150,7 +150,10 @@ fn rule_with_string_is_parsed() {
     let result = parse(source).unwrap();
 
     assert_eq!(result.rules[0].strings[0].identifier, "$s1");
-    assert_eq!(result.rules[0].strings[0].value, "cmd.exe");
+    assert_eq!(
+        result.rules[0].strings[0].value,
+        StringType::Text("cmd.exe".to_owned())
+    );
 }
 
 #[test]

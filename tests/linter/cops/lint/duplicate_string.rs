@@ -1,7 +1,8 @@
 use yarlint::linter::{
-    context::LintContext, cops::lint::duplicate_string::LintDuplicateString, finding::Severity,
-    rule::Rule,
+    context::LintContext, finding::Severity, rule::Rule,
+    rules::lint::duplicate_string::LintDuplicateString,
 };
+use yarlint::parser::syntax::strings::StringType;
 use yarlint::parser::syntax::{
     condition::ConditionNode,
     expr::ExprNode,
@@ -23,12 +24,12 @@ fn unique_strings_produce_no_findings() {
             strings: vec![
                 StringNode {
                     identifier: "$s1".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 },
                 StringNode {
                     identifier: "$s2".to_string(),
-                    value: "bar".to_string(),
+                    value: StringType::Text("bar".to_string()),
                     modifiers: vec![],
                 },
             ],
@@ -58,12 +59,12 @@ fn identical_value_and_modifiers_produces_warning() {
             strings: vec![
                 StringNode {
                     identifier: "$s1".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 },
                 StringNode {
                     identifier: "$s2".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 },
             ],
@@ -97,12 +98,12 @@ fn same_value_different_modifiers_produces_no_findings() {
             strings: vec![
                 StringNode {
                     identifier: "$s1".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![StringModifier::Wide],
                 },
                 StringNode {
                     identifier: "$s2".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![StringModifier::Ascii],
                 },
             ],
@@ -133,12 +134,12 @@ fn same_value_same_modifiers_different_order_produces_warning() {
             strings: vec![
                 StringNode {
                     identifier: "$s1".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![StringModifier::Wide, StringModifier::Ascii],
                 },
                 StringNode {
                     identifier: "$s2".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![StringModifier::Ascii, StringModifier::Wide],
                 },
             ],
@@ -169,7 +170,7 @@ fn duplicates_across_different_rules_produce_no_findings() {
                 meta: vec![],
                 strings: vec![StringNode {
                     identifier: "$s1".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 }],
                 condition: ConditionNode {
@@ -184,7 +185,7 @@ fn duplicates_across_different_rules_produce_no_findings() {
                 meta: vec![],
                 strings: vec![StringNode {
                     identifier: "$s1".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 }],
                 condition: ConditionNode {
@@ -214,17 +215,17 @@ fn three_identical_strings_produce_two_findings() {
             strings: vec![
                 StringNode {
                     identifier: "$s1".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 },
                 StringNode {
                     identifier: "$s2".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 },
                 StringNode {
                     identifier: "$s3".to_string(),
-                    value: "foo".to_string(),
+                    value: StringType::Text("foo".to_string()),
                     modifiers: vec![],
                 },
             ],

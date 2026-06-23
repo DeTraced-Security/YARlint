@@ -5,6 +5,7 @@
 
 pub mod condition;
 pub mod expr;
+pub mod hex;
 pub mod meta;
 pub mod operators;
 pub mod rule;

@@ -74,7 +74,7 @@ pub fn parse_meta(parser: &mut AstParser) -> Result<Vec<MetaEntryNode>, String> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::{ast_parser::AstParser, lexer::tokenize, syntax::MetaValue};
+    use crate::parser::{ast_parser::AstParser, lexer::yara::tokenize, syntax::MetaValue};
 
     fn make_parser_for_meta(source: &str) -> AstParser {
         // wrap in a fake rule context so the meta parser has a "strings" keyword to stop at

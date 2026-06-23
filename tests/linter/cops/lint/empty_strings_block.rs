@@ -1,7 +1,8 @@
 use yarlint::linter::{
-    context::LintContext, cops::lint::empty_strings_block::LintEmptyStringsBlock,
-    finding::Severity, rule::Rule,
+    context::LintContext, finding::Severity, rule::Rule,
+    rules::lint::empty_strings_block::LintEmptyStringsBlock,
 };
+use yarlint::parser::syntax::strings::StringType;
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,
     strings::StringNode,
@@ -19,7 +20,7 @@ fn rule_with_strings_produces_no_findings() {
             meta: vec![],
             strings: vec![StringNode {
                 identifier: "$s1".to_string(),
-                value: "cmd.exe".to_string(),
+                value: StringType::Text("cmd.exe".to_string()),
                 modifiers: vec![],
             }],
             condition: ConditionNode {
@@ -111,7 +112,7 @@ fn mixed_rules_only_produces_findings_for_empty_blocks() {
                 meta: vec![],
                 strings: vec![StringNode {
                     identifier: "$s1".to_string(),
-                    value: "cmd.exe".to_string(),
+                    value: StringType::Text("cmd.exe".to_string()),
                     modifiers: vec![],
                 }],
                 condition: ConditionNode {
