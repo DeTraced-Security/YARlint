@@ -221,6 +221,14 @@ fn parse_rule_without_condition_uses_default_condition() {
     assert!(result.is_ok());
 }
 
+#[test]
+fn empty_condition_is_parsed() {
+    // condition block without any contents is parsed
+    let tokens = tokenize("rule foo { condition: }").unwrap();
+    let result = AstParser::parse_rule_file(AstParser::new(tokens));
+    assert!(result.is_ok());
+}
+
 // --- error cases ---
 
 #[test]
