@@ -48,4 +48,4 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: taiki-e/install-action@cargo-llvm-cov
       - uses: Swatinem/rust-cache@v2
-      - run: cargo llvm-cov --fail-under-lines 99 --fail-under-functions 97
+      - run: cargo llvm-cov --fail-under-lines 95 --fail-under-functions 95

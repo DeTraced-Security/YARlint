@@ -13,6 +13,8 @@
 /// Parsing of YARA condition expressions.
 pub mod condition;
 
+pub mod hex;
+
 /// Parsing of YARA metadata sections.
 pub mod meta;
 
@@ -312,6 +314,52 @@ impl AstParser {
                 "Expected StringLiteral, found {:?}",
                 token.token_type
             )),
+
+            None => Err("Unexpected EOF".into()),
+        }
+    }
+
+    /// Consumes a YARA hex string
+    ///
+    /// # Returns
+    ///
+    /// Returns a [`TokenType::HexString`]
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - current token is not of `TokenType::HexString`
+    /// - current token is `None`
+    fn expect_hex_string(&mut self) -> Result<String, String> {
+        match self.advance() {
+            Some(Token {
+                token_type: TokenType::HexString(name),
+                ..
+            }) => Ok(name.clone()),
+            Some(token) => Err(format!("Expected HexString, found {:?}", token.token_type)),
+
+            None => Err("Unexpected EOF".into()),
+        }
+    }
+
+    /// Consumes a YARA Regular Expression String
+    ///
+    /// # Returns
+    ///
+    /// Returns a ['TokenType::Regex`]
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - current token is not of `TokenType::Regex`
+    /// - current token is `None`
+    fn expect_regex(&mut self) -> Result<String, String> {
+        match self.advance() {
+            Some(Token {
+                token_type: TokenType::Regex(name),
+                ..
+            }) => Ok(name.clone()),
+            Some(token) => Err(format!("Expected Regex, found {:?}", token.token_type)),
 
             None => Err("Unexpected EOF".into()),
         }
@@ -893,6 +941,70 @@ mod tests {
         let mut parser = make_parser(vec![]);
 
         assert!(parser.expect_any_keyword().is_err());
+    }
+
+    // --- expect_hex_string ---
+
+    fn dummy_span() -> Span {
+        Span { line: 0, column: 0 }
+    }
+
+    #[test]
+    fn expect_hex_string_wrong_token_type_returns_err() {
+        let tokens = vec![Token {
+            token_type: TokenType::Identifier("not_a_hex_string".to_string()),
+            span: dummy_span(),
+        }];
+        let mut parser = AstParser::new(tokens);
+
+        let result = parser.expect_hex_string();
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err(),
+            "Expected HexString, found Identifier(\"not_a_hex_string\")"
+        );
+    }
+
+    #[test]
+    fn expect_hex_string_eof_returns_err() {
+        let parser_tokens: Vec<Token> = Vec::new();
+        let mut parser = AstParser::new(parser_tokens);
+
+        let result = parser.expect_hex_string();
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Unexpected EOF");
+    }
+
+    // --- expect_regex_string ---
+
+    #[test]
+    fn expect_regex_wrong_token_type_returns_err() {
+        let tokens = vec![Token {
+            token_type: TokenType::Identifier("not_a_regex".to_string()),
+            span: dummy_span(),
+        }];
+        let mut parser = AstParser::new(tokens);
+
+        let result = parser.expect_regex();
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err(),
+            "Expected Regex, found Identifier(\"not_a_regex\")"
+        );
+    }
+
+    #[test]
+    fn expect_regex_eof_returns_err() {
+        let parser_tokens: Vec<Token> = Vec::new();
+        let mut parser = AstParser::new(parser_tokens);
+
+        let result = parser.expect_regex();
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Unexpected EOF");
     }
 
     // --- expect_rule_name ---

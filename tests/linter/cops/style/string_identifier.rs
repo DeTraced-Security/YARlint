@@ -1,7 +1,8 @@
 use yarlint::linter::{
-    context::LintContext, cops::style::string_identifier::StyleStringIdentifier, finding::Severity,
-    rule::Rule,
+    context::LintContext, finding::Severity, rule::Rule,
+    rules::style::string_identifier::StyleStringIdentifier,
 };
+use yarlint::parser::syntax::strings::StringType;
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,
     strings::StringNode,
@@ -18,7 +19,7 @@ fn make_rule_with_string(identifier: &str) -> RuleFileNode {
             meta: vec![],
             strings: vec![StringNode {
                 identifier: identifier.to_string(),
-                value: "foo".to_string(),
+                value: StringType::Text("foo".to_string()),
                 modifiers: vec![],
             }],
             condition: ConditionNode {
@@ -66,12 +67,12 @@ fn multiple_bad_identifiers_produce_one_finding_each() {
             strings: vec![
                 StringNode {
                     identifier: "$fooBar".to_string(),
-                    value: "a".to_string(),
+                    value: StringType::Text("a".to_string()),
                     modifiers: vec![],
                 },
                 StringNode {
                     identifier: "$BazQux".to_string(),
-                    value: "b".to_string(),
+                    value: StringType::Text("b".to_string()),
                     modifiers: vec![],
                 },
             ],

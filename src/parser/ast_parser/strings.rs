@@ -6,7 +6,8 @@
 
 use crate::parser::{
     ast_parser::AstParser,
-    syntax::{StringModifier, StringNode},
+    parse_hex_string,
+    syntax::{StringModifier, StringNode, strings::StringType},
     token::TokenType,
 };
 
@@ -50,7 +51,14 @@ pub fn parse_strings(parser: &mut AstParser) -> Result<Vec<StringNode>, String> 
 
         parser.expect(&TokenType::Equals)?;
 
-        let value = parser.expect_string_literal()?;
+        let value = match parser.peek().map(|t| &t.token_type) {
+            Some(TokenType::StringLiteral(_)) => StringType::Text(parser.expect_string_literal()?),
+            Some(TokenType::HexString(_)) => {
+                StringType::Hex(parse_hex_string(&parser.expect_hex_string()?)?)
+            }
+            Some(TokenType::Regex(_)) => StringType::RegEx(parser.expect_regex()?),
+            other => return Err(format!("Expected string value, found {:?}", other)),
+        };
 
         let mut modifiers = Vec::new();
 
@@ -108,7 +116,7 @@ pub fn parse_strings(parser: &mut AstParser) -> Result<Vec<StringNode>, String> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::{ast_parser::AstParser, lexer::tokenize, syntax::StringModifier};
+    use crate::parser::{ast_parser::AstParser, lexer::yara::tokenize, syntax::StringModifier};
 
     fn make_parser_for_strings(source: &str) -> AstParser {
         // wrap with a "condition" keyword so the strings parser has a stop token
@@ -136,7 +144,7 @@ mod tests {
 
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].identifier, "$s1");
-        assert_eq!(result[0].value, "cmd.exe");
+        assert_eq!(result[0].value, StringType::Text("cmd.exe".to_string()));
     }
 
     #[test]
@@ -156,7 +164,7 @@ mod tests {
 
         let result = parse_strings(&mut parser).unwrap();
 
-        assert_eq!(result[0].value, "");
+        assert_eq!(result[0].value, StringType::Text("".to_string()));
     }
 
     #[test]

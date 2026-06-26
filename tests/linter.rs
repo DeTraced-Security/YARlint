@@ -1,4 +1,5 @@
 use yarlint::linter::{context::LintContext, default_engine};
+use yarlint::parser::syntax::strings::StringType;
 use yarlint::parser::syntax::{MetaEntryNode, MetaValue};
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,
@@ -25,7 +26,7 @@ fn default_engine_has_cops_registered() {
             meta: vec![],
             strings: vec![StringNode {
                 identifier: "$s1".to_string(),
-                value: "foo".to_string(),
+                value: StringType::Text("foo".to_string()),
                 modifiers: vec![],
             }],
             condition: ConditionNode {
@@ -71,7 +72,7 @@ fn default_engine_produces_no_findings_for_clean_rule() {
             ],
             strings: vec![StringNode {
                 identifier: "$s1".to_string(),
-                value: "cmd.exe".to_string(),
+                value: StringType::Text("cmd.exe".to_string()),
                 modifiers: vec![],
             }],
             condition: ConditionNode {

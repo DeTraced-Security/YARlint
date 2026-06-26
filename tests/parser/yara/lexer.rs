@@ -1,5 +1,6 @@
-use yarlint::parser::lexer::tokenize;
-use yarlint::parser::token::TokenType;
+use yarlint::parser::lexer::yara::tokenize;
+use yarlint::parser::span::Span;
+use yarlint::parser::token::{Token, TokenType};
 
 // --- happy path ---
 
@@ -215,6 +216,48 @@ fn escaped_quote_in_string_literal_is_preserved() {
     );
 }
 
+// --- hex strings ---
+
+#[test]
+fn error_on_unterminated_hex_string() {
+    let result = tokenize(r#"= { aa bb cc"#);
+
+    assert!(result.is_err())
+}
+
+// --- regex strings ---
+
+#[test]
+fn escaped_push_past_next_char() {
+    let tokens = tokenize(r#" = /\\a /"#).unwrap();
+    let expected: Vec<Token> = vec![
+        Token {
+            token_type: TokenType::Equals,
+            span: Span { line: 1, column: 2 },
+        },
+        Token {
+            token_type: TokenType::Regex("\\\\a ".to_owned()),
+            span: Span { line: 1, column: 4 },
+        },
+    ];
+    assert_eq!(tokens, expected);
+}
+
+#[test]
+fn error_on_unterminated_regex() {
+    let result = tokenize(r#"= /"#);
+
+    assert!(result.is_err())
+}
+
+#[test]
+fn regex_double_escape_behavior() {
+    let tokens = tokenize(r#"= /\\\\/"#).unwrap();
+
+    // should preserve escape layering exactly as lexer emits it
+    assert!(matches!(tokens[1].token_type, TokenType::Regex(_)));
+}
+
 // --- string identifiers ---
 
 #[test]
@@ -258,6 +301,37 @@ fn bare_dollar_produces_dollar_only_string_identifier() {
     );
 }
 
+#[test]
+fn tokenize_empty_string_identifier() {
+    let tokens = tokenize("$").unwrap();
+
+    assert_eq!(tokens.len(), 1);
+    assert_eq!(
+        tokens[0].token_type,
+        TokenType::StringIdentifier("$".to_string())
+    );
+}
+
+#[test]
+fn tokenize_identifier_beginning_with_underscore() {
+    let tokens = tokenize("_foo").unwrap();
+
+    assert_eq!(
+        tokens[0].token_type,
+        TokenType::Identifier("_foo".to_string())
+    );
+}
+
+#[test]
+fn tokenize_number_followed_by_identifier() {
+    let tokens = tokenize("123abc").unwrap();
+
+    assert_eq!(
+        tokens[0].token_type,
+        TokenType::Number("123abc".to_string())
+    );
+}
+
 // --- keywords ---
 
 #[test]
@@ -289,7 +363,7 @@ fn strings_keyword_produces_keyword_token() {
 
 #[test]
 fn all_keywords_are_recognized() {
-    use yarlint::parser::lexer::KEYWORDS;
+    use yarlint::parser::lexer::yara::KEYWORDS;
 
     for keyword in KEYWORDS {
         let tokens = tokenize(keyword).unwrap();
@@ -326,7 +400,7 @@ fn identifier_with_underscore_prefix_is_tokenized() {
 
 #[test]
 fn all_identifiers_are_recognized() {
-    use yarlint::parser::lexer::IDENTIFIERS;
+    use yarlint::parser::lexer::yara::IDENTIFIERS;
 
     for identifier in IDENTIFIERS {
         let tokens = tokenize(identifier).unwrap();

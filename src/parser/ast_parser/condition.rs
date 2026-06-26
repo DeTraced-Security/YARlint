@@ -419,7 +419,7 @@ mod tests {
     use super::*;
     use crate::parser::{
         ast_parser::AstParser,
-        lexer::tokenize,
+        lexer::yara::tokenize,
         syntax::{BinaryOperator, ExprNode},
     };
 

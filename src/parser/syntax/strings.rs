@@ -1,5 +1,7 @@
 //! String declarations contained within a YARA rule.
 
+use crate::parser::syntax::hex::HexNode;
+
 /// Represents a string definition within a YARA rule's `strings` section.
 ///
 /// A string definition consists of an identifier, a value, and zero or more
@@ -14,12 +16,9 @@ pub struct StringNode {
 
     /// String value.
     ///
-    /// In the future we look to support all the different types of strings that
-    /// YARA can use: Text, Hex, and Regex
-    ///
     /// Example:
     /// `"cmd.exe"`
-    pub value: String,
+    pub value: StringType,
 
     /// Modifiers applied to the string.
     ///
@@ -53,4 +52,29 @@ pub enum StringModifier {
 
     /// Match the UTF-16 representation of the Base64-encoded string.
     Base64Wide,
+}
+
+/// Encapsulates the three different types of string values in a YARA Rule
+///
+/// There is still much to implement, though that will all most likely be
+/// https://yara.readthedocs.io/en/latest/writingrules.html#strings
+#[derive(Debug, Clone, Eq, Hash, PartialEq)]
+pub enum StringType {
+    /// String value.
+    ///
+    /// Example:
+    /// `"foo.exe"`
+    Text(String),
+
+    /// Hex Value.
+    ///
+    /// Example:
+    /// `{ a6 f8 ?d 82 }`
+    Hex(HexNode),
+
+    /// Regular Expression
+    ///
+    /// Example:
+    /// `/md5: [0-9a-fA-F]{32}/`
+    RegEx(String),
 }
