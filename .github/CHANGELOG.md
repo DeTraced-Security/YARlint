@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [0.1.7](https://github.com/DeTraced-Security/YARlint/compare/v0.1.6...v0.1.7) - 2026-06-26
+
+### Features
+
+- *(ast)* add hex and regex AST parsing
+- *(lexer)* add hex and regex lexing
+
+### Other
+
+- Merge github.com:DeTraced-Security/YARlint into feat/regex-and-hex-strings
+- refactor to pass ci/cd
+- lower test coverage requirements
+- add testing for ci/cd
+
 ## [0.1.6](https://github.com/DeTraced-Security/YARlint/compare/v0.1.5...v0.1.6) - 2026-06-18
 
 ### Features
