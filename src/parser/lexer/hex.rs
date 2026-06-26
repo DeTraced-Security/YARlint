@@ -197,3 +197,253 @@ pub(crate) fn tokenize_hex(source: &str) -> Result<Vec<HexToken>, String> {
 
     Ok(tokens)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn tokenize_hex_invalid_second_byte_char_returns_err() {
+        let result = tokenize_hex("4!");
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err(),
+            "Invalid second character in hex byte: '!'"
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_unknown_character_returns_unknown_token() {
+        let result = tokenize_hex("!");
+
+        assert!(result.is_ok());
+        let tokens = result.unwrap();
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens[0].token_type, HexTokenType::Unknown('!'));
+    }
+
+    #[test]
+    fn tokenize_hex_unterminated_jump_returns_err() {
+        let result = tokenize_hex("[4-6");
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err(),
+            "Unterminated jump in hex string: missing ']'"
+        );
+    }
+
+    #[test]
+    fn parse_nibble_returns_err_if_invalid_byte() {
+        let result = parse_nibble('w');
+        assert!(result.is_err())
+    }
+
+    #[test]
+    fn tokenize_hex_empty_input_returns_empty_vec() {
+        let tokens = tokenize_hex("").unwrap();
+        assert!(tokens.is_empty());
+    }
+
+    #[test]
+    fn tokenize_hex_whitespace_only_returns_empty_vec() {
+        let tokens = tokenize_hex(" \t\n\r ").unwrap();
+        assert!(tokens.is_empty());
+    }
+
+    #[test]
+    fn tokenize_hex_single_hex_digit_returns_eof_error() {
+        let result = tokenize_hex("A");
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Unexpected EOF inside hex byte");
+    }
+
+    #[test]
+    fn tokenize_hex_single_wildcard_returns_eof_error() {
+        let result = tokenize_hex("?");
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Unexpected EOF inside hex byte");
+    }
+
+    #[test]
+    fn tokenize_hex_parses_high_nibble_wildcard() {
+        let tokens = tokenize_hex("A?").unwrap();
+
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(
+            tokens[0].token_type,
+            HexTokenType::NibbleWildcard {
+                high: Some(0xA),
+                low: None,
+            }
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_parses_low_nibble_wildcard() {
+        let tokens = tokenize_hex("?A").unwrap();
+
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(
+            tokens[0].token_type,
+            HexTokenType::NibbleWildcard {
+                high: None,
+                low: Some(0xA),
+            }
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_accepts_lowercase_hex() {
+        let tokens = tokenize_hex("af").unwrap();
+
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens[0].token_type, HexTokenType::Byte(0xAF));
+    }
+
+    #[test]
+    fn tokenize_hex_accepts_mixed_case_hex() {
+        let tokens = tokenize_hex("aF").unwrap();
+
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens[0].token_type, HexTokenType::Byte(0xAF));
+    }
+
+    #[test]
+    fn tokenize_hex_parses_multi_digit_jump_bound() {
+        let tokens = tokenize_hex("[123]").unwrap();
+
+        assert_eq!(
+            tokens.iter().map(|t| &t.token_type).collect::<Vec<_>>(),
+            vec![
+                &HexTokenType::LBracket,
+                &HexTokenType::Number(123),
+                &HexTokenType::RBracket,
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_parses_leading_zero_jump_bound() {
+        let tokens = tokenize_hex("[0004]").unwrap();
+
+        assert_eq!(
+            tokens.iter().map(|t| &t.token_type).collect::<Vec<_>>(),
+            vec![
+                &HexTokenType::LBracket,
+                &HexTokenType::Number(4),
+                &HexTokenType::RBracket,
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_accepts_maximum_u32_jump_bound() {
+        let tokens = tokenize_hex("[4294967295]").unwrap();
+
+        assert_eq!(
+            tokens.iter().map(|t| &t.token_type).collect::<Vec<_>>(),
+            vec![
+                &HexTokenType::LBracket,
+                &HexTokenType::Number(u32::MAX),
+                &HexTokenType::RBracket,
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_rejects_overflowing_jump_bound() {
+        let result = tokenize_hex("[4294967296]");
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn tokenize_hex_ignores_all_whitespace() {
+        let tokens = tokenize_hex("AA\tBB\nCC\rDD").unwrap();
+
+        assert_eq!(
+            tokens.iter().map(|t| &t.token_type).collect::<Vec<_>>(),
+            vec![
+                &HexTokenType::Byte(0xAA),
+                &HexTokenType::Byte(0xBB),
+                &HexTokenType::Byte(0xCC),
+                &HexTokenType::Byte(0xDD),
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_empty_jump_emits_brackets() {
+        let tokens = tokenize_hex("[]").unwrap();
+
+        assert_eq!(
+            tokens.iter().map(|t| &t.token_type).collect::<Vec<_>>(),
+            vec![&HexTokenType::LBracket, &HexTokenType::RBracket,]
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_lone_dash_is_tokenized() {
+        let tokens = tokenize_hex("-").unwrap();
+
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens[0].token_type, HexTokenType::Dash);
+    }
+
+    #[test]
+    fn tokenize_hex_nested_parens_are_tokenized() {
+        let tokens = tokenize_hex("(((").unwrap();
+
+        assert_eq!(tokens.len(), 3);
+
+        assert!(tokens.iter().all(|t| t.token_type == HexTokenType::LParen));
+    }
+
+    #[test]
+    fn tokenize_hex_unknown_inside_jump_is_preserved() {
+        let tokens = tokenize_hex("[a]").unwrap();
+
+        assert_eq!(
+            tokens.iter().map(|t| &t.token_type).collect::<Vec<_>>(),
+            vec![
+                &HexTokenType::LBracket,
+                &HexTokenType::Unknown('a'),
+                &HexTokenType::RBracket,
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenize_hex_unknown_after_valid_byte_is_preserved() {
+        let tokens = tokenize_hex("AA!").unwrap();
+
+        assert_eq!(
+            tokens.iter().map(|t| &t.token_type).collect::<Vec<_>>(),
+            vec![&HexTokenType::Byte(0xAA), &HexTokenType::Unknown('!'),]
+        );
+    }
+
+    #[test]
+    fn parse_nibble_accepts_question_mark() {
+        assert_eq!(parse_nibble('?').unwrap(), None);
+    }
+
+    #[test]
+    fn parse_nibble_accepts_lowercase_hex() {
+        assert_eq!(parse_nibble('f').unwrap(), Some(0xF));
+    }
+
+    #[test]
+    fn parse_nibble_accepts_uppercase_hex() {
+        assert_eq!(parse_nibble('A').unwrap(), Some(0xA));
+    }
+
+    #[test]
+    fn parse_nibble_rejects_uppercase_non_hex() {
+        assert!(parse_nibble('G').is_err());
+    }
+}

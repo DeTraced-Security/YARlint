@@ -180,7 +180,7 @@ mod tests {
     #[test]
     fn parse_meta_returns_err_on_unsupported_value_type() {
         // LBrace is not a valid meta value
-        let mut parser = make_parser_for_meta("author = {");
+        let mut parser = make_parser_for_meta("author = {}");
 
         assert!(parse_meta(&mut parser).is_err());
     }

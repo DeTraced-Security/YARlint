@@ -205,3 +205,140 @@ pub fn parse_hex_string(hex_string: &str) -> Result<HexNode, String> {
         original_string: hex_string.to_string(),
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- expect ---
+
+    #[test]
+    fn expect_wrong_token_type_returns_err() {
+        let tokens = vec![HexToken {
+            token_type: HexTokenType::Pipe,
+        }];
+        let mut parser = HexAstParser::new(tokens);
+
+        let result = parser.expect(&HexTokenType::LBracket);
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err(),
+            "Expected LBracket, found Pipe"
+        );
+    }
+
+    #[test]
+    fn expect_eof_returns_err() {
+        let mut parser = HexAstParser::new(Vec::new());
+
+        let result = parser.expect(&HexTokenType::LBracket);
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Unexpected EOF in hex string");
+    }
+
+    // --- expect_number ---
+
+    #[test]
+    fn expect_number_wrong_token_type_returns_err() {
+        let tokens = vec![HexToken {
+            token_type: HexTokenType::Dash,
+        }];
+        let mut parser = HexAstParser::new(tokens);
+
+        let result = parser.expect_number();
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Expected jump bound, found Dash");
+    }
+
+    #[test]
+    fn expect_number_eof_returns_err() {
+        let mut parser = HexAstParser::new(Vec::new());
+
+        let result = parser.expect_number();
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Unexpected EOF in hex string");
+    }
+
+    // --- parse_sequence ---
+
+    #[test]
+    fn parse_sequence_unexpected_token_returns_err() {
+        // Dash only makes sense inside a jump; at the top of a sequence
+        // it's not a valid atom starter.
+        let tokens = vec![HexToken {
+            token_type: HexTokenType::Dash,
+        }];
+        let mut parser = HexAstParser::new(tokens);
+
+        let result = parser.parse_sequence();
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Unexpected token in hex string: Dash");
+    }
+
+    // --- parse_alternation ---
+
+    #[test]
+    fn parse_alternation_single_branch_returns_err() {
+        let tokens = vec![
+            HexToken {
+                token_type: HexTokenType::LParen,
+            },
+            HexToken {
+                token_type: HexTokenType::Byte(0xAA),
+            },
+            HexToken {
+                token_type: HexTokenType::RParen,
+            },
+        ];
+        let mut parser = HexAstParser::new(tokens);
+
+        let result = parser.parse_alternation();
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err(),
+            "Alternation must have at least two branches"
+        );
+    }
+
+    // --- parse_hex_string ---
+
+    #[test]
+    fn parse_hex_string_empty_returns_empty_node() {
+        let result = parse_hex_string("");
+
+        assert!(result.is_ok());
+        let node = result.unwrap();
+        assert!(node.expression.atoms.is_empty());
+        assert_eq!(node.original_string, "");
+    }
+
+    #[test]
+    fn parse_hex_string_single_byte_succeeds() {
+        let result = parse_hex_string("aa");
+
+        assert!(result.is_ok());
+        let node = result.unwrap();
+        assert_eq!(node.expression.atoms, vec![HexAtom::Byte(0xAA)]);
+        assert_eq!(node.original_string, "aa");
+    }
+
+    #[test]
+    fn parse_hex_string_trailing_token_returns_err() {
+        // A valid byte sequence followed by an unconsumed RParen with no
+        // matching LParen, parse_sequence stops cleanly at the byte,
+        // leaving the RParen as an unexpected trailing token.
+        let result = parse_hex_string("aa )");
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err(),
+            "Unexpected trailing token in hex string: RParen"
+        );
+    }
+}

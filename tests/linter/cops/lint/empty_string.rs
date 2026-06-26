@@ -1,7 +1,8 @@
 use yarlint::linter::{
     context::LintContext, finding::Severity, rule::Rule, rules::lint::empty_string::LintEmptyString,
 };
-use yarlint::parser::syntax::strings::StringType;
+use yarlint::parser::syntax::hex::{HexExprNode, HexNode};
+use yarlint::parser::syntax::strings::StringType::{self, Hex, RegEx};
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, rule::RuleNode, rule_file::RuleFileNode,
     strings::StringNode,
@@ -160,4 +161,63 @@ fn empty_rule_list_produces_no_findings() {
     LintEmptyString.check(&context, &mut findings);
 
     assert!(findings.is_empty());
+}
+
+#[test]
+fn rule_with_empty_hex_produces_no_findings() {
+    let file = RuleFileNode {
+        imports: vec![],
+        rules: vec![RuleNode {
+            name: "test_rule".to_string(),
+            is_global: false,
+            is_private: false,
+            tags: vec![],
+            meta: vec![],
+            strings: vec![StringNode {
+                identifier: "$empty_hex".to_string(),
+                value: Hex(HexNode {
+                    expression: HexExprNode { atoms: [].to_vec() },
+                    original_string: "".to_string(),
+                }),
+                modifiers: [].to_vec(),
+            }],
+            condition: ConditionNode {
+                expression: ExprNode::AllOfThem,
+            },
+        }],
+    };
+    let context = LintContext { file: &file};
+    let mut findings = vec![];
+
+    LintEmptyString.check(&context, &mut findings);
+    assert_eq!(findings.len(), 1);
+}
+
+#[test]
+fn rule_with_empty_regex_produces_no_findings() {
+    let file = RuleFileNode {
+        imports: vec![],
+        rules: vec![RuleNode {
+            name: "test_rule".to_string(),
+            is_global: false,
+            is_private: false,
+            tags: vec![],
+            meta: vec![],
+            strings: vec![StringNode {
+                    identifier: "$regex".to_owned(),
+                    value: RegEx(
+                        "".to_string(),
+                    ),
+                modifiers: [].to_vec(),
+            }],
+            condition: ConditionNode {
+                expression: ExprNode::AllOfThem,
+            },
+        }],
+    };
+    let context = LintContext { file: &file};
+    let mut findings = vec![];
+
+    LintEmptyString.check(&context, &mut findings);
+    assert_eq!(findings.len(), 1);
 }
