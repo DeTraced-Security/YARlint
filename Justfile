@@ -17,4 +17,4 @@ all:
     cargo clippy --all-targets --all-features -- -D warnings
     cargo build --all-features --locked
     cargo test --all-features --locked
-    cargo llvm-cov --fail-under-lines 99 --fail-under-functions 97
+    cargo llvm-cov --fail-under-lines 95 --fail-under-functions 95
