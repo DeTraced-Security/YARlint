@@ -1,5 +1,9 @@
-use std::{fs, path::PathBuf, time::{SystemTime, UNIX_EPOCH}};
 use std::io::Write;
+use std::{
+    fs,
+    path::PathBuf,
+    time::{SystemTime, UNIX_EPOCH},
+};
 use yarlint::validation::validate_files;
 
 #[path = "validation/bytes.rs"]

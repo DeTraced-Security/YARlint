@@ -230,7 +230,16 @@ fn error_on_unterminated_hex_string() {
 #[test]
 fn escaped_push_past_next_char() {
     let tokens = tokenize(r#" = /\\a /"#).unwrap();
-    let expected: Vec<Token> = vec![Token { token_type: TokenType::Equals, span: Span { line: 1, column: 2 } }, Token { token_type: TokenType::Regex("\\\\a ".to_owned()), span: Span { line: 1, column: 4 } }];
+    let expected: Vec<Token> = vec![
+        Token {
+            token_type: TokenType::Equals,
+            span: Span { line: 1, column: 2 },
+        },
+        Token {
+            token_type: TokenType::Regex("\\\\a ".to_owned()),
+            span: Span { line: 1, column: 4 },
+        },
+    ];
     assert_eq!(tokens, expected);
 }
 
@@ -246,10 +255,7 @@ fn regex_double_escape_behavior() {
     let tokens = tokenize(r#"= /\\\\/"#).unwrap();
 
     // should preserve escape layering exactly as lexer emits it
-    assert!(matches!(
-        tokens[1].token_type,
-        TokenType::Regex(_)
-    ));
+    assert!(matches!(tokens[1].token_type, TokenType::Regex(_)));
 }
 
 // --- string identifiers ---
@@ -325,8 +331,6 @@ fn tokenize_number_followed_by_identifier() {
         TokenType::Number("123abc".to_string())
     );
 }
-
-
 
 // --- keywords ---
 

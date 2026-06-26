@@ -186,7 +186,7 @@ fn rule_with_empty_hex_produces_no_findings() {
             },
         }],
     };
-    let context = LintContext { file: &file};
+    let context = LintContext { file: &file };
     let mut findings = vec![];
 
     LintEmptyString.check(&context, &mut findings);
@@ -204,10 +204,8 @@ fn rule_with_empty_regex_produces_no_findings() {
             tags: vec![],
             meta: vec![],
             strings: vec![StringNode {
-                    identifier: "$regex".to_owned(),
-                    value: RegEx(
-                        "".to_string(),
-                    ),
+                identifier: "$regex".to_owned(),
+                value: RegEx("".to_string()),
                 modifiers: [].to_vec(),
             }],
             condition: ConditionNode {
@@ -215,7 +213,7 @@ fn rule_with_empty_regex_produces_no_findings() {
             },
         }],
     };
-    let context = LintContext { file: &file};
+    let context = LintContext { file: &file };
     let mut findings = vec![];
 
     LintEmptyString.check(&context, &mut findings);

@@ -222,10 +222,7 @@ mod tests {
         let result = parser.expect(&HexTokenType::LBracket);
 
         assert!(result.is_err());
-        assert_eq!(
-            result.unwrap_err(),
-            "Expected LBracket, found Pipe"
-        );
+        assert_eq!(result.unwrap_err(), "Expected LBracket, found Pipe");
     }
 
     #[test]
