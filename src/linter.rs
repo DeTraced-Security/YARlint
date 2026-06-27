@@ -20,11 +20,14 @@ use rules::{
     },
 };
 
+use crate::linter::rules::naming::rule_name_length::NamingRuleNameLength;
+
 /// Creates the default lint engine with all built-in cops.
 pub fn default_engine() -> LintEngine {
     let mut engine = LintEngine::new();
 
     engine.register(NamingRuleName);
+    engine.register(NamingRuleNameLength);
     engine.register(LintEmptyString);
     engine.register(LintEmptyStringsBlock);
     engine.register(LintDuplicateString);
