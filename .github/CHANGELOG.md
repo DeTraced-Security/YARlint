@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.2.1](https://github.com/DeTraced-Security/YARlint/compare/v0.2.0...v0.2.1) - 2026-06-28
+
+### Features
+
+- *(cops)* add naming/rulenamelength cop
+
 ## [0.2.0](https://github.com/DeTraced-Security/YARlint/compare/v0.1.6...v0.2.0) - 2026-06-26
 
 ### Features
