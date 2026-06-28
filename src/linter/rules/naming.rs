@@ -2,3 +2,4 @@
 //! of different objects and variables in a YARA rule
 
 pub mod rule_name;
+pub mod rule_name_length;
