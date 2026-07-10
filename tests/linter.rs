@@ -57,7 +57,7 @@ fn default_engine_produces_no_findings_for_clean_rule() {
                 },
                 MetaEntryNode {
                     key: "description".to_string(),
-                    value: MetaValue::String("Good Rule :3".to_owned()),
+                    value: MetaValue::String("This is an example rule for YARlint".to_owned()),
                 },
                 MetaEntryNode {
                     key: "reference".to_string(),
