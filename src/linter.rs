@@ -10,22 +10,26 @@ use engine::LintEngine;
 
 use rules::{
     lint::{
-        duplicate_string::LintDuplicateString, empty_string::LintEmptyString,
+        duplicate_string::LintDuplicateString, 
+        empty_string::LintEmptyString,
         empty_strings_block::LintEmptyStringsBlock,
     },
-    naming::rule_name::NamingRuleName,
+    naming::{
+        descriptive_meta::NamingDescriptiveMeta, 
+        rule_name_length::NamingRuleNameLength, 
+        rule_name::NamingRuleName},
     style::{
-        meta_keys_order::StyleMetaKeysOrder, missing_required_meta::StyleMissingRequiredMeta,
+        meta_keys_order::StyleMetaKeysOrder, 
+        missing_required_meta::StyleMissingRequiredMeta,
         string_identifier::StyleStringIdentifier,
     },
 };
-
-use crate::linter::rules::naming::rule_name_length::NamingRuleNameLength;
 
 /// Creates the default lint engine with all built-in cops.
 pub fn default_engine() -> LintEngine {
     let mut engine = LintEngine::new();
 
+    engine.register(NamingDescriptiveMeta);
     engine.register(NamingRuleName);
     engine.register(NamingRuleNameLength);
     engine.register(LintEmptyString);
