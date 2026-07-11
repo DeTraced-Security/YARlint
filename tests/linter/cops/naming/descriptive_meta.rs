@@ -44,9 +44,7 @@ fn good_description_creates_no_warnings() {
 
 #[test]
 fn too_few_characters_creates_warning() {
-    let file = make_file_with_meta_description(MetaValue::String(
-        "a a a a a a".to_string(),
-    ));
+    let file = make_file_with_meta_description(MetaValue::String("a a a a a a".to_string()));
 
     let context = LintContext { file: &file };
 
@@ -76,9 +74,7 @@ fn too_few_words_creates_warning() {
 
 #[test]
 fn placeholder_match_creates_warning() {
-    let file = make_file_with_meta_description(MetaValue::String(
-        "foo".to_string(),
-    ));
+    let file = make_file_with_meta_description(MetaValue::String("foo".to_string()));
 
     let context = LintContext { file: &file };
 
@@ -92,9 +88,7 @@ fn placeholder_match_creates_warning() {
 
 #[test]
 fn multiple_issues_creates_multiple_warnings() {
-    let file = make_file_with_meta_description(MetaValue::String(
-        "Malware".to_string(),
-    ));
+    let file = make_file_with_meta_description(MetaValue::String("Malware".to_string()));
 
     let context = LintContext { file: &file };
 
