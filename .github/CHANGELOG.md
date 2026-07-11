@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## [0.2.2](https://github.com/DeTraced-Security/YARlint/compare/v0.2.1...v0.2.2) - 2026-07-11
+
+### Bug Fixes
+
+- ci/cd fix
+- minor bug
+- *(test)* fix test that broke with new cop
+
+### Features
+
+- add Naming/DescriptiveMeta cop
+
+### Other
+
+- refactor to pass ci/cd
+- *(cops)* add tests for Naming/DescriptiveMeta
+
 ## [0.2.1](https://github.com/DeTraced-Security/YARlint/compare/v0.2.0...v0.2.1) - 2026-06-28
 
 ### Features
