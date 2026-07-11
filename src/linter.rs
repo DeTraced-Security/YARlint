@@ -10,17 +10,15 @@ use engine::LintEngine;
 
 use rules::{
     lint::{
-        duplicate_string::LintDuplicateString, 
-        empty_string::LintEmptyString,
+        duplicate_string::LintDuplicateString, empty_string::LintEmptyString,
         empty_strings_block::LintEmptyStringsBlock,
     },
     naming::{
-        descriptive_meta::NamingDescriptiveMeta, 
-        rule_name_length::NamingRuleNameLength, 
-        rule_name::NamingRuleName},
+        descriptive_meta::NamingDescriptiveMeta, rule_name::NamingRuleName,
+        rule_name_length::NamingRuleNameLength,
+    },
     style::{
-        meta_keys_order::StyleMetaKeysOrder, 
-        missing_required_meta::StyleMissingRequiredMeta,
+        meta_keys_order::StyleMetaKeysOrder, missing_required_meta::StyleMissingRequiredMeta,
         string_identifier::StyleStringIdentifier,
     },
 };

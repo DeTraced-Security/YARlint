@@ -14,15 +14,15 @@ use crate::{
 /// Enforces a minimum level of substantiality to the description tag
 pub struct NamingDescriptiveMeta;
 
-/// Defines the minimum character length of the description. Will be made 
+/// Defines the minimum character length of the description. Will be made
 /// configurable in the future.
 const MIN_CHAR_LENGTH: usize = 20;
 
-/// Defines the minimum word count of the description. Will be made 
+/// Defines the minimum word count of the description. Will be made
 /// configurable in the future.
 const MIN_WORD_COUNT: usize = 5;
 
-/// Defines placeholder values to search for in the description. Will be made 
+/// Defines placeholder values to search for in the description. Will be made
 /// configurable in the future.
 const PLACEHOLDER_VALUES: &[&str] = &[
     "malware",
@@ -49,7 +49,6 @@ const PLACEHOLDER_VALUES: &[&str] = &[
 ];
 
 impl Rule for NamingDescriptiveMeta {
-    
     /// Returns the name of the rule
     ///
     /// # Returns
@@ -60,15 +59,15 @@ impl Rule for NamingDescriptiveMeta {
     }
 
     /// Checks the description value for descriptiveness.
-    /// 
+    ///
     /// It checks the description value in the meta tag for three things. If
-    /// any of the things are violated, it creates a finding. Since a 
+    /// any of the things are violated, it creates a finding. Since a
     /// description can have multiple issues with it, it alerts if all three are
     /// met. The three things are:
     /// - Not a placeholder value
     /// - Above a minimum character length
     /// - Above a minimum word count
-    /// 
+    ///
     /// # Arguments
     ///
     /// * `context` (`&LintContext`) - A `LintContext` containing the
@@ -85,42 +84,42 @@ impl Rule for NamingDescriptiveMeta {
                             let words: Vec<&str> =
                                 normalized_description_string.split_whitespace().collect();
 
-                            
-                            if PLACEHOLDER_VALUES.contains(&normalized_description_string.as_str()) {
+                            if PLACEHOLDER_VALUES.contains(&normalized_description_string.as_str())
+                            {
                                 findings.push(
-                                    Finding { 
-                                        rule: self.name(), 
+                                    Finding {
+                                        rule: self.name(),
                                         message: format!(
-                                            "Rule {}'s description tag is a generic placeholder value \"{}\"", 
+                                            "Rule {}'s description tag is a generic placeholder value \"{}\"",
                                             rule.name, normalized_description_string
-                                        ), 
+                                        ),
                                         severity: Severity::Info
                                     }
                                 );
                             }
-                            
+
                             if normalized_description_string.chars().count() < MIN_CHAR_LENGTH {
                                 findings.push(
-                                    Finding { 
-                                        rule: self.name(), 
+                                    Finding {
+                                        rule: self.name(),
                                         message: format!(
-                                            "Description value in {} is shorter than minimum character length ({})", 
+                                            "Description value in {} is shorter than minimum character length ({})",
                                             rule.name, MIN_CHAR_LENGTH
-                                        ), 
-                                        severity: Severity::Info 
+                                        ),
+                                        severity: Severity::Info
                                     }
                                 );
                             }
 
                             if words.len() < MIN_WORD_COUNT {
                                 findings.push(
-                                    Finding { 
-                                        rule: self.name(), 
+                                    Finding {
+                                        rule: self.name(),
                                         message: format!(
-                                            "Description value in {} is shorter than minimum word count ({})", 
+                                            "Description value in {} is shorter than minimum word count ({})",
                                             rule.name, MIN_WORD_COUNT
-                                        ), 
-                                        severity: Severity::Info 
+                                        ),
+                                        severity: Severity::Info
                                     }
                                 );
                             }

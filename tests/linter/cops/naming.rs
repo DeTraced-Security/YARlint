@@ -1,3 +1,6 @@
+#[path = "naming/descriptive_meta.rs"]
+pub mod descriptive_meta;
+
 #[path = "naming/rule_name.rs"]
 pub mod rule_name;
 
