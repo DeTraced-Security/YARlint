@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [0.2.3](https://github.com/DeTraced-Security/YARlint/compare/v0.2.2...v0.2.3) - 2026-07-12
+
+### Features
+
+- add Lint/DuplicateMeta
+
+### Other
+
+- add testing for Lint/DuplicateMeta
+
 ## [0.2.2](https://github.com/DeTraced-Security/YARlint/compare/v0.2.1...v0.2.2) - 2026-07-11
 
 
