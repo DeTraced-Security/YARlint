@@ -1,3 +1,6 @@
+#[path = "lint/duplicate_meta.rs"]
+pub mod duplicate_meta;
+
 #[path = "lint/duplicate_string.rs"]
 pub mod duplicate_string;
 
