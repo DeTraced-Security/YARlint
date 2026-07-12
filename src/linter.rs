@@ -23,6 +23,8 @@ use rules::{
     },
 };
 
+use crate::linter::rules::lint::duplicate_meta::LintDuplicateMeta;
+
 /// Creates the default lint engine with all built-in cops.
 pub fn default_engine() -> LintEngine {
     let mut engine = LintEngine::new();
@@ -32,6 +34,7 @@ pub fn default_engine() -> LintEngine {
     engine.register(NamingRuleNameLength);
     engine.register(LintEmptyString);
     engine.register(LintEmptyStringsBlock);
+    engine.register(LintDuplicateMeta);
     engine.register(LintDuplicateString);
     engine.register(StyleStringIdentifier);
     engine.register(StyleMetaKeysOrder);
