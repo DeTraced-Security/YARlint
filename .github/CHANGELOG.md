@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.3.0](https://github.com/DeTraced-Security/YARlint/compare/v0.2.4...v0.3.0) - 2026-07-25
+
+### Features
+
+- bump version to 0.3.0
+
 ## [0.2.4](https://github.com/DeTraced-Security/YARlint/compare/v0.2.3...v0.2.4) - 2026-07-25
 
 ### Features
