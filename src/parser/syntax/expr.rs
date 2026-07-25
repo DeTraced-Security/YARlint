@@ -11,6 +11,8 @@ pub enum ExprNode {
     /// A named identifier such as `filesize`, `them`, or a rule name.
     Identifier(String),
 
+    BoolLiteral(bool),
+
     /// A string literal value.
     ///
     /// Example:
@@ -23,7 +25,11 @@ pub enum ExprNode {
     /// `100`
     /// `0x5a4d`
     /// `100KB`
-    Number(String),
+    Number {
+        size: usize,
+        unit: Option<NumberUnitType>,
+        original: String,
+    },
 
     /// A function call expression.
     ///
@@ -133,4 +139,11 @@ pub enum ExprNode {
     /// on. Without this the ast_parser would crash if it got to a condition
     /// block that was empty
     Empty,
+}
+
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum NumberUnitType {
+    Kilobyte,
+    Megabyte,
 }

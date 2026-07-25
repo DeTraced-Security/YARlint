@@ -5,9 +5,11 @@
 //! It implements operator precedence and grouping semantics used by
 //! YARA condition expressions.
 
+use std::ops::ControlFlow::Continue;
+
 use crate::parser::{
     ast_parser::AstParser,
-    syntax::{BinaryOperator, ConditionNode, ExprNode},
+    syntax::{BinaryOperator, ConditionNode, ExprNode, expr::NumberUnitType},
     token::{Token, TokenType},
 };
 
@@ -284,7 +286,13 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
                     parser.advance();
 
                     return Ok(ExprNode::Of {
-                        count: Box::new(ExprNode::Number(count)),
+                        count: Box::new(ExprNode::Number {
+                            size: count
+                                .parse()
+                                .map_err(|err| format!("Error parsing number"))?,
+                            unit: None,
+                            original: count,
+                        }),
                         pattern: "them".to_string(),
                     });
                 }
@@ -297,12 +305,36 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
                 parser.expect(&TokenType::RParen)?;
 
                 return Ok(ExprNode::Of {
-                    count: Box::new(ExprNode::Number(count)),
+                    count: Box::new(ExprNode::Number {
+                        size: count
+                            .parse()
+                            .map_err(|err| format!("Error parsing number"))?,
+                        unit: None,
+                        original: count,
+                    }),
                     pattern,
                 });
             }
 
-            Ok(ExprNode::Number(count))
+            let original = count.clone();
+
+            let (numeric_part, unit) = if let Some(prefix) = original.strip_suffix("KB") {
+                (prefix, Some(NumberUnitType::Kilobyte))
+            } else if let Some(prefix) = original.strip_suffix("MB") {
+                (prefix, Some(NumberUnitType::Megabyte))
+            } else {
+                (original.as_str(), None)
+            };
+
+            let size = numeric_part
+                .parse::<usize>()
+                .map_err(|err| format!("Error parsing number"))?;
+
+            Ok(ExprNode::Number {
+                size,
+                unit,
+                original,
+            })
         }
 
         Some(Token {
@@ -389,23 +421,36 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
         Some(Token {
             token_type: TokenType::Keyword(k),
             ..
-        }) if k == "all" => {
-            parser.expect_keyword("all")?;
-            parser.expect_keyword("of")?;
+        }) => {
+            if k == "all" {
+                parser.expect_keyword("all")?;
+                parser.expect_keyword("of")?;
 
-            if parser.peek_keyword("them") {
-                parser.advance();
+                if parser.peek_keyword("them") {
+                    parser.advance();
 
-                return Ok(ExprNode::AllOfThem);
+                    return Ok(ExprNode::AllOfThem);
+                }
+                parser.expect(&TokenType::LParen)?;
+
+                let pattern = parser.expect_string_identifier()?;
+
+                parser.expect(&TokenType::Star)?;
+                parser.expect(&TokenType::RParen)?;
+
+                return Ok(ExprNode::AllOf { pattern });
+            } else if k == "true" {
+                parser.expect_keyword("true");
+                return Ok(ExprNode::BoolLiteral(true));
+            } else if k == "false" {
+                parser.expect_keyword("false");
+                return Ok(ExprNode::BoolLiteral(false));
+            } else {
+                return Err(format!(
+                    "Unexpected keyword '{}' in condition expression",
+                    k
+                ));
             }
-            parser.expect(&TokenType::LParen)?;
-
-            let pattern = parser.expect_string_identifier()?;
-
-            parser.expect(&TokenType::Star)?;
-            parser.expect(&TokenType::RParen)?;
-
-            Ok(ExprNode::AllOf { pattern })
         }
 
         Some(tok) => Err(format!("Unexpected token {:?}", tok.token_type)),
@@ -585,7 +630,18 @@ mod tests {
     fn parse_primary_parses_number_literal() {
         let result = parse_expr_from("42").unwrap();
 
-        assert!(matches!(result, ExprNode::Number(n) if n == "42"));
+        if let ExprNode::Number {
+            size,
+            unit,
+            original,
+        } = result
+        {
+            assert_eq!(size, 42);
+            assert_eq!(unit, None);
+            assert_eq!(original, "42");
+        } else {
+            panic!("expected ExprNode::Number, got {:?}", result);
+        }
     }
 
     #[test]
