@@ -1,10 +1,22 @@
 # CHANGELOG
 
-## [0.3.0](https://github.com/DeTraced-Security/YARlint/compare/v0.2.4...v0.3.0) - 2026-07-25
-
+## [0.3.0](https://github.com/DeTraced-Security/YARlint/compare/v0.2.0...v0.3.0) - 2026-07-25
+*(diff since 0.2.0)*
 ### Features
 
 - bump version to 0.3.0
+- *(cops)* add naming/rulenamelength cop
+- add Logic/ConstantCondition cop
+- constant folding engine
+- add Lint/DuplicateMeta
+- add Naming/DescriptiveMeta cop
+
+
+### Other
+- add testing to the constant fold engine
+- add testing for Lint/DuplicateMeta
+- *(cops)* add tests for Naming/DescriptiveMeta
+
 
 ## [0.2.4](https://github.com/DeTraced-Security/YARlint/compare/v0.2.3...v0.2.4) - 2026-07-25
 
