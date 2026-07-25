@@ -1,5 +1,6 @@
 //! YARlint linting engine.
 
+pub mod analysis;
 pub mod context;
 pub mod engine;
 pub mod finding;
@@ -13,6 +14,7 @@ use rules::{
         duplicate_string::LintDuplicateString, empty_string::LintEmptyString,
         empty_strings_block::LintEmptyStringsBlock,
     },
+    logic::constant_condition::LogicConstantCondition,
     naming::{
         descriptive_meta::NamingDescriptiveMeta, rule_name::NamingRuleName,
         rule_name_length::NamingRuleNameLength,
@@ -28,17 +30,20 @@ use crate::linter::rules::lint::duplicate_meta::LintDuplicateMeta;
 /// Creates the default lint engine with all built-in cops.
 pub fn default_engine() -> LintEngine {
     let mut engine = LintEngine::new();
-
-    engine.register(NamingDescriptiveMeta);
-    engine.register(NamingRuleName);
-    engine.register(NamingRuleNameLength);
-    engine.register(LintEmptyString);
-    engine.register(LintEmptyStringsBlock);
     engine.register(LintDuplicateMeta);
     engine.register(LintDuplicateString);
-    engine.register(StyleStringIdentifier);
+    engine.register(LintEmptyString);
+    engine.register(LintEmptyStringsBlock);
+
+    engine.register(LogicConstantCondition);
+
+    engine.register(NamingDescriptiveMeta);
+    engine.register(NamingRuleNameLength);
+    engine.register(NamingRuleName);
+
     engine.register(StyleMetaKeysOrder);
     engine.register(StyleMissingRequiredMeta);
+    engine.register(StyleStringIdentifier);
 
     engine
 }

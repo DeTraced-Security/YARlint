@@ -11,6 +11,11 @@ pub enum ExprNode {
     /// A named identifier such as `filesize`, `them`, or a rule name.
     Identifier(String),
 
+    /// A boolean literal value
+    ///
+    /// Either `true` or `false`
+    BoolLiteral(bool),
+
     /// A string literal value.
     ///
     /// Example:
@@ -23,7 +28,14 @@ pub enum ExprNode {
     /// `100`
     /// `0x5a4d`
     /// `100KB`
-    Number(String),
+    Number {
+        /// The size of the number
+        size: usize,
+        /// The unit of the number, if present
+        unit: Option<NumberUnitType>,
+        /// The original string
+        original: String,
+    },
 
     /// A function call expression.
     ///
@@ -133,4 +145,15 @@ pub enum ExprNode {
     /// on. Without this the ast_parser would crash if it got to a condition
     /// block that was empty
     Empty,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+/// The number unit type.
+///
+/// YARA allows for numbers to be used as`Kilobyte`s or `Megabyte`s.
+pub enum NumberUnitType {
+    /// Kilobyte representation
+    Kilobyte,
+    /// Megabyte representation
+    Megabyte,
 }
