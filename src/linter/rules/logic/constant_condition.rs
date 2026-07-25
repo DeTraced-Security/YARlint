@@ -1,3 +1,5 @@
+//! Checks if the `condition:` block resolves to a boolean value.
+
 use crate::linter::{
     analysis::const_fold::{
         FoldResult::{Constant, NotConstant},
@@ -8,6 +10,7 @@ use crate::linter::{
     rule::Rule,
 };
 
+/// Checks if the `condition:` block resolves to a boolean value.
 pub struct LogicConstantCondition;
 
 impl Rule for LogicConstantCondition {

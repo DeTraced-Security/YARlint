@@ -1,9 +1,16 @@
-use crate::parser::syntax::{BinaryOperator, ExprNode, expr::NumberUnitType, UnaryOperator};
+//! Tests the `condition:` block to see what it results in.
+
+use crate::{
+    linter::analysis::const_fold::FoldResult::{Constant, NotConstant},
+    parser::syntax::{BinaryOperator, ExprNode, UnaryOperator, expr::NumberUnitType},
+};
 
 /// Result of attempting to constant-fold a boolean expression.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FoldResult {
+    /// Resolved either to `true` or `false`
     Constant(bool),
+    /// Did not resolve to `true` or `false`
     NotConstant,
 }
 
@@ -19,25 +26,36 @@ pub enum NumericValue {
     NotNumeric,
 }
 
+/// Tests the `condition:` block to see what it results in.
+///
+/// In order to see if a `condition:` block folds down to a boolean value
+/// it must be checked by this function.
+///
+/// # Arguments
+/// * `expr` (`&ExprNode`) - The expression node to be tested
 pub fn fold(expr: &ExprNode) -> FoldResult {
-    use FoldResult::{Constant, NotConstant};
-
     match expr {
-        ExprNode::Identifier(name) => NotConstant,
-        
+        ExprNode::Identifier(_) => NotConstant,
 
         ExprNode::BoolLiteral(bool_type) => Constant(*bool_type),
 
         ExprNode::Group(inner) => fold(inner),
 
-        ExprNode::Unary { operator, expression } => match operator {
+        ExprNode::Unary {
+            operator,
+            expression,
+        } => match operator {
             UnaryOperator::Not => match fold(expression) {
                 Constant(b) => Constant(!b),
                 NotConstant => NotConstant,
             },
         },
 
-        ExprNode::Binary { left, operator, right } => match operator {
+        ExprNode::Binary {
+            left,
+            operator,
+            right,
+        } => match operator {
             BinaryOperator::And => fold_and(fold(left), fold(right)),
             BinaryOperator::Or => fold_or(fold(left), fold(right)),
 
@@ -82,9 +100,12 @@ pub fn fold(expr: &ExprNode) -> FoldResult {
     }
 }
 
+/// Folds an `and` statement
+///
+/// # Arguments
+/// * `lhs` (`FoldResult`) - left hand side of the `and`
+/// * `rhs` (`FoldResult`) - right hand side of the `and`
 fn fold_and(lhs: FoldResult, rhs: FoldResult) -> FoldResult {
-    use FoldResult::{Constant, NotConstant};
-
     match (lhs, rhs) {
         (Constant(false), _) | (_, Constant(false)) => Constant(false),
         (Constant(true), Constant(true)) => Constant(true),
@@ -92,9 +113,12 @@ fn fold_and(lhs: FoldResult, rhs: FoldResult) -> FoldResult {
     }
 }
 
+/// Folds an `or` statement
+///
+/// # Arguments
+/// * `lhs` (`FoldResult`) - left hand side of the `or`
+/// * `rhs` (`FoldResult`) - right hand side of the `or`
 fn fold_or(lhs: FoldResult, rhs: FoldResult) -> FoldResult {
-    use FoldResult::{Constant, NotConstant};
-
     match (lhs, rhs) {
         (Constant(true), _) | (_, Constant(true)) => Constant(true),
         (Constant(false), Constant(false)) => Constant(false),
@@ -112,6 +136,7 @@ pub fn numeric_value(expr: &ExprNode) -> NumericValue {
     }
 }
 
+/// Applies the unit to the number to return the number in bytes
 fn apply_unit(size: usize, unit: &Option<NumberUnitType>) -> NumericValue {
     let size = size as u64;
 

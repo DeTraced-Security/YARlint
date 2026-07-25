@@ -5,8 +5,6 @@
 //! It implements operator precedence and grouping semantics used by
 //! YARA condition expressions.
 
-use std::ops::ControlFlow::Continue;
-
 use crate::parser::{
     ast_parser::AstParser,
     syntax::{BinaryOperator, ConditionNode, ExprNode, expr::NumberUnitType},
@@ -289,7 +287,7 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
                         count: Box::new(ExprNode::Number {
                             size: count
                                 .parse()
-                                .map_err(|err| format!("Error parsing number"))?,
+                                .map_err(|err| format!("Error parsing number: {err}"))?,
                             unit: None,
                             original: count,
                         }),
@@ -308,7 +306,7 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
                     count: Box::new(ExprNode::Number {
                         size: count
                             .parse()
-                            .map_err(|err| format!("Error parsing number"))?,
+                            .map_err(|err| format!("Error parsing number: {err}"))?,
                         unit: None,
                         original: count,
                     }),
@@ -328,7 +326,7 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
 
             let size = numeric_part
                 .parse::<usize>()
-                .map_err(|err| format!("Error parsing number"))?;
+                .map_err(|err| format!("Error parsing number: {err}"))?;
 
             Ok(ExprNode::Number {
                 size,
@@ -438,18 +436,18 @@ fn parse_primary(parser: &mut AstParser) -> Result<ExprNode, String> {
                 parser.expect(&TokenType::Star)?;
                 parser.expect(&TokenType::RParen)?;
 
-                return Ok(ExprNode::AllOf { pattern });
+                Ok(ExprNode::AllOf { pattern })
             } else if k == "true" {
-                parser.expect_keyword("true");
-                return Ok(ExprNode::BoolLiteral(true));
+                parser.expect_keyword("true")?;
+                Ok(ExprNode::BoolLiteral(true))
             } else if k == "false" {
-                parser.expect_keyword("false");
-                return Ok(ExprNode::BoolLiteral(false));
+                parser.expect_keyword("false")?;
+                Ok(ExprNode::BoolLiteral(false))
             } else {
-                return Err(format!(
+                Err(format!(
                     "Unexpected keyword '{}' in condition expression",
                     k
-                ));
+                ))
             }
         }
 

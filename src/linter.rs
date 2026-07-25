@@ -14,9 +14,7 @@ use rules::{
         duplicate_string::LintDuplicateString, empty_string::LintEmptyString,
         empty_strings_block::LintEmptyStringsBlock,
     },
-    logic:: {
-        constant_condition::LogicConstantCondition
-    },
+    logic::constant_condition::LogicConstantCondition,
     naming::{
         descriptive_meta::NamingDescriptiveMeta, rule_name::NamingRuleName,
         rule_name_length::NamingRuleNameLength,
@@ -36,16 +34,13 @@ pub fn default_engine() -> LintEngine {
     engine.register(LintDuplicateString);
     engine.register(LintEmptyString);
     engine.register(LintEmptyStringsBlock);
-    
-    
-    engine.register(LogicConstantCondition);
 
+    engine.register(LogicConstantCondition);
 
     engine.register(NamingDescriptiveMeta);
     engine.register(NamingRuleNameLength);
     engine.register(NamingRuleName);
-    
-    
+
     engine.register(StyleMetaKeysOrder);
     engine.register(StyleMissingRequiredMeta);
     engine.register(StyleStringIdentifier);
