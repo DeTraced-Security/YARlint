@@ -1,0 +1,39 @@
+use crate::linter::{
+    analysis::const_fold::{
+        FoldResult::{Constant, NotConstant},
+        fold,
+    },
+    context::LintContext,
+    finding::{Finding, Severity},
+    rule::Rule,
+};
+
+pub struct LogicConstantCondition;
+
+impl Rule for LogicConstantCondition {
+    fn name(&self) -> &'static str {
+        "Logic/ConstantCondition"
+    }
+
+    fn check(&self, context: &LintContext, findings: &mut Vec<Finding>) {
+        for rule in &context.file.rules {
+            let fold_result = fold(&rule.condition.expression);
+            match fold_result {
+                Constant(bool_result) => {
+                    findings.push(Finding {
+                        rule: self.name(),
+                        message: format!(
+                            "The condition in rule {} results in a unilateral {}",
+                            rule.name, bool_result
+                        ),
+                        severity: Severity::Warning,
+                    });
+                }
+
+                NotConstant => {
+                    continue;
+                }
+            }
+        }
+    }
+}
