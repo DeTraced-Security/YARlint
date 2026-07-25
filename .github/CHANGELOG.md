@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## [0.2.4](https://github.com/DeTraced-Security/YARlint/compare/v0.2.3...v0.2.4) - 2026-07-25
+
+### Features
+
+- add Logic/ConstantCondition cop
+- constant folding engine
+
+### Other
+
+- new cargo.lock
+- pass ci/cd
+- add testing to the constant fold engine
+- pass CI/CD
+
+### Refactored
+
+- add increased verbosity into ast parsing and results
+- reorganized the engine registration list
+
 ## [0.2.3](https://github.com/DeTraced-Security/YARlint/compare/v0.2.2...v0.2.3) - 2026-07-12
 
 ### Features
