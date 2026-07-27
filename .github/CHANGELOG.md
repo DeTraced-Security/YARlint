@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [0.3.2](https://github.com/DeTraced-Security/YARlint/compare/v0.3.1...v0.3.2) - 2026-07-27
+
+### Documentation
+
+- update docs for cop naming
+
+### Other
+
+- add logic cops labeling
+
+### Refactored
+
+- move src/linter/rule* to src/linter/cop*
+
 ## [0.3.1](https://github.com/DeTraced-Security/YARlint/compare/v0.3.0...v0.3.1) - 2026-07-27
 
 ### Features
