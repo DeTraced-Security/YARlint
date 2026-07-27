@@ -16,7 +16,7 @@ pub enum Severity {
 /// A single lint result.
 #[derive(Debug, Clone)]
 pub struct Finding {
-    /// Name of the rule that generated this finding.
+    /// Name of the cop that generated this finding.
     pub rule: &'static str,
 
     /// Human-readable message.
