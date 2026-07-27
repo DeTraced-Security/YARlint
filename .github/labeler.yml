@@ -58,6 +58,12 @@ lint cops:
           - 'src/linter/cops/lint/**'
           - 'src/linter/cops/lint.rs'
 
+logic cops:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/linter/cops/logic/**'
+          - 'src/linter/cops/logic.rs'
+
 performance cops:
   - changed-files:
       - any-glob-to-any-file:
