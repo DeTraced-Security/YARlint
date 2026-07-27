@@ -1,32 +1,32 @@
 //! Lint engine.
 
-use crate::linter::{context::LintContext, finding::Finding, rule::Rule};
+use crate::linter::{context::LintContext, cop::Cop, finding::Finding};
 
 /// Lint execution engine.
 pub struct LintEngine {
-    /// Rules to be loaded into the lint engine
-    rules: Vec<Box<dyn Rule>>,
+    /// Cops to be loaded into the lint engine
+    cops: Vec<Box<dyn Cop>>,
 }
 
 impl LintEngine {
     /// Create an empty engine.
     pub fn new() -> Self {
-        Self { rules: Vec::new() }
+        Self { cops: Vec::new() }
     }
 
     /// Register a rule.
     ///
     /// # Arguments
     ///
-    /// * `rule` (`R`) - rule to be registered to the engine
-    pub fn register<R>(&mut self, rule: R)
+    /// * `cop` (`C`) - cop to be registered to the engine
+    pub fn register<C>(&mut self, cop: C)
     where
-        R: Rule + 'static,
+        C: Cop + 'static,
     {
-        self.rules.push(Box::new(rule));
+        self.cops.push(Box::new(cop));
     }
 
-    /// Run all registered rules.
+    /// Run all registered cops.
     ///
     /// # Arguments
     ///
@@ -40,8 +40,8 @@ impl LintEngine {
     pub fn run(&self, context: &LintContext) -> Vec<Finding> {
         let mut findings = Vec::new();
 
-        for rule in &self.rules {
-            rule.check(context, &mut findings);
+        for cop in &self.cops {
+            cop.check(context, &mut findings);
         }
 
         findings

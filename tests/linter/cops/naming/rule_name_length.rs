@@ -1,6 +1,6 @@
 use yarlint::{
     linter::{
-        context::LintContext, rule::Rule, rules::naming::rule_name_length::NamingRuleNameLength,
+        context::LintContext, cop::Cop, cops::naming::rule_name_length::NamingRuleNameLength,
     },
     parser::syntax::{ConditionNode, RuleNode, expr::ExprNode, rule_file::RuleFileNode},
 };

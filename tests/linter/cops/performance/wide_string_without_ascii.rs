@@ -1,7 +1,7 @@
 use yarlint::{
     linter::{
-        context::LintContext, rule::Rule,
-        rules::performance::wide_string_without_ascii::PerformanceWideStringWithoutAscii,
+        context::LintContext, cop::Cop,
+        cops::performance::wide_string_without_ascii::PerformanceWideStringWithoutAscii,
     },
     parser::syntax::{
         ConditionNode, ExprNode, RuleNode, StringModifier, StringNode,

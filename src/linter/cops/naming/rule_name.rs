@@ -2,15 +2,15 @@
 
 use crate::linter::{
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 
 /// Validates rule naming conventions.
 pub struct NamingRuleName;
 
-impl Rule for NamingRuleName {
-    /// Returns the name of the rule
+impl Cop for NamingRuleName {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///
@@ -19,7 +19,7 @@ impl Rule for NamingRuleName {
         "Naming/RuleName"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the cop
     ///
     /// This rule is violated if a `RuleNode`'s name includes any '-'s
     ///

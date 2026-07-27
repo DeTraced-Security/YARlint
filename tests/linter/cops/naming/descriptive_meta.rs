@@ -1,6 +1,6 @@
 use yarlint::{
     linter::{
-        context::LintContext, rule::Rule, rules::naming::descriptive_meta::NamingDescriptiveMeta,
+        context::LintContext, cop::Cop, cops::naming::descriptive_meta::NamingDescriptiveMeta,
     },
     parser::syntax::{
         ConditionNode, ExprNode, MetaEntryNode, MetaValue, RuleNode, rule_file::RuleFileNode,

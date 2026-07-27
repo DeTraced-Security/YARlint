@@ -7,15 +7,15 @@ use std::collections::HashSet;
 
 use crate::linter::{
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 
 /// Verifies no two meta entries are duplicates of each other
 pub struct LintDuplicateMeta;
 
-impl Rule for LintDuplicateMeta {
-    /// Returns the name of the rule
+impl Cop for LintDuplicateMeta {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///
@@ -24,9 +24,9 @@ impl Rule for LintDuplicateMeta {
         "Lint/DuplicateMeta"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the cop
     ///
-    /// This rule check fails if a meta entry is defined more than once
+    /// This cop check fails if a meta entry is defined more than once
     /// in a rule
     ///
     /// # Arguments

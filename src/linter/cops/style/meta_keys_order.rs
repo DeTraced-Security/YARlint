@@ -2,8 +2,8 @@
 
 use crate::linter::{
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 
 /// Enforces the order of expected meta keys.
@@ -13,8 +13,8 @@ pub struct StyleMetaKeysOrder;
 /// https://github.com/DeTraced-Security/YARlint/issues/74 is implemented.
 const META_KEYS_ORDER: [&str; 4] = ["author", "description", "reference", "date"];
 
-impl Rule for StyleMetaKeysOrder {
-    /// Returns the name of the rule
+impl Cop for StyleMetaKeysOrder {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///
@@ -23,9 +23,9 @@ impl Rule for StyleMetaKeysOrder {
         "Style/MetaKeysOrder"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the cop
     ///
-    /// This rule is violated if any rules have meta values that are out of
+    /// This cop is violated if any rules have meta values that are out of
     /// the specified order.
     ///
     /// # Arguments

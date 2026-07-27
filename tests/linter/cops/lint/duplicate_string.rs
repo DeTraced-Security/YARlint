@@ -1,6 +1,6 @@
 use yarlint::linter::{
-    context::LintContext, finding::Severity, rule::Rule,
-    rules::lint::duplicate_string::LintDuplicateString,
+    context::LintContext, cop::Cop, cops::lint::duplicate_string::LintDuplicateString,
+    finding::Severity,
 };
 use yarlint::parser::syntax::strings::StringType;
 use yarlint::parser::syntax::{

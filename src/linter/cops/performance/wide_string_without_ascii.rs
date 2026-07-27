@@ -3,8 +3,8 @@
 use crate::{
     linter::{
         context::LintContext,
+        cop::Cop,
         finding::{Finding, Severity},
-        rule::Rule,
     },
     parser::syntax::{
         StringModifier::{Ascii, Wide},
@@ -16,7 +16,7 @@ use crate::{
 /// using the `ascii` modifier
 pub struct PerformanceWideStringWithoutAscii;
 
-impl Rule for PerformanceWideStringWithoutAscii {
+impl Cop for PerformanceWideStringWithoutAscii {
     fn name(&self) -> &'static str {
         "Performance/WideStringWithoutAscii"
     }

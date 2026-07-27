@@ -1,6 +1,6 @@
 use yarlint::linter::{
-    context::LintContext, finding::Severity, rule::Rule,
-    rules::style::meta_keys_order::StyleMetaKeysOrder,
+    context::LintContext, cop::Cop, cops::style::meta_keys_order::StyleMetaKeysOrder,
+    finding::Severity,
 };
 use yarlint::parser::syntax::{
     condition::ConditionNode, expr::ExprNode, meta::MetaEntryNode, meta::MetaValue, rule::RuleNode,

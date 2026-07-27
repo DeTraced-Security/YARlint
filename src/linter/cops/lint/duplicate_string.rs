@@ -9,8 +9,8 @@ use std::collections::HashMap;
 use crate::{
     linter::{
         context::LintContext,
+        cop::Cop,
         finding::{Finding, Severity},
-        rule::Rule,
     },
     parser::syntax::{StringModifier, strings::StringType},
 };
@@ -18,8 +18,8 @@ use crate::{
 /// Verifies no two strings are duplicates of each other
 pub struct LintDuplicateString;
 
-impl Rule for LintDuplicateString {
-    /// Returns the name of the rule
+impl Cop for LintDuplicateString {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///
@@ -28,9 +28,9 @@ impl Rule for LintDuplicateString {
         "Lint/DuplicateString"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the cop
     ///
-    /// This rule check fails if a string is defined more than once in a rule
+    /// This cop check fails if a string is defined more than once in a rule
     ///
     /// # Arguments
     ///

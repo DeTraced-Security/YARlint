@@ -6,14 +6,14 @@ use crate::linter::{
         fold,
     },
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 
 /// Checks if the `condition:` block resolves to a boolean value.
 pub struct LogicConstantCondition;
 
-impl Rule for LogicConstantCondition {
+impl Cop for LogicConstantCondition {
     fn name(&self) -> &'static str {
         "Logic/ConstantCondition"
     }

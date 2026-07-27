@@ -2,8 +2,8 @@
 
 use crate::linter::{
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 
 /// Enforces the presence of expected meta keys.
@@ -13,8 +13,8 @@ pub struct StyleMissingRequiredMeta;
 /// https://github.com/DeTraced-Security/YARlint/issues/74 is implemented.
 const REQUIRED_META_KEYS: [&str; 4] = ["author", "description", "reference", "date"];
 
-impl Rule for StyleMissingRequiredMeta {
-    /// Returns the name of the rule
+impl Cop for StyleMissingRequiredMeta {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///
@@ -23,9 +23,9 @@ impl Rule for StyleMissingRequiredMeta {
         "Style/MissingRequiredMeta"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the cop
     ///
-    /// This rule is violated if any rules are missing required meta values
+    /// This cop is violated if any rules are missing required meta values
     ///
     /// # Arguments
     ///
