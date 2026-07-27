@@ -2,15 +2,15 @@
 
 use crate::linter::{
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 
 /// Validates that string identifiers are snake_case.
 pub struct StyleStringIdentifier;
 
-impl Rule for StyleStringIdentifier {
-    /// Returns the name of the rule
+impl Cop for StyleStringIdentifier {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///
@@ -19,9 +19,9 @@ impl Rule for StyleStringIdentifier {
         "Style/StringIdentifier"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the cop
     ///
-    /// This rule is violated if any rules contain `StringNode`s not in snake
+    /// This cop is violated if any rules contain `StringNode`s not in snake
     /// case
     ///
     /// # Arguments

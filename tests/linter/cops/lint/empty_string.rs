@@ -1,5 +1,5 @@
 use yarlint::linter::{
-    context::LintContext, finding::Severity, rule::Rule, rules::lint::empty_string::LintEmptyString,
+    context::LintContext, cop::Cop, cops::lint::empty_string::LintEmptyString, finding::Severity,
 };
 use yarlint::parser::syntax::hex::{HexExprNode, HexNode};
 use yarlint::parser::syntax::strings::StringType::{self, Hex, RegEx};

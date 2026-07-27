@@ -2,14 +2,14 @@
 
 pub mod analysis;
 pub mod context;
+pub mod cop;
+pub mod cops;
 pub mod engine;
 pub mod finding;
-pub mod rule;
-pub mod rules;
 
 use engine::LintEngine;
 
-use rules::{
+use cops::{
     lint::{
         duplicate_meta::LintDuplicateMeta, duplicate_string::LintDuplicateString,
         empty_string::LintEmptyString, empty_strings_block::LintEmptyStringsBlock,

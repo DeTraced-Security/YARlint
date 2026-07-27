@@ -5,8 +5,8 @@
 use crate::{
     linter::{
         context::LintContext,
+        cop::Cop,
         finding::{Finding, Severity},
-        rule::Rule,
     },
     parser::syntax::MetaValue,
 };
@@ -48,8 +48,8 @@ const PLACEHOLDER_VALUES: &[&str] = &[
     "bar",
 ];
 
-impl Rule for NamingDescriptiveMeta {
-    /// Returns the name of the rule
+impl Cop for NamingDescriptiveMeta {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///

@@ -1,25 +1,25 @@
 //! Validates the string block in a YARA rule isn't empty
 use crate::linter::{
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 /// Validates the string block in a YARA rule isn't empty
 pub struct LintEmptyStringsBlock;
 
-impl Rule for LintEmptyStringsBlock {
-    /// Returns the name of the rule
+impl Cop for LintEmptyStringsBlock {
+    /// Returns the name of the cop
     ///
     /// # Returns
-    ///
+    ///u
     /// Returns "Lint/EmptyStringsBlock"
     fn name(&self) -> &'static str {
         "Lint/EmptyStringsBlock"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the cop
     ///
-    /// This rule is violated if any `RuleNode`s have an empty strings block.
+    /// This cop is violated if any `RuleNode`s have an empty strings block.
     ///
     /// # Arguments
     ///

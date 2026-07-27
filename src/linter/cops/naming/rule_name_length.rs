@@ -4,8 +4,8 @@
 
 use crate::linter::{
     context::LintContext,
+    cop::Cop,
     finding::{Finding, Severity},
-    rule::Rule,
 };
 
 /// Enforces a minimum and maximum length on YARA rule names.
@@ -19,7 +19,7 @@ const MIN_NAME_LENGTH: usize = 4;
 /// file eventually
 const MAX_NAME_LENGTH: usize = 80;
 
-impl Rule for NamingRuleNameLength {
+impl Cop for NamingRuleNameLength {
     fn name(&self) -> &'static str {
         "Naming/RuleNameLength"
     }

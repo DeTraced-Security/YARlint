@@ -1,5 +1,5 @@
 use yarlint::linter::{
-    context::LintContext, rule::Rule, rules::lint::duplicate_meta::LintDuplicateMeta,
+    context::LintContext, cop::Cop, cops::lint::duplicate_meta::LintDuplicateMeta,
 };
 use yarlint::parser::syntax::MetaValue;
 use yarlint::parser::syntax::{

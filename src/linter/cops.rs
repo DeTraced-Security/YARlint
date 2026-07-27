@@ -1,4 +1,4 @@
-//! Built-in lint rules.
+//! Built-in lint cops.
 
 pub mod lint;
 pub mod logic;

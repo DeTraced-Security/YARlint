@@ -3,8 +3,8 @@
 use crate::{
     linter::{
         context::LintContext,
+        cop::Cop,
         finding::{Finding, Severity},
-        rule::Rule,
     },
     parser::syntax::strings::StringType,
 };
@@ -12,8 +12,8 @@ use crate::{
 /// Verifies that a String is not empty
 pub struct LintEmptyString;
 
-impl Rule for LintEmptyString {
-    /// Returns the name of the rule
+impl Cop for LintEmptyString {
+    /// Returns the name of the cop
     ///
     /// # Returns
     ///
@@ -22,9 +22,9 @@ impl Rule for LintEmptyString {
         "Lint/EmptyString"
     }
 
-    /// Checks for compliance with the rule
+    /// Checks for compliance with the coop
     ///
-    /// This rule is violated if a `StringNode` in the context being checked is
+    /// This cop is violated if a `StringNode` in the context being checked is
     /// empty.
     ///
     /// # Arguments
