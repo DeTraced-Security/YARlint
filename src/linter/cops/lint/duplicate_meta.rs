@@ -7,7 +7,7 @@ use std::collections::HashSet;
 
 use crate::linter::{
     context::LintContext,
-    cop::Cop,
+    cop::{Category, Cop},
     finding::{Finding, Severity},
 };
 
@@ -15,13 +15,18 @@ use crate::linter::{
 pub struct LintDuplicateMeta;
 
 impl Cop for LintDuplicateMeta {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Lint
+    }
+
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Lint/DuplicateMeta"
+    /// Returns "DuplicateMeta"
     fn name(&self) -> &'static str {
-        "Lint/DuplicateMeta"
+        "DuplicateMeta"
     }
 
     /// Checks for compliance with the cop
@@ -41,6 +46,7 @@ impl Cop for LintDuplicateMeta {
                 if meta_keys.contains(meta_entry.key.as_str()) {
                     findings.push(Finding {
                         rule: self.name(),
+                        category: self.category(),
                         message: format!(
                             "In rule {} there are two meta values named {}.",
                             rule.name, meta_entry.key

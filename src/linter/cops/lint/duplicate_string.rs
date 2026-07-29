@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use crate::{
     linter::{
         context::LintContext,
-        cop::Cop,
+        cop::{Category, Cop},
         finding::{Finding, Severity},
     },
     parser::syntax::{StringModifier, strings::StringType},
@@ -19,13 +19,18 @@ use crate::{
 pub struct LintDuplicateString;
 
 impl Cop for LintDuplicateString {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Lint
+    }
+
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Lint/DuplicateString"
+    /// Returns "DuplicateString"
     fn name(&self) -> &'static str {
-        "Lint/DuplicateString"
+        "DuplicateString"
     }
 
     /// Checks for compliance with the cop
@@ -50,6 +55,7 @@ impl Cop for LintDuplicateString {
                 if let Some(existing_identifier) = string_map.get(&key) {
                     findings.push(Finding {
                         rule: self.name(),
+                        category: self.category(),
                         message: format!(
                             "String {} in rule {} is a duplicate of {}",
                             string.identifier, rule.name, existing_identifier

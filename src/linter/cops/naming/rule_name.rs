@@ -2,7 +2,7 @@
 
 use crate::linter::{
     context::LintContext,
-    cop::Cop,
+    cop::{Category, Cop},
     finding::{Finding, Severity},
 };
 
@@ -10,13 +10,17 @@ use crate::linter::{
 pub struct NamingRuleName;
 
 impl Cop for NamingRuleName {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Naming
+    }
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Naming/RuleName"
+    /// Returns "RuleName"
     fn name(&self) -> &'static str {
-        "Naming/RuleName"
+        "RuleName"
     }
 
     /// Checks for compliance with the cop
@@ -33,6 +37,7 @@ impl Cop for NamingRuleName {
             if rule.name.contains('-') {
                 findings.push(Finding {
                     rule: self.name(),
+                    category: self.category(),
                     message: format!("Rule '{}' contains '-'", rule.name),
                     severity: Severity::Warning,
                 });
