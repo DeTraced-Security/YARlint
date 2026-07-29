@@ -5,7 +5,7 @@
 use crate::{
     linter::{
         context::LintContext,
-        cop::Cop,
+        cop::{Category, Cop},
         finding::{Finding, Severity},
     },
     parser::syntax::MetaValue,
@@ -49,13 +49,17 @@ const PLACEHOLDER_VALUES: &[&str] = &[
 ];
 
 impl Cop for NamingDescriptiveMeta {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Naming
+    }
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Naming/DescriptiveMeta"
+    /// Returns "DescriptiveMeta"
     fn name(&self) -> &'static str {
-        "Naming/DescriptiveMeta"
+        "DescriptiveMeta"
     }
 
     /// Checks the description value for descriptiveness.
@@ -89,6 +93,7 @@ impl Cop for NamingDescriptiveMeta {
                                 findings.push(
                                     Finding {
                                         rule: self.name(),
+                                        category: self.category(),
                                         message: format!(
                                             "Rule {}'s description tag is a generic placeholder value \"{}\"",
                                             rule.name, normalized_description_string
@@ -102,6 +107,7 @@ impl Cop for NamingDescriptiveMeta {
                                 findings.push(
                                     Finding {
                                         rule: self.name(),
+                                        category: self.category(),
                                         message: format!(
                                             "Description value in {} is shorter than minimum character length ({})",
                                             rule.name, MIN_CHAR_LENGTH
@@ -115,6 +121,7 @@ impl Cop for NamingDescriptiveMeta {
                                 findings.push(
                                     Finding {
                                         rule: self.name(),
+                                        category: self.category(),
                                         message: format!(
                                             "Description value in {} is shorter than minimum word count ({})",
                                             rule.name, MIN_WORD_COUNT

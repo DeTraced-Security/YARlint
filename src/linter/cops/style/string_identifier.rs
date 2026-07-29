@@ -2,7 +2,7 @@
 
 use crate::linter::{
     context::LintContext,
-    cop::Cop,
+    cop::{Category, Cop},
     finding::{Finding, Severity},
 };
 
@@ -10,13 +10,18 @@ use crate::linter::{
 pub struct StyleStringIdentifier;
 
 impl Cop for StyleStringIdentifier {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Style
+    }
+
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Style/StringIdentifier"
+    /// Returns "StringIdentifier"
     fn name(&self) -> &'static str {
-        "Style/StringIdentifier"
+        "StringIdentifier"
     }
 
     /// Checks for compliance with the cop
@@ -35,6 +40,7 @@ impl Cop for StyleStringIdentifier {
                 if !is_snake_case(&string.identifier) {
                     findings.push(Finding {
                         rule: self.name(),
+                        category: self.category(),
                         message: format!(
                             "String identifier {} in rule {} should be snake_case",
                             string.identifier, rule.name

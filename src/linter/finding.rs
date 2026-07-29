@@ -1,5 +1,7 @@
 //! Lint findings and severity levels.
 
+use crate::linter::cop::Category;
+
 /// Severity of a lint finding.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Severity {
@@ -18,6 +20,9 @@ pub enum Severity {
 pub struct Finding {
     /// Name of the cop that generated this finding.
     pub rule: &'static str,
+
+    /// Category of the cop that generated this finding.
+    pub category: Category,
 
     /// Human-readable message.
     pub message: String,
