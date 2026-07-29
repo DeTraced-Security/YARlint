@@ -3,7 +3,7 @@
 use crate::{
     linter::{
         context::LintContext,
-        cop::Cop,
+        cop::{Category, Cop},
         finding::{Finding, Severity},
     },
     parser::syntax::strings::StringType,
@@ -13,13 +13,17 @@ use crate::{
 pub struct LintEmptyString;
 
 impl Cop for LintEmptyString {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Lint
+    }
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Lint/EmptyString"
+    /// Returns "EmptyString"
     fn name(&self) -> &'static str {
-        "Lint/EmptyString"
+        "EmptyString"
     }
 
     /// Checks for compliance with the coop
@@ -40,6 +44,7 @@ impl Cop for LintEmptyString {
                         if text.is_empty() {
                             findings.push(Finding {
                                 rule: self.name(),
+                                category: self.category(),
                                 message: format!(
                                     "String '{}' in rule '{}' is empty, consider removing it",
                                     string.identifier, rule.name
@@ -53,6 +58,7 @@ impl Cop for LintEmptyString {
                         if hex_node.original_string.is_empty() {
                             findings.push(Finding {
                                 rule: self.name(),
+                                category: self.category(),
                                 message: format!(
                                     "String '{}' in rule '{}' is empty, consider removing it",
                                     string.identifier, rule.name
@@ -66,6 +72,7 @@ impl Cop for LintEmptyString {
                         if regex_string.is_empty() {
                             findings.push(Finding {
                                 rule: self.name(),
+                                category: self.category(),
                                 message: format!(
                                     "String '{}' in rule '{}' is empty, consider removing it",
                                     string.identifier, rule.name

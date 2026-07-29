@@ -4,7 +4,7 @@
 
 use crate::linter::{
     context::LintContext,
-    cop::Cop,
+    cop::{Category, Cop},
     finding::{Finding, Severity},
 };
 
@@ -20,8 +20,12 @@ const MIN_NAME_LENGTH: usize = 4;
 const MAX_NAME_LENGTH: usize = 80;
 
 impl Cop for NamingRuleNameLength {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Naming
+    }
     fn name(&self) -> &'static str {
-        "Naming/RuleNameLength"
+        "RuleNameLength"
     }
 
     fn check(&self, context: &LintContext, findings: &mut Vec<Finding>) {
@@ -31,6 +35,7 @@ impl Cop for NamingRuleNameLength {
             if name.chars().count() > MAX_NAME_LENGTH {
                 findings.push(Finding {
                     rule: self.name(),
+                    category: self.category(),
                     message: format!(
                         "The name {} is longer than the maximum character length of {}",
                         rule.name, MAX_NAME_LENGTH
@@ -40,6 +45,7 @@ impl Cop for NamingRuleNameLength {
             } else if name.chars().count() < MIN_NAME_LENGTH {
                 findings.push(Finding {
                     rule: self.name(),
+                    category: self.category(),
                     message: format!(
                         "The name {} is shorter than the minimum character length of {}",
                         rule.name, MIN_NAME_LENGTH

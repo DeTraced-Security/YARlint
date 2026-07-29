@@ -2,7 +2,7 @@
 
 use crate::linter::{
     context::LintContext,
-    cop::Cop,
+    cop::{Category, Cop},
     finding::{Finding, Severity},
 };
 
@@ -14,13 +14,18 @@ pub struct StyleMissingRequiredMeta;
 const REQUIRED_META_KEYS: [&str; 4] = ["author", "description", "reference", "date"];
 
 impl Cop for StyleMissingRequiredMeta {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Style
+    }
+
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Style/MissingRequiredMeta"
+    /// Returns "MissingRequiredMeta"
     fn name(&self) -> &'static str {
-        "Style/MissingRequiredMeta"
+        "MissingRequiredMeta"
     }
 
     /// Checks for compliance with the cop
@@ -39,6 +44,7 @@ impl Cop for StyleMissingRequiredMeta {
                 if !present {
                     findings.push(Finding {
                         rule: self.name(),
+                        category: self.category(),
                         message: format!(
                             "Rule {} is missing the meta key '{}'",
                             rule.name, required_key

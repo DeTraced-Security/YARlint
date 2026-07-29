@@ -6,7 +6,7 @@ use crate::linter::{
         fold,
     },
     context::LintContext,
-    cop::Cop,
+    cop::{Category, Cop},
     finding::{Finding, Severity},
 };
 
@@ -14,8 +14,12 @@ use crate::linter::{
 pub struct LogicConstantCondition;
 
 impl Cop for LogicConstantCondition {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Logic
+    }
     fn name(&self) -> &'static str {
-        "Logic/ConstantCondition"
+        "ConstantCondition"
     }
 
     fn check(&self, context: &LintContext, findings: &mut Vec<Finding>) {
@@ -25,6 +29,7 @@ impl Cop for LogicConstantCondition {
                 Constant(bool_result) => {
                     findings.push(Finding {
                         rule: self.name(),
+                        category: self.category(),
                         message: format!(
                             "The condition in rule {} results in a unilateral {}",
                             rule.name, bool_result

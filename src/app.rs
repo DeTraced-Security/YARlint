@@ -53,8 +53,8 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
         for finding in findings {
             println!(
-                "[{:?}] {}: {}",
-                finding.severity, finding.rule, finding.message,
+                "[{:?}] {}/{}: {}",
+                finding.severity, finding.category, finding.rule, finding.message,
             );
         }
     }

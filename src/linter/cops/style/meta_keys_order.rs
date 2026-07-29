@@ -2,7 +2,7 @@
 
 use crate::linter::{
     context::LintContext,
-    cop::Cop,
+    cop::{Category, Cop},
     finding::{Finding, Severity},
 };
 
@@ -14,13 +14,18 @@ pub struct StyleMetaKeysOrder;
 const META_KEYS_ORDER: [&str; 4] = ["author", "description", "reference", "date"];
 
 impl Cop for StyleMetaKeysOrder {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Style
+    }
+
     /// Returns the name of the cop
     ///
     /// # Returns
     ///
-    /// Returns "Style/MetaKeysOrder"
+    /// Returns "MetaKeysOrder"
     fn name(&self) -> &'static str {
-        "Style/MetaKeysOrder"
+        "MetaKeysOrder"
     }
 
     /// Checks for compliance with the cop
@@ -49,6 +54,7 @@ impl Cop for StyleMetaKeysOrder {
                 {
                     findings.push(Finding {
                         rule: self.name(),
+                        category: self.category(),
                         message: format!(
                             "meta keys for rule {} are out of order: found '{}' after '{}', expected '{}' before '{}'",
                             rule.name, entry.key, last_key, entry.key, last_key

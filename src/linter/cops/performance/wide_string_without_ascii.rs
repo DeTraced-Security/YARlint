@@ -3,7 +3,7 @@
 use crate::{
     linter::{
         context::LintContext,
-        cop::Cop,
+        cop::{Category, Cop},
         finding::{Finding, Severity},
     },
     parser::syntax::{
@@ -17,8 +17,13 @@ use crate::{
 pub struct PerformanceWideStringWithoutAscii;
 
 impl Cop for PerformanceWideStringWithoutAscii {
+    /// Returns the category of the cop
+    fn category(&self) -> Category {
+        Category::Performance
+    }
+
     fn name(&self) -> &'static str {
-        "Performance/WideStringWithoutAscii"
+        "WideStringWithoutAscii"
     }
 
     fn check(&self, context: &LintContext, findings: &mut Vec<Finding>) {
@@ -33,6 +38,7 @@ impl Cop for PerformanceWideStringWithoutAscii {
                 {
                     findings.push(Finding {
                         rule:self.name(),
+                        category: self.category(),
                         message: format!("The string {} in rule {} uses the modifier 'Wide' without the modifier 'Ascii'", string.identifier, rule.name),
                         severity: Severity::Info,
                     });
