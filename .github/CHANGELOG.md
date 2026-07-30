@@ -8,7 +8,6 @@
 
 ### Other
 
-- pass ci/cd
 - add qualified name testing for cops
 - add selector testing
 
