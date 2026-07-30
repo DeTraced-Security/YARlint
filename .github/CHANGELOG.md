@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.3.5](https://github.com/DeTraced-Security/YARlint/compare/v0.3.4...v0.3.5) - 2026-07-30
+
+### Features
+
+- update license in Cargo.toml ([#119](https://github.com/DeTraced-Security/YARlint/pull/119))
+
 ## [0.3.4](https://github.com/DeTraced-Security/YARlint/compare/v0.3.3...v0.3.4) - 2026-07-30
 
 ### Features
