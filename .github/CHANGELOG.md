@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [0.3.4](https://github.com/DeTraced-Security/YARlint/compare/v0.3.3...v0.3.4) - 2026-07-30
+
+### Features
+
+- add `--except` and `--only` flags
+
+### Other
+
+- pass ci/cd
+- add qualified name testing for cops
+- add selector testing
+
 ## [0.3.3](https://github.com/DeTraced-Security/YARlint/compare/v0.3.2...v0.3.3) - 2026-07-29
 
 ### Features
