@@ -42,7 +42,10 @@ fn qualified_name_uses_each_category_variants_display_form() {
     ];
 
     for (category, expected_prefix) in cases {
-        let cop = MockCop { name: "Whatever", category };
+        let cop = MockCop {
+            name: "Whatever",
+            category,
+        };
         assert_eq!(cop.qualified_name(), format!("{expected_prefix}/Whatever"));
     }
 }
