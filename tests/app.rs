@@ -7,6 +7,8 @@ fn make_args(path: &str) -> Args {
         recursive: false,
         depth: None,
         verbose: false,
+        only: vec![],
+        except: vec![],
     }
 }
 
@@ -45,6 +47,8 @@ fn pipeline_succeeds_with_recursive_flag_on_fixture_dir() {
         recursive: true,
         depth: None,
         verbose: false,
+        only: vec![],
+        except: vec![],
     };
 
     let result = yarlint_pipeline(&args);
@@ -59,6 +63,8 @@ fn pipeline_succeeds_with_depth_limit() {
         recursive: true,
         depth: Some(1),
         verbose: false,
+        only: vec![],
+        except: vec![],
     };
 
     let result = yarlint_pipeline(&args);

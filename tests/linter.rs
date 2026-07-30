@@ -6,6 +6,9 @@ use yarlint::parser::syntax::{
     strings::StringNode,
 };
 
+#[path = "linter/cop.rs"]
+pub mod cop;
+
 #[path = "linter/cops.rs"]
 pub mod cops;
 
