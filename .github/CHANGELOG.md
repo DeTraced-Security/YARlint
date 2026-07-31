@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.3.6](https://github.com/DeTraced-Security/YARlint/compare/v0.3.5...v0.3.6) - 2026-07-31
+
+### Features
+
+- add Style/RuleNameCase Cop ([#121](https://github.com/DeTraced-Security/YARlint/pull/121))
+
 ## [0.3.5](https://github.com/DeTraced-Security/YARlint/compare/v0.3.4...v0.3.5) - 2026-07-30
 
 ### Features
