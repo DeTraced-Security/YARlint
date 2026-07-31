@@ -7,7 +7,7 @@
 
 use crate::parser::{
     ast_parser::AstParser,
-    syntax::{BinaryOperator, ConditionNode, ExprNode, expr::NumberUnitType},
+    syntax::{BinaryOperator, ConditionNode, ExprNode, UnaryOperator, expr::NumberUnitType},
     token::{Token, TokenType},
 };
 
@@ -153,12 +153,12 @@ fn parse_or(parser: &mut AstParser) -> Result<ExprNode, String> {
 /// - the expression contains invalid syntax
 /// - the expression cannot be parsed
 fn parse_and(parser: &mut AstParser) -> Result<ExprNode, String> {
-    let mut left = parse_comparison(parser)?;
+    let mut left = parse_not(parser)?;
 
     while parser.peek_keyword("and") {
         parser.advance();
 
-        let right = parse_comparison(parser)?;
+        let right = parse_not(parser)?;
 
         left = ExprNode::Binary {
             left: Box::new(left),
@@ -170,14 +170,47 @@ fn parse_and(parser: &mut AstParser) -> Result<ExprNode, String> {
     Ok(left)
 }
 
+/// Parses logical negation operations.
+///
+/// Negation binds less tightly than comparisons and more tightly than
+/// logical conjunctions. Consecutive `not` operators are parsed recursively.
+///
+/// # Arguments
+///
+/// * `parser` (`&mut AstParser`) - Parser positioned at a condition expression
+///
+/// # Returns
+///
+/// Returns the parsed unary expression or the next comparison expression.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - the expression following `not` is invalid
+/// - the comparison expression cannot be parsed
+fn parse_not(parser: &mut AstParser) -> Result<ExprNode, String> {
+    if parser.peek_keyword("not") {
+        parser.advance();
+        return Ok(ExprNode::Unary {
+            operator: UnaryOperator::Not,
+            expression: Box::new(parse_not(parser)?),
+        });
+    }
+
+    parse_comparison(parser)
+}
+
 /// Parses comparison operations.
 ///
 /// Supported operators:
 ///
 /// ```yara
 /// ==
+/// !=
 /// <
+/// <=
 /// >
+/// >=
 /// ```
 ///
 /// Example:
@@ -214,6 +247,7 @@ fn parse_comparison(parser: &mut AstParser) -> Result<ExprNode, String> {
     while let Some(tok) = parser.peek() {
         let op = match &tok.token_type {
             TokenType::EqualsEquals => BinaryOperator::Equals,
+            TokenType::NotEquals => BinaryOperator::NotEquals,
             TokenType::LThan => BinaryOperator::LessThan,
             TokenType::GThan => BinaryOperator::GreaterThan,
             TokenType::LEThan => BinaryOperator::LessThanEqual,
@@ -463,7 +497,7 @@ mod tests {
     use crate::parser::{
         ast_parser::AstParser,
         lexer::yara::tokenize,
-        syntax::{BinaryOperator, ExprNode},
+        syntax::{BinaryOperator, ExprNode, UnaryOperator},
     };
 
     fn parse_expr_from(source: &str) -> Result<ExprNode, String> {
@@ -555,6 +589,28 @@ mod tests {
         ));
     }
 
+    #[test]
+    fn not_wraps_comparison_expression() {
+        let result = parse_expr_from("not filesize == 0").unwrap();
+
+        let ExprNode::Unary {
+            operator,
+            expression,
+        } = result
+        else {
+            panic!("expected unary expression");
+        };
+
+        assert_eq!(operator, UnaryOperator::Not);
+        assert!(matches!(
+            *expression,
+            ExprNode::Binary {
+                operator: BinaryOperator::Equals,
+                ..
+            }
+        ));
+    }
+
     // --- parse_comparison ---
 
     #[test]
@@ -565,6 +621,19 @@ mod tests {
             result,
             ExprNode::Binary {
                 operator: BinaryOperator::Equals,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_expr_parses_not_equals() {
+        let result = parse_expr_from("filesize != 100").unwrap();
+
+        assert!(matches!(
+            result,
+            ExprNode::Binary {
+                operator: BinaryOperator::NotEquals,
                 ..
             }
         ));

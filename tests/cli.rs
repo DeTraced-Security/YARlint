@@ -24,6 +24,18 @@ fn exits_zero_on_rule_with_findings() {
 }
 
 #[test]
+fn reports_condition_spacing_finding() {
+    let file = tempfile::Builder::new().suffix(".yar").tempfile().unwrap();
+    std::fs::write(file.path(), "rule Example { condition: filesize>= 10 }").unwrap();
+    let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
+    cmd.arg("--path").arg(file.path());
+
+    cmd.assert()
+        .success()
+        .stdout(predicates::str::contains("Style/ConditionSpacing"));
+}
+
+#[test]
 fn recursive_flag_exits_zero_on_fixture_dir() {
     let mut cmd = assert_cmd::Command::cargo_bin("yarlint").unwrap();
     cmd.arg("--path").arg("tests/fixtures").arg("--recursive");

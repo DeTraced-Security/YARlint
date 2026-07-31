@@ -44,12 +44,15 @@ use crate::parser::{
 /// - Expression parsing (`parse_or`, `parse_and`, etc.)
 ///
 /// Parsing follows standard operator precedence rules:
+/// comparisons bind more tightly than logical negation, which binds more
+/// tightly than logical conjunction and disjunction.
 ///
 /// ```text
 /// or
 /// └── and
-///     └── comparison
-///         └── primary
+///     └── not
+///         └── comparison
+///             └── primary
 /// ```
 ///
 /// This allows complex YARA conditions such as:
@@ -581,19 +584,62 @@ impl AstParser {
     /// * `parser` (`AstParser`) - an `AstParser` positioned at the beginning of a
     ///   YARA file
     ///
+    /// # Returns
+    ///
+    /// Returns the parsed YARA rule file.
+    ///
     /// # Errors
     ///
     /// Returns an error if:
     /// - The YARA file or any of its rules is malformed
     pub fn parse_rule_file(mut parser: AstParser) -> Result<RuleFileNode, String> {
+        parser.parse_rule_file_inner()
+    }
+
+    /// Parses a YARA file while preserving its lexer tokens.
+    ///
+    /// The parser returns ownership of its original token allocation after
+    /// constructing the syntax tree.
+    ///
+    /// # Arguments
+    ///
+    /// * `parser` (`AstParser`) - Parser positioned at the beginning of a YARA
+    ///   file
+    ///
+    /// # Returns
+    ///
+    /// Returns the parsed rule file together with its lexer tokens.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - The YARA file or any of its rules is malformed
+    pub(crate) fn parse_rule_file_with_tokens(
+        mut parser: AstParser,
+    ) -> Result<(RuleFileNode, Vec<Token>), String> {
+        let rule_file = parser.parse_rule_file_inner()?;
+        Ok((rule_file, parser.tokens))
+    }
+
+    /// Parses a YARA file from this parser.
+    ///
+    /// # Returns
+    ///
+    /// Returns the parsed YARA rule file.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - The YARA file or any of its rules is malformed
+    fn parse_rule_file_inner(&mut self) -> Result<RuleFileNode, String> {
         let mut imports: Vec<String> = Vec::new();
-        while parser.peek_keyword("import") {
-            parser.expect_keyword("import")?;
-            imports.push(parser.expect_string_literal()?);
+        while self.peek_keyword("import") {
+            self.expect_keyword("import")?;
+            imports.push(self.expect_string_literal()?);
         }
         let mut rules: Vec<RuleNode> = Vec::new();
-        while parser.peek_keyword("rule") {
-            rules.push(Self::parse_rule(&mut parser)?);
+        while self.peek_keyword("rule") {
+            rules.push(Self::parse_rule(self)?);
         }
         Ok(RuleFileNode { imports, rules })
     }
