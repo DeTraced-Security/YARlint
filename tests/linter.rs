@@ -49,7 +49,7 @@ fn default_engine_produces_no_findings_for_clean_rule() {
     let file = RuleFileNode {
         imports: vec![],
         rules: vec![RuleNode {
-            name: "clean_rule".to_string(),
+            name: "CleanRule".to_string(),
             is_global: false,
             is_private: false,
             tags: vec![],

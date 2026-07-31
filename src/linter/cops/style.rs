@@ -2,6 +2,7 @@
 
 pub mod meta_keys_order;
 pub mod missing_required_meta;
+pub mod rule_name_case;
 pub mod string_identifier;
 
 /// Checks if string passed is snake case
@@ -24,6 +25,8 @@ fn is_snake_case(s: &str) -> bool {
 
     match chars.next() {
         Some(c) if c.is_ascii_lowercase() => {}
+        // The $ is for checking identifiers. Is does not impact the ability
+        // to pass rule names into this function
         Some('_') | Some('$') => match chars.peek() {
             Some(next) if next.is_ascii_lowercase() => {}
             _ => return false,
@@ -46,6 +49,32 @@ fn is_snake_case(s: &str) -> bool {
     }
 
     true
+}
+
+/// Checks if string passed is pascal case
+///
+/// # Arguments
+///
+/// * `s` (`&str`) - the string to be evaluated
+///
+/// # Returns
+///
+/// Returns `true` if string is in pascal case
+/// Returns `false` if string is not in pascal case
+/// Returns `false` if string is empty
+fn is_pascal_case(s: &str) -> bool {
+    if s.is_empty() {
+        return false;
+    }
+
+    let mut chars = s.chars();
+
+    match chars.next() {
+        Some(c) if c.is_ascii_uppercase() => {}
+        _ => return false,
+    }
+
+    chars.all(|c| c.is_ascii_alphanumeric())
 }
 
 #[cfg(test)]
