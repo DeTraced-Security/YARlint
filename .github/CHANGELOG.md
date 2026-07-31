@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.3.7](https://github.com/DeTraced-Security/YARlint/compare/v0.3.6...v0.3.7) - 2026-07-31
+
+### Features
+
+- add MSRV ([#164](https://github.com/DeTraced-Security/YARlint/pull/164))
+- *(linter)* add condition spacing cop ([#123](https://github.com/DeTraced-Security/YARlint/pull/123))
+
 ## [0.3.6](https://github.com/DeTraced-Security/YARlint/compare/v0.3.5...v0.3.6) - 2026-07-31
 
 ### Features
