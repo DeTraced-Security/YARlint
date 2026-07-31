@@ -22,9 +22,11 @@ use cops::{
     performance::wide_string_without_ascii::PerformanceWideStringWithoutAscii,
     style::{
         meta_keys_order::StyleMetaKeysOrder, missing_required_meta::StyleMissingRequiredMeta,
-        string_identifier::StyleStringIdentifier,
+        rule_name_case::StyleRuleNameCase, string_identifier::StyleStringIdentifier,
     },
 };
+
+use crate::config;
 
 /// Creates the default lint engine with all built-in cops.
 pub fn default_engine() -> LintEngine {
@@ -43,6 +45,7 @@ pub fn default_engine() -> LintEngine {
     engine.register(PerformanceWideStringWithoutAscii);
 
     engine.register(StyleMetaKeysOrder);
+    engine.register(StyleRuleNameCase::new(config::rule_name_case()));
     engine.register(StyleMissingRequiredMeta);
     engine.register(StyleStringIdentifier);
 
