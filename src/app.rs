@@ -12,7 +12,7 @@ use crate::linter;
 use crate::linter::context::LintContext;
 use crate::linter::cop::Cop;
 use crate::linter::cops::selector::{self, ConflictingSelectorError};
-use crate::parser::parse_files;
+use crate::parser::parse_files_with_tokens;
 use crate::parser::syntax::rule_file::RuleFileNode;
 use crate::validation::validate_files;
 
@@ -44,19 +44,28 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
 
     print_valid_file_summary(valid_files.len());
 
-    let yara_rule_files: Vec<RuleFileNode> = parse_files(&valid_files)?;
+    let parsed_rule_files = parse_files_with_tokens(&valid_files)?;
+    let mut yara_rule_files: Vec<RuleFileNode> = Vec::with_capacity(parsed_rule_files.len());
 
-    let engine = linter::default_engine();
-
-    let all_cops: Vec<&dyn Cop> = engine.cops().iter().map(AsRef::as_ref).collect();
-    let enabled = selector::resolve_enabled_cops(&all_cops, &args.only, &args.except)
-        .unwrap_or_else(|ConflictingSelectorError(name)| {
+    let selector_engine = linter::default_engine();
+    let all_cops: Vec<&dyn Cop> = selector_engine.cops().iter().map(AsRef::as_ref).collect();
+    selector::resolve_enabled_cops(&all_cops, &args.only, &args.except).unwrap_or_else(
+        |ConflictingSelectorError(name)| {
             eprintln!("'{name}' was passed to both --only and --except");
             std::process::exit(1);
-        });
+        },
+    );
 
-    for rule_file in &yara_rule_files {
-        let context = LintContext { file: rule_file };
+    for (rule_file, tokens) in parsed_rule_files {
+        let engine = linter::default_engine_with_tokens(tokens);
+        let all_cops: Vec<&dyn Cop> = engine.cops().iter().map(AsRef::as_ref).collect();
+        let enabled = selector::resolve_enabled_cops(&all_cops, &args.only, &args.except)
+            .unwrap_or_else(|ConflictingSelectorError(name)| {
+                eprintln!("'{name}' was passed to both --only and --except");
+                std::process::exit(1);
+            });
+
+        let context = LintContext { file: &rule_file };
         let findings = engine.run_selected(&context, &enabled);
 
         for finding in findings {
@@ -65,6 +74,8 @@ pub fn yarlint_pipeline(args: &Args) -> Result<(), String> {
                 finding.severity, finding.category, finding.rule, finding.message,
             );
         }
+
+        yara_rule_files.push(rule_file);
     }
     if verbose() {
         print_yara_rule_files(&yara_rule_files);

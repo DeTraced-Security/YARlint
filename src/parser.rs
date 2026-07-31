@@ -21,6 +21,7 @@ use crate::parser::{
 use std::{
     fs::File,
     io::{BufReader, Read},
+    path::Path,
 };
 
 /// Parses and validates one or more YARA files.
@@ -36,7 +37,7 @@ use std::{
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` if all files were successfully read and tokenized.
+/// Returns the parsed rule files.
 ///
 /// # Errors
 ///
@@ -44,38 +45,92 @@ use std::{
 /// - A file cannot be opened
 /// - A file cannot be read
 /// - Tokenization fails
+/// - Parsing fails
 pub fn parse_files(files: &Vec<std::path::PathBuf>) -> Result<Vec<RuleFileNode>, String> {
-    let mut rule_files: Vec<RuleFileNode> = Vec::new();
+    let mut rule_files = Vec::with_capacity(files.len());
+
     for file_path in files {
-        println!("File name: {}", file_path.display());
-        let file = File::open(file_path).map_err(|e| e.to_string())?;
-
-        let mut reader = BufReader::new(file);
-
-        let mut file_source = String::new();
-
-        reader
-            .read_to_string(&mut file_source)
-            .map_err(|e| e.to_string())?;
-        let tokens: Vec<Token> = tokenize(&file_source.to_string())?;
-        if tokens.is_empty() {
-            println!("Skipping {}: contains no YARA rule", file_path.display());
-            continue;
+        if let Some((rule_file, _)) = parse_file(file_path)? {
+            rule_files.push(rule_file);
         }
-        // Debug
-        //for token in &tokens {
-        //    println!("{:?}", token);
-        //}
-        let parser: AstParser = AstParser::new(tokens);
-
-        // Debug
-        //println!("About to parse rule");
-        let rule_file = AstParser::parse_rule_file(parser)?;
-        // Debug
-        //println!("Rule parsed successfully");
-        rule_files.push(rule_file);
     }
+
     Ok(rule_files)
+}
+
+/// Parses YARA files and preserves their lexer output.
+///
+/// The returned tokens are the same allocation consumed by the AST parser,
+/// allowing token-aware cops to run without reading or lexing the file again.
+///
+/// # Arguments
+///
+/// * `files` (`&Vec<std::path::PathBuf>`) - Paths to YARA files to parse
+///
+/// # Returns
+///
+/// Returns each parsed rule file together with its lexer tokens.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - A file cannot be opened
+/// - A file cannot be read
+/// - Tokenization fails
+/// - Parsing fails
+pub(crate) fn parse_files_with_tokens(
+    files: &Vec<std::path::PathBuf>,
+) -> Result<Vec<(RuleFileNode, Vec<Token>)>, String> {
+    let mut rule_files = Vec::with_capacity(files.len());
+
+    for file_path in files {
+        if let Some(parsed_file) = parse_file(file_path)? {
+            rule_files.push(parsed_file);
+        }
+    }
+
+    Ok(rule_files)
+}
+
+/// Parses one YARA file and preserves its lexer tokens.
+///
+/// Empty token streams are skipped without constructing a syntax tree.
+///
+/// # Arguments
+///
+/// * `file_path` (`&Path`) - Path to the YARA file to parse
+///
+/// # Returns
+///
+/// Returns the parsed rule file and tokens, or `None` when the file contains
+/// no YARA tokens.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - The file cannot be opened
+/// - The file cannot be read
+/// - Tokenization fails
+/// - Parsing fails
+fn parse_file(file_path: &Path) -> Result<Option<(RuleFileNode, Vec<Token>)>, String> {
+    println!("File name: {}", file_path.display());
+    let file = File::open(file_path).map_err(|e| e.to_string())?;
+    let mut reader = BufReader::new(file);
+    let mut file_source = String::new();
+
+    reader
+        .read_to_string(&mut file_source)
+        .map_err(|e| e.to_string())?;
+    let tokens = tokenize(&file_source)?;
+
+    if tokens.is_empty() {
+        println!("Skipping {}: contains no YARA rule", file_path.display());
+        return Ok(None);
+    }
+
+    let parser = AstParser::new(tokens);
+    let parsed_file = AstParser::parse_rule_file_with_tokens(parser)?;
+    Ok(Some(parsed_file))
 }
 
 /// Parses the contents of a YARA hex string into a [`HexNode`].

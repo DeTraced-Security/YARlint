@@ -63,6 +63,9 @@ pub enum TokenType {
     /// Equality operator (`==`).
     EqualsEquals,
 
+    /// Inequality operator (`!=`).
+    NotEquals,
+
     /// Minus operator (`-`).
     Minus,
 

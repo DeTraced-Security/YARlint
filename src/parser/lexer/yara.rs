@@ -308,6 +308,22 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, String> {
                 }
             }
 
+            '!' => {
+                if matches!(lexer.peek(), Some('=')) {
+                    lexer.next_char();
+
+                    tokens.push(Token {
+                        token_type: TokenType::NotEquals,
+                        span,
+                    });
+                } else {
+                    tokens.push(Token {
+                        token_type: TokenType::Unknown(ch),
+                        span,
+                    });
+                }
+            }
+
             '>' => {
                 if matches!(lexer.peek(), Some('=')) {
                     lexer.next_char();

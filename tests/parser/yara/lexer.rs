@@ -114,6 +114,20 @@ fn double_equals_produces_equals_equals_token() {
 }
 
 #[test]
+fn not_equals_produces_not_equals_token() {
+    let tokens = tokenize("!=").unwrap();
+
+    assert_eq!(tokens[0].token_type, TokenType::NotEquals);
+}
+
+#[test]
+fn bare_exclamation_produces_unknown_token() {
+    let tokens = tokenize("!").unwrap();
+
+    assert_eq!(tokens[0].token_type, TokenType::Unknown('!'));
+}
+
+#[test]
 fn greater_than_produces_gthan_token() {
     let tokens = tokenize(">").unwrap();
 

@@ -21,15 +21,31 @@ use cops::{
     },
     performance::wide_string_without_ascii::PerformanceWideStringWithoutAscii,
     style::{
-        meta_keys_order::StyleMetaKeysOrder, missing_required_meta::StyleMissingRequiredMeta,
-        rule_name_case::StyleRuleNameCase, string_identifier::StyleStringIdentifier,
+        condition_spacing::StyleConditionSpacing, meta_keys_order::StyleMetaKeysOrder,
+        missing_required_meta::StyleMissingRequiredMeta, rule_name_case::StyleRuleNameCase,
+        string_identifier::StyleStringIdentifier,
     },
 };
 
-use crate::config;
+use crate::{config, parser::token::Token};
 
 /// Creates the default lint engine with all built-in cops.
 pub fn default_engine() -> LintEngine {
+    default_engine_with_tokens(Vec::new())
+}
+
+/// Creates the default lint engine for a tokenized YARA file.
+///
+/// The token stream is moved into cops that require source location data.
+///
+/// # Arguments
+///
+/// * `tokens` (`Vec<Token>`) - Tokens produced while parsing the file
+///
+/// # Returns
+///
+/// Returns a lint engine containing every built-in cop.
+pub fn default_engine_with_tokens(tokens: Vec<Token>) -> LintEngine {
     let mut engine = LintEngine::new();
     engine.register(LintDuplicateMeta);
     engine.register(LintDuplicateString);
@@ -44,6 +60,7 @@ pub fn default_engine() -> LintEngine {
 
     engine.register(PerformanceWideStringWithoutAscii);
 
+    engine.register(StyleConditionSpacing::new(tokens));
     engine.register(StyleMetaKeysOrder);
     engine.register(StyleRuleNameCase::new(config::rule_name_case()));
     engine.register(StyleMissingRequiredMeta);
