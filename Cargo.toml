@@ -8,6 +8,7 @@ description = "A modern YARA linter written in Rust"
 readme = "README.md"
 keywords = ["yara", "security", "lint", "malware"]
 categories = ["command-line-utilities", "development-tools"]
+rust-version = "1.88.0"
 
 [profile.release]
 lto = true
