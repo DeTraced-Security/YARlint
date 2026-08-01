@@ -7,14 +7,13 @@ on:
 
 jobs:
 
-  release-plz-release:
+  cargo-deny:
     if: ${{ github.repository_owner == 'DeTraced-Security' }}
 
-    name: Release-plz release
+    name: cargo-deny
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: read
+      contents: read
     steps:
       - &checkout
         name: Checkout repository
@@ -25,6 +24,22 @@ jobs:
       - &install-rust
         name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+      - name: Run cargo-deny
+        uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
+        with:
+          command: check
+
+  release-plz-release:
+    if: ${{ github.repository_owner == 'DeTraced-Security' }}
+
+    name: Release-plz release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - *checkout
+      - *install-rust
       - name: Run release-plz
         uses: release-plz/action@v0.5
         with:
@@ -36,6 +51,7 @@ jobs:
   # Create a PR with the new versions and changelog, preparing the next release.
   release-plz-pr:
     if: ${{ github.repository_owner == 'DeTraced-Security' }}
+    needs: cargo-deny
 
     name: Release-plz PR
     runs-on: ubuntu-latest
