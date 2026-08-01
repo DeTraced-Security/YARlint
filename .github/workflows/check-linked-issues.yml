@@ -1,0 +1,55 @@
+name: Check Linked Issues
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  issues: read
+  pull-requests: write
+
+jobs:
+  linked-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: nearform-actions/github-action-check-linked-issues@v1
+        with:
+          # Leave comments enabled so contributors receive immediate feedback
+          # when a PR is missing a linked issue. The comment is automatically
+          # removed once the PR is updated with a valid issue reference.
+          comment: true
+
+          loose-matching: true
+
+          # This label allows maintainers to bypass the linked issue requirement for
+          # exceptional cases (for example, automated release PRs or repository
+          # maintenance). Contributors should not apply this label themselves.
+          skip-linked-issues-check-label: "no-linked-issue-required"
+
+          # Release-plz automatically opens release PRs from branches like:
+          #   release-plz-2026-07-31T22-41-45Z
+          # These PRs aggregate previously merged changes and therefore do not
+          # correspond to a single GitHub issue.
+          exclude-branches: "release-plz-**,dependabot/**"
+
+          custom-body-comment: |
+            Thanks for your contribution!
+
+            This pull request doesn't appear to be linked to a GitHub issue.
+
+            **All code changes in YARlint should be associated with an approved issue** to help us:
+            - Track the motivation behind changes.
+            - Keep discussions in one place.
+            - Improve release notes and project planning.
+
+            Please update your pull request description with one of GitHub's supported keywords, for example:
+
+            - `Closes #123`
+            - `Fixes #123`
+            - `Resolves #123`
+            - `Related to #123` (if this PR should not close the issue)
+
+            If this change is an approved exception, a maintainer can apply the appropriate label to bypass this check.
+
+            Thanks! 💜
