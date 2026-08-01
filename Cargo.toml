@@ -2,7 +2,7 @@
 name = "yarlint"
 version = "0.3.7"
 edition = "2024"
-license = "GPL-3.0"
+license = "GPL-3.0-or-later"
 repository = "https://github.com/DeTraced-Security/yarlint"
 description = "A modern YARA linter written in Rust"
 readme = "README.md"
