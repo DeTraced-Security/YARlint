@@ -38,6 +38,13 @@ This applies if you are:
 
 > Small things like typo fixes can skip the issue step. Use your judgment.
 
+### Exceptions
+
+In rare cases, a pull request may not require a linked issue (for example,
+automated release PRs or repository maintenance).
+
+Maintainers may apply the `no-linked-issue-required` label to bypass the linked issue check. Contributors should not request or apply this label unless directed by a maintainer. Adding the label to a PR without authorization are grounds for the denial of merging, and further consequences as seen fit by maintainers.
+
 ---
 
 ## Fork & Branch
@@ -77,6 +84,7 @@ When opening your PR:
 - Keep it scoped — one PR, one purpose
 
 Please fill out the PR template when opening a pull request. That helps us with understanding what your PR is trying to do. PRs without context or without an associated issue may be closed or sent back for clarification.
+
 
 
 ---
