@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v7 
         
       - name: Label PR by size
         uses: cbrgm/pr-size-labeler-action@v1.3.10
