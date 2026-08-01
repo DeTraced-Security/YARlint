@@ -1,0 +1,21 @@
+name: PR Size Labeler
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    name: Label PR Size
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Label PR by size
+        uses: cbrgm/pr-size-labeler-action@v1.3.10
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repository: ${{ github.repository }}
+          github_pr_number: ${{ github.event.number }}

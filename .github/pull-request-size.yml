@@ -1,0 +1,45 @@
+# Configuration for PR Size Labeler
+# 
+# https://github.com/cbrgm/pr-size-labeler-action
+
+exclude_files:
+  - "**/*.svg"
+  - "**/*.png"
+  - "**/*.jpg"
+  - "**/*.jpeg"
+  - "**/*.gif"
+  - "Cargo.lock"
+  - "target/**"
+
+label_configs:
+  - size: xs
+    diff: 50
+    files: 3
+    labels:
+      - "size/xs"
+
+  - size: s
+    diff: 200
+    files: 8
+    labels:
+      - "size/s"
+
+  - size: m
+    diff: 600
+    files: 20
+    labels:
+      - "size/m"
+
+  - size: l
+    diff: 1200
+    files: 40
+    labels:
+      - "size/l"
+
+  - size: xl
+    diff: 2500
+    files: 75
+    labels:
+      - "size/xl"
+
+added_lines_only: false
