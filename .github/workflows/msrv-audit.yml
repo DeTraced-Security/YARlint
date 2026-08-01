@@ -1,0 +1,52 @@
+name: MSRV Audit
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "src/**"
+      - ".github/workflows/msrv.yml"
+  pull_request:
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "src/**"
+      - ".github/workflows/msrv.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  msrv:
+    name: Verify MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Extract MSRV from Cargo.toml
+        id: msrv
+        run: |
+          MSRV=$(grep -m1 '^rust-version' Cargo.toml | sed -E 's/.*"([^"]+)".*/\1/')
+          if [[ -z "$MSRV" ]]; then
+            echo "::error::Could not extract rust-version from Cargo.toml"
+            exit 1
+          fi
+          echo "msrv=$MSRV" >> "$GITHUB_OUTPUT"
+
+      - name: Install MSRV toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ steps.msrv.outputs.msrv }}
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build against MSRV
+        run: cargo build --all-features --locked
+
+      - name: Test against MSRV
+        run: cargo test --all-features --locked
