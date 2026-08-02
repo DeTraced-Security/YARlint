@@ -1,0 +1,59 @@
+name: Benchmark
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  bench:
+    name: Run benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+
+      - name: Checkout PR base
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install hyperfine
+        uses: taiki-e/install-action@hyperfine
+
+      - name: Build base
+        run: cargo build --release --locked
+        working-directory: base
+
+      - name: Build PR head
+        run: cargo build --release --locked
+        working-directory: pr
+
+      - name: Run benchmark comparison
+        run: |
+          hyperfine \
+            --warmup 3 \
+            --export-markdown bench-result.md \
+            --command-name "base (${{ github.event.pull_request.base.sha }})" \
+            "./base/target/release/yarlint -p base/tests/fixtures -r" \
+            --command-name "pr head (${{ github.event.pull_request.head.sha }})" \
+            "./pr/target/release/yarlint -p base/tests/fixtures -r"
+
+      - name: Save PR number
+        run: echo "${{ github.event.pull_request.number }}" > pr-number.txt
+
+      - name: Upload benchmark result
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: benchmark-result
+          path: |
+            bench-result.md
+            pr-number.txt

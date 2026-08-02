@@ -1,0 +1,48 @@
+name: Benchmark Comment
+
+on:
+  workflow_run:
+    workflows: ["Benchmark"]
+    types:
+      - completed
+
+permissions:
+  pull-requests: write
+
+jobs:
+  comment:
+    name: Post benchmark comment
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Download benchmark result
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: benchmark-result
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Post or update PR comment
+        run: |
+          PR_NUMBER=$(cat pr-number.txt)
+          MARKER="<!-- yarlint-benchmark-comment -->"
+
+          {
+            echo "$MARKER"
+            echo "## Benchmark Results"
+            echo ""
+            cat bench-result.md
+          } > full-comment.md
+
+          EXISTING_ID=$(gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+            --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -n1)
+
+          if [[ -n "$EXISTING_ID" ]]; then
+            gh api "repos/${{ github.repository }}/issues/comments/${EXISTING_ID}" \
+              -X PATCH -F body=@full-comment.md
+          else
+            gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              -X POST -F body=@full-comment.md
+          fi
