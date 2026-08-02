@@ -3,43 +3,89 @@ description: Create a report to help us improve
 labels:
   - bug
 body:
-  - type: textarea
+  - type: checkboxes
+    id: preflight
     attributes:
-      label: Describe the bug
-      description: A clear and concise description of what the bug is.
+      label: Preflight checklist
+      options:
+        - label: I have searched [existing issues](https://github.com/DeTraced-Security/YARlint/issues?q=is%3Aissue) and confirmed this hasn't already been reported.
+          required: true
+        - label: I have read and agree to follow the [Code of Conduct](https://github.com/DeTraced-Security/YARlint/blob/main/.github/CODE_OF_CONDUCT.md).
+          required: true
+
+  - type: input
+    id: yarlint-version
+    attributes:
+      label: YARlint version
+      description: Output of `yarlint --version`
+      placeholder: "0.3.7"
+    validations:
+      required: true
+
+  - type: input
+    id: rust-version
+    attributes:
+      label: Rust version
+      description: Output of `rustc --version`
+      placeholder: "rustc 1.88.0 (stable)"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: The OS (and distro/version if relevant) you were running YARlint on.
+      placeholder: "Ubuntu 24.04"
     validations:
       required: true
 
   - type: textarea
+    id: minimal-rule
     attributes:
-      label: Steps To Reproduce
-      description: Steps to reproduce the behavior.
+      label: Minimal YARA rule
+      description: The smallest YARA rule that reproduces the bug.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-output
+    attributes:
+      label: Expected output
+      description: What you expected YARlint to report for the rule above.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-output
+    attributes:
+      label: Actual output
+      description: What YARlint actually reported. Paste raw terminal output, not a paraphrase.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Any steps beyond running YARlint against the rule above (CLI flags used, config, directory layout, etc.)
       placeholder: |
         1. In this environment...
         2. With this config...
         3. Run '...'
         4. See error...
     validations:
-      required: true
+      required: false
 
   - type: textarea
-    attributes:
-      label: Expected Behavior
-      description: A concise description of what you expected to happen.
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Environment
-      value: |
-        - Version: <!-- run `command -v` -->
-    validations:
-      required: true
-
-  - type: textarea
+    id: anything-else
     attributes:
       label: Anything else?
       description: |
         Add any extra context here.
         Logs, screenshots, or weird edge cases welcome.
+    validations:
+      required: false
