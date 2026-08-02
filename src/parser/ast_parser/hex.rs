@@ -2,7 +2,7 @@
 //!
 //! Hex strings are not part of the main YARA grammar - they are a small,
 //! self-contained grammar of their own (bytes, wildcards, jumps, and
-//! alternations). [`HexAstParser`] is therefore a fully separate parser
+//! alternations). `HexAstParser` is therefore a fully separate parser
 //! from [`crate::parser::ast_parser::AstParser`], with its own cursor
 //! over its own token type, rather than sharing one with the main
 //! grammar.

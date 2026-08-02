@@ -349,7 +349,7 @@ impl AstParser {
     ///
     /// # Returns
     ///
-    /// Returns a ['TokenType::Regex`]
+    /// Returns a 'TokenType::Regex`
     ///
     /// # Errors
     ///
@@ -577,7 +577,7 @@ impl AstParser {
     /// - multiple rule definitions
     ///
     /// The parser consumes tokens sequentially and delegates
-    /// rule parsing to [`AstParser::parse_rule`].
+    /// rule parsing to `AstParser::parse_rule`.
     ///
     /// # Arguments
     ///
