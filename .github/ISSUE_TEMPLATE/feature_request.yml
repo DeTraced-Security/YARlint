@@ -3,7 +3,18 @@ description: Suggest an idea for this project
 labels:
   - enhancement
 body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight checklist
+      options:
+        - label: I have searched [existing issues](https://github.com/DeTraced-Security/YARlint/issues?q=is%3Aissue) and confirmed this hasn't already been requested.
+          required: true
+        - label: I have read and agree to follow the [Code of Conduct](https://github.com/DeTraced-Security/YARlint/blob/main/.github/CODE_OF_CONDUCT.md).
+          required: true
+
   - type: textarea
+    id: problem
     attributes:
       label: Is your feature request related to a problem? Please describe
       description: A clear and concise description of what the problem is.
@@ -11,18 +22,77 @@ body:
       required: true
 
   - type: textarea
+    id: solution
     attributes:
       label: Describe the solution you'd like
       description: A clear and concise description of what you want to happen.
     validations:
       required: true
 
+  - type: dropdown
+    id: cop-family
+    attributes:
+      label: Related cop family (if applicable)
+      description: If this is about a lint rule/cop, which family does it belong to? Pick "New family" if it doesn't fit any existing one, or "Not applicable" if this isn't cop-related.
+      options:
+        - Lint
+        - Logic
+        - Naming
+        - Performance
+        - Style
+        - New family
+        - Not applicable
+    validations:
+      required: true
+
   - type: textarea
+    id: alternatives
     attributes:
       label: Describe alternatives you've considered
       description: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
 
   - type: textarea
+    id: motivation
+    attributes:
+      label: Who benefits from this?
+      description: Is this a niche need for your own workflow, or something you'd expect most YARlint users to want?
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Existing workaround
+      description: Is there a way to accomplish this today (even if clunky), or is it currently not possible at all?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: breaking-change
+    attributes:
+      label: Would this be a breaking change?
+      description: Would this alter existing CLI flags, config schema, cop behavior, or output format in a way that could break existing usage?
+      options:
+        - "No"
+        - "Yes"
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration required
+      description: Would this need new config (e.g. a new flag, cop option, or config file field), or should it work with no setup?
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
     attributes:
       label: Additional context
       description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false
