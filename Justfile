@@ -18,3 +18,4 @@ all:
     cargo build --all-features --locked
     cargo test --all-features --locked
     cargo llvm-cov --fail-under-lines 95 --fail-under-functions 95
+    RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --document-private-items

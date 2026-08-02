@@ -57,7 +57,7 @@ pub enum StringModifier {
 /// Encapsulates the three different types of string values in a YARA Rule
 ///
 /// There is still much to implement, though that will all most likely be
-/// https://yara.readthedocs.io/en/latest/writingrules.html#strings
+/// <https://yara.readthedocs.io/en/latest/writingrules.html#strings>
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum StringType {
     /// String value.

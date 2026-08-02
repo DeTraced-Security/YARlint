@@ -2,9 +2,9 @@
 //!
 //! This module tokenizes the *interior* of a hex string - the raw text
 //! already captured between an unescaped `{` and `}` by the main
-//! [`crate::parser::lexer::tokenize`] - turning it into a stream of
-//! [`HexToken`]s consumed by
-//! [`crate::parser::ast_parser::hex::parse_hex_string`].
+//! `crate::parser::lexer::tokenize` - turning it into a stream of
+//! `HexToken`s consumed by
+//! `crate::parser::ast_parser::hex::parse_hex_string`.
 //!
 //! Hex strings are not part of the main YARA grammar. They are a small,
 //! self-contained grammar of their own (bytes, wildcards, jumps, and
@@ -20,7 +20,7 @@ use crate::parser::token::{
 
 /// Stateful lexer used to tokenize the contents of a YARA hex string.
 ///
-/// Unlike [`crate::parser::lexer::Lexer`], no position is tracked. Hex
+/// Unlike `crate::parser::lexer::Lexer`, no position is tracked. Hex
 /// string findings are reported at the granularity of the whole string,
 /// not the individual atom, so no [`crate::parser::span::Span`] is
 /// produced here.

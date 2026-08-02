@@ -4,7 +4,7 @@
 /// Representation of a byte in a YARA hex string
 ///
 /// YARA hex strings have various ways to represent bytes. They can be simple
-/// such as `a5`, `f3`, and `e4`, which all are represented by the [`Byte(u8)`]
+/// such as `a5`, `f3`, and `e4`, which all are represented by the `Byte(u8)`
 /// field. or they can have a `?` as a wildcard, and etc.
 pub enum HexAtom {
     /// unsigned 8bit integer representation of a byte, converted from chars.
@@ -48,7 +48,7 @@ pub struct HexExprNode {
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 /// A Hex node, contains both the original string for simple lints, and a
-/// ['HexExprNode`] for AST parsed output that will be used for more complex
+/// 'HexExprNode` for AST parsed output that will be used for more complex
 /// lints
 pub struct HexNode {
     /// AST representation of the original hex string

@@ -10,7 +10,7 @@ use crate::linter::{
 pub struct StyleMissingRequiredMeta;
 
 /// The required meta keys. This will be phased out when
-/// https://github.com/DeTraced-Security/YARlint/issues/74 is implemented.
+/// <https://github.com/DeTraced-Security/YARlint/issues/74> is implemented.
 const REQUIRED_META_KEYS: [&str; 4] = ["author", "description", "reference", "date"];
 
 impl Cop for StyleMissingRequiredMeta {
