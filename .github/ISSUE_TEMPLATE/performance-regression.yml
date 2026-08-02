@@ -1,0 +1,78 @@
+name: Performance Regression
+description: Report a slowdown in YARlint's linting performance
+labels:
+  - performance
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight checklist
+      options:
+        - label: I have searched [existing issues](https://github.com/DeTraced-Security/YARlint/issues?q=is%3Aissue) and confirmed this hasn't already been reported.
+          required: true
+        - label: I have read and agree to follow the [Code of Conduct](https://github.com/DeTraced-Security/YARlint/blob/main/.github/CODE_OF_CONDUCT.md).
+          required: true
+
+  - type: input
+    id: regressed-version
+    attributes:
+      label: Version where the slowdown appears
+      description: Output of `yarlint --version` on the slow build.
+      placeholder: "0.3.7"
+    validations:
+      required: true
+
+  - type: input
+    id: good-version
+    attributes:
+      label: Last known good version (if known)
+      description: The most recent version/commit where performance was acceptable, if you know it.
+      placeholder: "0.3.5"
+    validations:
+      required: false
+
+  - type: input
+    id: rust-version
+    attributes:
+      label: Rust version
+      description: Output of `rustc --version`
+      placeholder: "rustc 1.88.0 (stable)"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: The OS (and distro/version if relevant) and hardware you were running YARlint on.
+      placeholder: "Ubuntu 24.04, 8-core, 16GB RAM"
+    validations:
+      required: true
+
+  - type: textarea
+    id: corpus
+    attributes:
+      label: Corpus size and shape
+      description: How many rule files, roughly how large, and any notable structure (deeply nested conditions, large hex strings, many string modifiers, etc.)
+      placeholder: "~5,000 .yar files, average 40 lines each, several with large hex byte sequences"
+    validations:
+      required: true
+
+  - type: textarea
+    id: benchmark-output
+    attributes:
+      label: Benchmark comparison
+      description: |
+        If possible, run `hyperfine` comparing the two versions against your corpus and paste the output here, e.g.:
+        `hyperfine -w 3 './yarlint-old -p corpus -r' './yarlint-new -p corpus -r'`
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Anything else that might be relevant (recent config changes, specific cops enabled/disabled, CI vs local timing differences, etc.)
+    validations:
+      required: false
