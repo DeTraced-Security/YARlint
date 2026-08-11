@@ -1,12 +1,8 @@
 use yarlint::{
-    linter::{
-        context::LintContext, cop::Cop, cops::performance::filesize::PerformanceFilesize,
-    },
+    linter::{context::LintContext, cop::Cop, cops::performance::filesize::PerformanceFilesize},
     parser::syntax::{
-        ConditionNode, ExprNode, RuleNode, StringModifier, StringNode,
-        operators::BinaryOperator,
-        rule_file::RuleFileNode,
-        strings::StringType,
+        ConditionNode, ExprNode, RuleNode, StringModifier, StringNode, operators::BinaryOperator,
+        rule_file::RuleFileNode, strings::StringType,
     },
 };
 
