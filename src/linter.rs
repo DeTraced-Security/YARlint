@@ -19,7 +19,9 @@ use cops::{
         descriptive_meta::NamingDescriptiveMeta, rule_name::NamingRuleName,
         rule_name_length::NamingRuleNameLength,
     },
-    performance::wide_string_without_ascii::PerformanceWideStringWithoutAscii,
+    performance::{
+        filesize::PerformanceFilesize, wide_string_without_ascii::PerformanceWideStringWithoutAscii,
+    },
     style::{
         condition_spacing::StyleConditionSpacing, meta_keys_order::StyleMetaKeysOrder,
         missing_required_meta::StyleMissingRequiredMeta, rule_name_case::StyleRuleNameCase,
@@ -58,6 +60,7 @@ pub fn default_engine_with_tokens(tokens: Vec<Token>) -> LintEngine {
     engine.register(NamingRuleNameLength);
     engine.register(NamingRuleName);
 
+    engine.register(PerformanceFilesize);
     engine.register(PerformanceWideStringWithoutAscii);
 
     engine.register(StyleConditionSpacing::new(tokens));
