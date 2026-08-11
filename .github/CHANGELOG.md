@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## [0.3.8](https://github.com/DeTraced-Security/YARlint/compare/v0.3.7...v0.3.8) - 2026-08-11
+
+### Documentation
+
+- update contributing file with testing info ([#181](https://github.com/DeTraced-Security/YARlint/pull/181))
+- add writing a cop guide ([#180](https://github.com/DeTraced-Security/YARlint/pull/180))
+- add review expectation guide ([#179](https://github.com/DeTraced-Security/YARlint/pull/179))
+- add performance regression issue type
+- update feature request template
+- update bug report template
+- improve pull request template ([#166](https://github.com/DeTraced-Security/YARlint/pull/166))
+- add development setup guide ([#165](https://github.com/DeTraced-Security/YARlint/pull/165))
+
+### Features
+
+- add performance/filesize ([#187](https://github.com/DeTraced-Security/YARlint/pull/187))
+
+### Other
+
+- *(deps)* bump actions/download-artifact from 7.0.0 to 8.0.1 ([#185](https://github.com/DeTraced-Security/YARlint/pull/185))
+- *(deps)* bump cbrgm/pr-size-labeler-action from 1.3.10 to 1.3.11 ([#186](https://github.com/DeTraced-Security/YARlint/pull/186))
+- *(deps)* bump github/codeql-action from 4.37.3 to 4.37.6 ([#184](https://github.com/DeTraced-Security/YARlint/pull/184))
+- *(deps)* bump actions/checkout from 6 to 7 ([#183](https://github.com/DeTraced-Security/YARlint/pull/183))
+- *(deps)* bump clap from 4.6.4 to 4.6.5 ([#182](https://github.com/DeTraced-Security/YARlint/pull/182))
+- add documentation check workflow ([#177](https://github.com/DeTraced-Security/YARlint/pull/177))
+- add benchmarking workflows ([#176](https://github.com/DeTraced-Security/YARlint/pull/176))
+- add MSRV audit workflow ([#175](https://github.com/DeTraced-Security/YARlint/pull/175))
+- add actionlint
+- add linked issues check
+- add pull request size workflow ([#167](https://github.com/DeTraced-Security/YARlint/pull/167))
+
 ## [0.3.7](https://github.com/DeTraced-Security/YARlint/compare/v0.3.6...v0.3.7) - 2026-07-31
 
 ### Features
