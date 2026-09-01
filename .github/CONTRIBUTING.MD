@@ -61,6 +61,27 @@ Please use clear branch names. Since your pull request will be squashed upon
 merge, make sure the branch, and pull request title follow the conventional
 commits standard.
 
+Commit messages themselves should begin with a type, include an optional scope
+for the changes committed, and conclude with a brief, but precise, description
+of the changes. For example:
+
+```
+docs(linter): Added missing documentation
+or
+docs: Added missing documentation
+```
+
+Acceptable commit types include:
+- docs - documentation
+- fix - patch/bugfix
+- feat - feature
+- chore - simple maintenance
+- test - testing
+- style - style changes
+
+Imprecise commit messages may result in increased difficulty of PR reviews and
+will result in changes being requested.
+
 ## Making Changes
 
 A few expectations:
