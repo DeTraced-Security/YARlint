@@ -61,10 +61,10 @@ Please use clear branch names. Since your pull request will be squashed upon
 merge, make sure the branch, and pull request title follow the conventional
 commits standard.
 
-As for commit messages themselves, we follow the conventional commit standards.
-Each commit message should begin with a type, include an optional scope for the
-changes committed, and conclude with a brief, but precise, description of the
-changes. For example:
+As for commit messages themselves, we follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+standards. Each commit message should begin with a type, include an optional
+scope for the changes committed, and conclude with a brief, but precise,
+description of the changes. For example:
 
 ```
 docs(linter): Added missing documentation
