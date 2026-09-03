@@ -1,0 +1,42 @@
+name: Documentation Issue
+description: Report insufficient or erroneous documentation
+labels:
+ - documentation
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight checklist
+      options:
+        - label: i have searched [existing issues](https://github.com/DeTraced-Security/YARlint/issues?q=is%3Aissue) and confirmed this hasn't already been requested.
+          required: true
+        - label: I have read and agree to follow the [Code of Conduct](https://github.com/DeTraced-Security/YARlint/blob/main/.github/CODE_OF_CONDUCT.md).
+          required: true
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Select the most accurate description of the issue
+      options:
+        - Missing documentation
+        - Erroneous documentation
+        - Confusing documentation
+        - Insufficient documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: where
+    attributes:
+      label: Where is the problematic documentation?
+      description: Include the path to the offending file, any specific module, function, struct, etc., and a line and column number of the offense.
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Describe the problematic documentation.
+      description: Describe what is missing, wrong, or confusing.
+    validations:
+      required: true
