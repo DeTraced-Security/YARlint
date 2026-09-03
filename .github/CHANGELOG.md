@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## [0.3.9](https://github.com/DeTraced-Security/YARlint/compare/v0.3.8...v0.3.9) - 2026-09-03
+
+### Documentation
+
+- docs/commit message conventions ([#196](https://github.com/DeTraced-Security/YARlint/pull/196))
+- added architecture overview ([#195](https://github.com/DeTraced-Security/YARlint/pull/195))
+- add contributor workflow ([#192](https://github.com/DeTraced-Security/YARlint/pull/192))
+
+### Features
+
+- "chore: bump version 0.4.0 ([#198](https://github.com/DeTraced-Security/YARlint/pull/198))" ([#199](https://github.com/DeTraced-Security/YARlint/pull/199))
+
+### Other
+
+- bump version 0.4.0 ([#198](https://github.com/DeTraced-Security/YARlint/pull/198))
+- added documentation issue template ([#197](https://github.com/DeTraced-Security/YARlint/pull/197))
+- *(deps)* bump github/codeql-action from 4.37.7 to 4.37.9 ([#193](https://github.com/DeTraced-Security/YARlint/pull/193))
+- *(deps)* bump cbrgm/pr-size-labeler-action from 1.3.11 to 1.3.12 ([#194](https://github.com/DeTraced-Security/YARlint/pull/194))
+- *(deps)* bump github/codeql-action from 4.37.6 to 4.37.7 ([#191](https://github.com/DeTraced-Security/YARlint/pull/191))
+
 ## [0.3.8](https://github.com/DeTraced-Security/YARlint/compare/v0.3.7...v0.3.8) - 2026-08-11
 
 ### Documentation
