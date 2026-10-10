@@ -5,6 +5,7 @@
 //! and parsing.
 
 pub mod collect;
+pub mod config_file;
 pub mod filters;
 
 pub use collect::collect_yara_files;
